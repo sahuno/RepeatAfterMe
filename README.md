@@ -1,6 +1,6 @@
 # Repeat After Me
 
-Visual lessons on repeated DNA (transposable elements) in the mouse and human genomes. Written for the newcomer who has to analyse repeats for the first time, and readable by anyone curious.
+Visual lessons on repeated DNA (transposable elements) in mouse and human. For people analysing repeats for the first time.
 
 Live site: https://sahuno.github.io/RepeatAfterMe/
 
