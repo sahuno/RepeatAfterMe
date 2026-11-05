@@ -187,6 +187,10 @@
     var tmp = el('rect', { x: site.x + w, y: ROWS[site.row] - EH / 2, width: 0, height: EH, rx: 5, fill: colour }, gItems);
     return tween(ms, function (p) { tmp.setAttribute('x', site.x + w - w * p); tmp.setAttribute('width', w * p); });
   }
+  function nick(x, row, below) {
+    var y = ROWS[row] + (below ? 8 : -8);
+    return spark(x, y).then(function () { el('rect', { x: x - 3, y: y - 2, width: 6, height: 4, fill: 'var(--bg)' }, gItems); });
+  }
   function blocked(text) { var s = [{ text: text, run: function () { return Promise.resolve(); } }]; s.blocked = true; return s; }
   var NO_ROOM = 'No room left. Press Reset to start again.';
 
@@ -203,8 +207,9 @@
       { text: 'The RNA copy leaves the nucleus.', run: function () { return A.moveTo(sx + 40, OUT_Y, 900); } },
       { text: 'It makes its own tools, and they grab on.', run: function () { tools = A.tools(src.w); return tween(700, function (p) { tools.appear(p); }); } },
       { text: 'They carry it back in and pick a spot.', run: function () { return A.moveTo(site.x + w - src.w, hov, 1000); } },
-      { text: 'The tool nicks the DNA.', run: function () { return spark(site.x + w, ROWS[site.row]); } },
-      { text: 'It writes the copy from the tail end, backwards.', run: function () { return growCopy(site, w, 'var(--LINE)', 1100); } },
+      { text: 'The tool nicks one strand of the DNA.', run: function () { return nick(site.x + w, site.row, true); } },
+      { text: 'Starting at the nick, it writes the copy from the tail end, backwards.', run: function () { return growCopy(site, w, 'var(--LINE)', 1100); } },
+      { text: 'Then it cuts the other strand, a little further along.', run: function () { return nick(site.x + w - 14, site.row, false).then(function () { return hold(300); }); } },
       { text: f >= 1 ? 'Full length, head and all. A copy like this can copy itself again.' : 'Stopped early. No head, so this copy can never copy itself.',
         run: function () { return tween(500, function (p) { A.fade(1 - p); }).then(function () { A.remove(); S.items.push({ cls: 'LINE', kind: f >= 1 ? 'full' : 'short', row: site.row, x: site.x, w: w }); S.counts.copies++; if (f >= 1) S.counts.full++; else S.counts.short++; render(); }); } }
     ];
@@ -227,8 +232,9 @@
     var hov = ROWS[site.row] - EH / 2 - HOVER;
     steps.push({ text: "It borrows LINE's tools.", run: function () { tools = A.tools(w, { beads: false, fill: 'var(--LINE)' }); tools.appear(1); return tween(900, function (p) { tools.at(lerp(-360, 0, p), lerp(60, 0, p)); }); } });
     steps.push({ text: 'They carry it back in and pick a spot.', run: function () { return A.moveTo(site.x, hov, 900); } });
-    steps.push({ text: 'The tool nicks the DNA.', run: function () { return spark(site.x + w, ROWS[site.row]); } });
+    steps.push({ text: 'The tool nicks one strand of the DNA.', run: function () { return nick(site.x + w, site.row, true); } });
     steps.push({ text: 'Short, so the copy is written quickly.', run: function () { return growCopy(site, w, 'var(--SINE)', 500); } });
+    steps.push({ text: 'Then it cuts the other strand, a little further along.', run: function () { return nick(site.x + w - 14, site.row, false).then(function () { return hold(300); }); } });
     steps.push({ text: 'A new short copy.', run: function () { return tween(400, function (p) { A.fade(1 - p); }).then(function () { A.remove(); S.items.push({ cls: 'SINE', kind: 'sine', row: site.row, x: site.x, w: w }); S.counts.copies++; render(); }); } });
     return steps;
   }
