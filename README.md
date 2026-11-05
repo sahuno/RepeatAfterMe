@@ -6,7 +6,7 @@ Live site: https://sahuno.github.io/RepeatAfterMe/
 
 ## How the site is built
 
-- Plain HTML, one file per page, no build step. Open `index.html` in a browser and it works.
+- Plain HTML pages plus one small shared `assets/` folder, no build step. Open `index.html` in a browser and it works.
 - `assets/site.css` holds the shared look: the four class colours (LINE, SINE, LTR, DNA), fonts, light and dark mode.
 - Every link is relative, because the site is served under `/RepeatAfterMe/`.
 - Hosted by GitHub Pages from the `main` branch of this repository.
