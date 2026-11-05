@@ -240,7 +240,7 @@
     var w = CLS.LTR.w, cap = CLS.LTR.cap;
     var site = findSite(w);
     if (!site) return blocked(NO_ROOM);
-    var A = actor(), rna, bubble, bar, sx = src.x, sy = ROWS[src.row], hov = ROWS[site.row] - EH / 2 - HOVER;
+    var A = actor(), rna, bubble, bar, integ, sx = src.x, sy = ROWS[src.row], hov = ROWS[site.row] - EH / 2 - HOVER;
     return [
       { text: 'The left end starts the reading.', run: function () { A.at(sx, sy - EH / 2 - 12); rna = A.rna('LTR', 0); return tween(900, function (p) { rna.setLen(w * p); }); } },
       { text: 'The RNA leaves the nucleus.', run: function () { return A.moveTo(sx + 20, OUT_Y, 900); } },
@@ -254,13 +254,27 @@
           return tween(700, function (p) { rna.el.setAttribute('opacity', 1 - p); bar.setAttribute('opacity', p); });
         });
       } },
-      { text: 'The particle comes back in, and the new copy slots into the DNA.', run: function () {
-        return A.moveTo(site.x, hov, 1000)
-          .then(function () { return tween(400, function (p) { bubble.setAttribute('opacity', 1 - p); }); })
+      { text: 'The particle comes back in and opens.', run: function () {
+        return A.moveTo(site.x, hov, 1000).then(function () { return tween(400, function (p) { bubble.setAttribute('opacity', 1 - p); }); });
+      } },
+      { text: 'Its own cutter, integrase, cuts both strands, one a little further along than the other.', run: function () {
+        var y = ROWS[site.row], drop = y - 16 - hov, xc = site.x + 6;
+        integ = el('g', { opacity: 0, transform: 'translate(6 12)' }, A.g);
+        el('rect', { x: -12, y: -8, width: 24, height: 8, rx: 3, 'class': 'tool' }, integ);
+        el('path', { d: 'M-7 0 l0 8', stroke: 'currentColor', 'stroke-width': 3, 'stroke-linecap': 'round' }, integ);
+        el('path', { d: 'M7 0 l0 24', stroke: 'currentColor', 'stroke-width': 3, 'stroke-linecap': 'round' }, integ);
+        return tween(700, function (p) { integ.setAttribute('opacity', p); integ.setAttribute('transform', 'translate(6 ' + lerp(12, drop, p) + ')'); })
+          .then(function () { return Promise.all([spark(xc - 7, y - 8), spark(xc + 7, y + 8)]); })
           .then(function () {
-            var rects = Array.prototype.slice.call(bar.querySelectorAll('rect'));
-            return tween(500, function (p) { A.at(site.x, lerp(hov, ROWS[site.row], p)); rects.forEach(function (r) { r.setAttribute('y', -7 - (EH / 2 - 7) * p); r.setAttribute('height', 14 + (EH - 14) * p); }); });
-          })
+            el('rect', { x: xc - 10, y: y - 10, width: 6, height: 4, fill: 'var(--bg)' }, gItems);
+            el('rect', { x: xc + 4, y: y + 6, width: 6, height: 4, fill: 'var(--bg)' }, gItems);
+            return hold(300);
+          });
+      } },
+      { text: 'The copy is joined into the cut, and the cell seals the small gaps.', run: function () {
+        var rects = Array.prototype.slice.call(bar.querySelectorAll('rect'));
+        return tween(300, function (p) { integ.setAttribute('opacity', 1 - p); })
+          .then(function () { return tween(500, function (p) { A.at(site.x, lerp(hov, ROWS[site.row], p)); rects.forEach(function (r) { r.setAttribute('y', -7 - (EH / 2 - 7) * p); r.setAttribute('height', 14 + (EH - 14) * p); }); }); })
           .then(function () { A.remove(); S.items.push({ cls: 'LTR', kind: 'full', row: site.row, x: site.x, w: w }); S.counts.copies++; render(); });
       } }
     ];
