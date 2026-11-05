@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Repeat After Me</title>
+<meta name="description" content="Visual lessons on repeated DNA in the mouse and human genomes, made for people who have to analyse repeats for the first time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+/* Landing page only */
+header.hero { padding: 48px 0 24px; display: flex; flex-direction: column; gap: 18px; }
+.strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(14px, 1fr)); gap: 4px; }
+.strip i { display: block; aspect-ratio: 1; border-radius: 3px; background: var(--notrepeat); }
+.strip i.LINE { background: var(--LINE); } .strip i.SINE { background: var(--SINE); } .strip i.LTR { background: var(--LTR); } .strip i.DNA { background: var(--DNA); }
+.classes { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+.class { background: var(--surface); border: 1px solid var(--rule); border-left: 6px solid var(--c); border-radius: 6px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.class h3 { font-size: 1rem; }
+.class p { font-size: 0.95rem; color: var(--ink-2); }
+.soon { background: var(--surface); border: 1px dashed var(--rule); border-radius: 6px; padding: 14px 16px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="#lessons">Lessons</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Mouse and human genomes</div>
+  <h1>Repeat After Me</h1>
+  <p class="lede">Visual lessons on the repeated DNA that fills a large share of every mammal's genome. Made for the newcomer who has to analyse repeats next month, and for anyone who is curious.</p>
+  <div class="strip" aria-hidden="true">
+    <i class="LINE"></i><i></i><i class="SINE"></i><i class="LINE"></i><i></i><i></i><i class="LTR"></i><i class="LTR"></i><i></i><i class="SINE"></i><i class="LINE"></i><i></i><i></i><i class="SINE"></i><i></i><i class="LINE"></i><i class="LINE"></i><i></i><i class="DNA"></i><i></i><i class="SINE"></i><i></i><i class="LTR"></i><i></i><i></i><i class="LINE"></i><i class="SINE"></i><i></i><i></i><i class="LTR"></i><i></i><i class="SINE"></i><i class="LINE"></i><i></i><i></i><i class="LINE"></i><i></i><i class="SINE"></i><i class="LTR"></i><i></i><i></i><i class="LINE"></i><i class="LINE"></i><i></i><i class="SINE"></i><i></i><i class="DNA"></i><i></i><i class="LTR"></i><i></i><i class="SINE"></i><i class="LINE"></i><i></i><i></i><i class="LINE"></i><i></i><i class="SINE"></i><i></i><i class="LTR"></i><i></i>
+  </div>
+  <p class="muted" style="font-size:0.9rem">A stretch of genome, as this site colours it. Grey is not a repeat. Colours only; the strip is not to scale.</p>
+</header>
+
+<section id="classes">
+  <h2>Four kinds of repeat, four colours, on every page</h2>
+  <div class="classes">
+    <div class="class" style="--c: var(--LINE)"><h3><span class="sw LINE"></span>LINE</h3><p>Long. Carries its own copying machine.</p></div>
+    <div class="class" style="--c: var(--SINE)"><h3><span class="sw SINE"></span>SINE</h3><p>Short. Borrows the LINE machine.</p></div>
+    <div class="class" style="--c: var(--LTR)"><h3><span class="sw LTR"></span>LTR</h3><p>Built like a retrovirus that stayed in.</p></div>
+    <div class="class" style="--c: var(--DNA)"><h3><span class="sw DNA"></span>DNA</h3><p>Cut and paste. Long still, in mouse and human.</p></div>
+  </div>
+</section>
+
+<section id="lessons">
+  <h2>Lessons</h2>
+  <p>Each lesson is one page you can play with, built around one question a newcomer actually asks.</p>
+  <div class="soon">Lesson 1 is being drawn. It will appear here.</div>
+</section>
+
+<section id="about">
+  <h2>About</h2>
+  <p>Every figure will list its sources underneath it. Every page is a single file you can save and open offline.</p>
+  <p>Found a mistake? <a href="https://github.com/sahuno/RepeatAfterMe/issues">Open an issue on GitHub</a>, and it will be fixed and credited.</p>
+</section>
+
+<footer>
+  <div>Made by Samuel Ahuno.</div>
+  <div>The four class colours follow the Okabe and Ito palette, chosen to be readable with colour-blindness.</div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+/* Repeat After Me: shared identity for every page on the site.
+   The four class colours are fixed across all lessons (Okabe-Ito, colour-blind safe). */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #15181d; --ink-2: #474e5c; --muted: #767d8b; --rule: #dce0e6;
+  --accent: #2a78d6;
+  --LINE: #E69F00; --SINE: #56B4E9; --LTR: #009E73; --DNA: #CC79A7; --notrepeat: #c9ced6;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111317; --surface: #191c21; --ink: #eef0f3; --ink-2: #b7bdc8; --muted: #878e9b; --rule: #2c3139;
+  --accent: #3987e5; --notrepeat: #3a4049; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #111317; --surface: #191c21; --ink: #eef0f3; --ink-2: #b7bdc8; --muted: #878e9b; --rule: #2c3139;
+  --accent: #3987e5; --notrepeat: #3a4049; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 max(16px, env(safe-area-inset-left, 0px)) 72px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.6rem); font-weight: 700; letter-spacing: -0.015em; }
+h2 { font-size: 1.4rem; font-weight: 700; }
+p { margin: 0; max-width: 62ch; }
+a { color: var(--accent); }
+.eyebrow { font-family: var(--display); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.15rem; color: var(--ink-2); }
+.muted { color: var(--muted); }
+.mono { font-family: var(--mono); font-size: 0.85em; }
+
+/* Site navigation, the same on every page. Links are relative because the site lives under /RepeatAfterMe/. */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.nav .brand { font-family: var(--display); font-weight: 700; text-decoration: none; color: var(--ink); display: inline-flex; align-items: center; gap: 10px; }
+.nav .brand .dots { display: inline-flex; gap: 3px; }
+.nav .brand .dots i { width: 9px; height: 9px; border-radius: 2px; display: block; }
+.nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 18px; font-family: var(--display); font-size: 0.92rem; }
+.nav ul a { color: var(--ink-2); text-decoration: none; }
+.nav ul a:hover { color: var(--ink); text-decoration: underline; }
+
+section { padding: 36px 0 8px; display: flex; flex-direction: column; gap: 16px; }
+section + section { border-top: 1px solid var(--rule); }
+footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--rule); font-size: 0.9rem; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
+
+/* Class swatches */
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 8px; }
+.LINE { background: var(--LINE); } .SINE { background: var(--SINE); } .LTR { background: var(--LTR); } .DNA { background: var(--DNA); } .notrepeat { background: var(--notrepeat); }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
