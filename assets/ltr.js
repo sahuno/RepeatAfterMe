@@ -89,7 +89,8 @@
     var names = {}; pv.rows.forEach(function (r) { names[r[2]] = 1; });
     var bodyRows = pv.rows.filter(isBody).length;
     var bodyR = pv.rows.filter(isBody), touching = bodyR.every(function (r, i) { return i === 0 || r[0] === bodyR[i - 1][1]; });
-    var t = 'In the table this one copy is <b>' + pv.rows.length + ' rows</b> with <b>' + Object.keys(names).length + ' names</b>' +
+    var t = main().examples[S.body] ? '' : '<b>No clean whole copy of ' + esc(S.body) + ' was found</b> (both ends with the same name and no other rows inside), so this figure shows the default ' + esc(DEF[S.sp].body) + ' copy instead. ';
+    t += 'In the table this one copy is <b>' + pv.rows.length + ' rows</b> with <b>' + Object.keys(names).length + ' names</b>' +
       (bodyRows > 1 ? '; the body alone is split over ' + bodyRows + ' rows' + (touching ? ' that meet exactly, so the split is in the table, not in the DNA' : '') : '') + '. ';
     var pr = sp().pair;
     var endsRows = pv.rows.filter(function (r) { return !isBody(r); });
