@@ -17,6 +17,10 @@ header.hero { padding: 48px 0 24px; display: flex; flex-direction: column; gap: 
 .strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(14px, 1fr)); gap: 4px; }
 .strip i { display: block; aspect-ratio: 1; border-radius: 3px; background: var(--notrepeat); }
 .strip i.LINE { background: var(--LINE); } .strip i.SINE { background: var(--SINE); } .strip i.LTR { background: var(--LTR); } .strip i.DNA { background: var(--DNA); }
+.lessoncard { display: flex; flex-direction: column; gap: 4px; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; color: var(--ink); text-decoration: none; }
+.lessoncard b { font-family: var(--display); font-size: 1.1rem; }
+.lessoncard span { color: var(--ink-2); }
+.lessoncard:hover { border-color: var(--ink-2); }
 .soon { background: var(--surface); border: 1px dashed var(--rule); border-radius: 6px; padding: 14px 16px; color: var(--ink-2); }
 </style>
 </head>
@@ -78,7 +82,8 @@ header.hero { padding: 48px 0 24px; display: flex; flex-direction: column; gap: 
 <section id="lessons">
   <h2>Lessons</h2>
   <p>One page per question. Each page is interactive.</p>
-  <div class="soon">Lesson 1 in progress.</div>
+  <a class="lessoncard" href="names.html"><b>Three names</b><span>Class, family, subfamily: which one to count. Mouse and human.</span></a>
+  <div class="soon">More lessons in progress.</div>
 </section>
 
 <section id="about">

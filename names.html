@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Three Names</title>
+<meta name="description" content="Every repeat in a RepeatMasker table has three names: class, family and subfamily. See them as boxes for mouse and human, and learn which one to count.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/names.css">
+<script src="data/names.js" defer></script>
+<script src="assets/names.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Naming</div>
+  <h1>Three names</h1>
+  <p class="lede">Every repeat in the genome carries three names: class, family and subfamily. You count with the smallest one.</p>
+</header>
+
+<section id="row">
+  <h2>One row of the table</h2>
+  <p>RepeatMasker is the program that finds repeats in a genome. Its table has one row per repeat fragment. This is the first transposon row on chromosome 1. Tap a name.</p>
+  <div class="rawwrap"><table class="raw" id="raw" aria-label="One row of the RepeatMasker table"></table></div>
+  <p class="muted" style="font-size:0.9rem">The table lists the smallest name first. Scroll left for the grey columns: positions and scores, not names.</p>
+</section>
+
+<section id="tree">
+  <h2>Class, family, subfamily</h2>
+  <p>Each row of boxes is one level of name. Box width is the share of the genome. Tap a box to look inside it.</p>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Species">
+      <span class="lab">Species</span>
+      <button type="button" data-sp="mouse" aria-pressed="true">Mouse</button>
+      <button type="button" data-sp="human" aria-pressed="false">Human</button>
+    </div>
+    <div class="seg" role="group" aria-label="Box width">
+      <span class="lab">Width</span>
+      <button type="button" data-size="bp" aria-pressed="true">Bases</button>
+      <button type="button" data-size="rows" aria-pressed="false">Rows</button>
+    </div>
+    <button type="button" class="reset" id="reset" title="Back to the start: mouse, bases, whole genome, nothing selected">↺ Reset view</button>
+  </div>
+  <figure class="ice" id="icicle">
+    <nav class="crumbs" id="crumbs" aria-label="Where you are in the tree"></nav>
+    <div class="icebox"><svg class="ice" role="group" aria-label="Boxes for every repeat name, four rows: genome, class, family, subfamily. Box width is the share of the genome. The panel below describes the selected box."></svg></div>
+    <noscript><p>This figure needs JavaScript.</p></noscript>
+    <p class="note" id="flagnote" aria-live="polite"></p>
+    <div class="panel" id="panel" aria-live="polite"></div>
+    <figcaption>
+      Bases: box width = bases covered. Rows: box width = rows in the table; one inserted copy can be split over several rows.
+      Mouse and human share one set of boxes, matched by identical label; a label missing from one table has no box there.
+      Coloured boxes are transposons. Striped boxes have a "?" in their class. Grey boxes are other repeats. The dashed box is DNA with no repeat row, including assembly gaps. Pale strips are many names side by side, each too thin to draw at this zoom; tap one to zoom in.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="traps">
+  <h2>Labels that mislead</h2>
+  <p>Each button jumps the figure above to the spot and explains it there.</p>
+  <div class="flags" id="flags" role="group" aria-label="Labels that mislead">
+    <button type="button" data-flag="b1" aria-pressed="false">B1 is filed under Alu</button>
+    <button type="button" data-flag="q" aria-pressed="false">Names with a "?"</button>
+    <button type="button" data-flag="iap" aria-pressed="false">One virus, two names</button>
+    <button type="button" data-flag="only" aria-pressed="false">In one species only</button>
+  </div>
+</section>
+
+<section id="count">
+  <h2>Which one to count</h2>
+  <p>Count and test subfamilies. A family is the sum of its subfamilies, and a class is the sum of its families, so every read sits in all three at once. Use family and class to group results, never as extra rows in the same sum or test.</p>
+  <p>Try it. The read numbers are made up, and the example pretends L1 is the only LINE family.</p>
+  <table class="toy" id="toy">
+    <thead><tr><th>Tick rows to add up</th><th class="r">Reads</th></tr></thead>
+    <tbody>
+      <tr><td><label><input type="checkbox" data-n="600" checked> Class LINE</label></td><td class="r">600</td></tr>
+      <tr><td class="ind1"><label><input type="checkbox" data-n="600" checked> Family L1</label></td><td class="r">600</td></tr>
+      <tr><td class="ind2"><label><input type="checkbox" data-n="300" data-sub="1" checked> Subfamily L1Md_T</label></td><td class="r">300</td></tr>
+      <tr><td class="ind2"><label><input type="checkbox" data-n="200" data-sub="1" checked> Subfamily L1Md_A</label></td><td class="r">200</td></tr>
+      <tr><td class="ind2"><label><input type="checkbox" data-n="100" data-sub="1" checked> Subfamily L1_Mus3</label></td><td class="r">100</td></tr>
+    </tbody>
+  </table>
+  <p class="toysum" id="toysum" aria-live="polite"></p>
+</section>
+
+<footer>
+  <div class="sources" id="sources"></div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>

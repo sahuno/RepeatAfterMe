@@ -1,0 +1,81 @@
+/* Repeat After Me: the "Three names" lesson. Needs site.css. */
+:root { --genome: #e4e7ec; --otherrep: #a3a9b3; --ink-on-col: #15181d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --genome: #2a2f37; --otherrep: #59606b; } }
+:root[data-theme="dark"] { --genome: #2a2f37; --otherrep: #59606b; }
+
+header.lesson { padding: 40px 0 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* One raw RepeatMasker row */
+.rawwrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; }
+table.raw { border-collapse: collapse; font-family: var(--mono); font-size: 0.8rem; white-space: nowrap; }
+table.raw th, table.raw td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--rule); }
+table.raw th { color: var(--muted); font-weight: 400; }
+table.raw td { color: var(--muted); }
+table.raw tr.lvl td { border-bottom: 0; font-family: var(--display); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+table.raw .nm { color: var(--ink); }
+table.raw button { font: 600 0.82rem var(--mono); color: var(--ink-on-col); background: var(--c, var(--genome)); border: 2px solid transparent; border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+table.raw button:hover { border-color: var(--ink); }
+table.raw button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--surface) inset; }
+
+/* Controls */
+.controls { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; }
+.seg { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.seg .lab { font-family: var(--display); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-right: 2px; }
+.lesson-btn, .seg button, .crumbs button, .flags button { font: 600 0.88rem var(--display); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 5px 13px; cursor: pointer; }
+.controls .reset { font: 600 0.88rem var(--display); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 5px 13px; cursor: pointer; }
+.controls .reset:hover, .seg button:hover, .crumbs button:hover, .flags button:hover { border-color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+button:focus-visible, [tabindex]:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.crumbs { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-family: var(--mono); font-size: 0.85rem; min-height: 32px; }
+.crumbs button { font-family: var(--mono); font-weight: 400; font-size: 0.82rem; padding: 3px 10px; }
+.crumbs .sep { color: var(--muted); }
+.crumbs .here { font-weight: 600; padding: 3px 4px; }
+
+/* The icicle */
+figure.ice { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+.icebox { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; }
+svg.ice { display: block; width: 100%; overflow: visible; }
+svg.ice text { font-family: var(--mono); font-size: 12px; pointer-events: none; }
+svg.ice text.rowlab { font-family: var(--display); font-size: 11px; font-weight: 700; letter-spacing: 0.07em; fill: var(--muted); }
+svg.ice text.rowlab.on { fill: var(--accent); }
+svg.ice [data-p] { cursor: pointer; }
+svg.ice rect.box { stroke: var(--surface); stroke-width: 1; }
+svg.ice rect.thin { stroke: none; }
+svg.ice rect.run { stroke: none; fill-opacity: 0.45; }
+svg.ice [data-run] { cursor: zoom-in; }
+svg.ice rect.nr { fill: var(--surface); stroke: var(--muted); stroke-dasharray: 3 3; }
+svg.ice rect.sel { fill: none; stroke: var(--ink); stroke-width: 2.5; pointer-events: none; }
+svg.ice g.dim { opacity: 0.28; }
+figcaption, .foot { font-size: 0.9rem; color: var(--ink-2); max-width: 75ch; }
+
+/* Detail panel */
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; font-size: 0.95rem; }
+.panel .path { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); overflow-wrap: anywhere; }
+.panel .path b { color: var(--ink); font-weight: 600; }
+table.cmp { border-collapse: collapse; font-size: 0.92rem; width: 100%; max-width: 520px; }
+table.cmp th, table.cmp td { padding: 4px 10px 4px 0; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.cmp thead th { font-family: var(--display); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+table.cmp td { font-family: var(--mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+table.cmp td.cur { font-weight: 600; }
+table.cmp td.none { font-family: var(--body); color: var(--muted); font-style: italic; }
+.note { font-size: 0.93rem; color: var(--ink-2); border-left: 3px solid var(--accent); padding-left: 10px; }
+.note:empty { display: none; }
+
+.flags { display: flex; flex-wrap: wrap; gap: 8px; }
+.flags button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+
+/* Double-counting toy */
+table.toy { border-collapse: collapse; font-size: 0.95rem; }
+table.toy td, table.toy th { padding: 5px 16px 5px 0; border-bottom: 1px solid var(--rule); text-align: left; }
+table.toy td.r, table.toy th.r { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+table.toy th { font-family: var(--display); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+table.toy .ind1 { padding-left: 18px; } table.toy .ind2 { padding-left: 36px; }
+.toysum { font-size: 1rem; }
+.toysum b { font-family: var(--mono); }
+.toysum .bad { color: #b4462b; } .toysum .ok { color: #1f7a4d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .toysum .bad { color: #e8805f; } :root:not([data-theme="light"]) .toysum .ok { color: #5fcf94; } }
+:root[data-theme="dark"] .toysum .bad { color: #e8805f; } :root[data-theme="dark"] .toysum .ok { color: #5fcf94; }
+
+.sources { font-size: 0.85rem; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+.sources .mono { overflow-wrap: anywhere; }

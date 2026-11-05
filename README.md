@@ -10,6 +10,7 @@ Live site: https://sahuno.github.io/RepeatAfterMe/
 - `assets/site.css` holds the shared look: the four class colours (LINE, SINE, LTR, DNA), fonts, light and dark mode.
 - Every link is relative, because the site is served under `/RepeatAfterMe/`.
 - Hosted by GitHub Pages from the `main` branch of this repository.
+- `data/` holds small summaries of public UCSC RepeatMasker tables; `prep/` holds the Python scripts that made them, so every number can be rebuilt. The raw tables are not stored here.
 
 To view locally:
 
