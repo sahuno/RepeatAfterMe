@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Body and Ends</title>
+<meta name="description" content="RepeatMasker files a retrovirus-like copy as a body (-int) and two ends (LTRs) with separate names. Rebuilt from the real mouse and human genomes: which ends go with which body, and how many ends have lost their body.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/names.css">
+<link rel="stylesheet" href="assets/ltr.css">
+<script src="data/names.js" defer></script>
+<script src="data/ltr.js" defer></script>
+<script src="assets/ltr.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Naming</div>
+  <h1>Body and ends</h1>
+  <p class="lede">A retrovirus-like copy is one piece of DNA, but the RepeatMasker table splits it into rows with different names: a body ending in "-int", and two ends called LTRs. Many ends have no body left.</p>
+  <div class="controls stickybar">
+    <div class="seg" role="group" aria-label="Species">
+      <span class="lab">Species</span>
+      <button type="button" data-sp="mouse" aria-pressed="true">Mouse</button>
+      <button type="button" data-sp="human" aria-pressed="false">Human</button>
+    </div>
+    <button type="button" class="reset" id="reset" title="Back to the start">↺ Reset view</button>
+  </div>
+</header>
+
+<section id="copy">
+  <h2>One copy, several rows</h2>
+  <p>A real copy from the genome, drawn to scale. LTR stands for long terminal repeat: the same sequence sits at both ends.</p>
+  <figure class="ice">
+    <div class="icebox"><svg id="copysvg" class="chart" role="img" aria-label="A real provirus drawn to scale: an LTR, the body, and a second LTR, with a solo LTR below on the same scale."></svg></div>
+    <div class="rawwrap"><table class="raw rows" id="copyrows" aria-label="The RepeatMasker rows for this copy"></table></div>
+    <p class="muted" style="font-size:0.88rem">Columns as in the UCSC table: genoName is the chromosome; genoStart and genoEnd are positions; milliDiv is how much the row differs from its reference sequence, in tenths of a percent (18 = 1.8%).</p>
+    <p class="note" id="copynote"></p>
+  </figure>
+</section>
+
+<section id="pairs">
+  <h2>Which ends go with which body</h2>
+  <p>The table never says which end belongs to which body. Their positions do: for every body, the page looked for an LTR on the same strand right next to it.</p>
+  <div class="controls">
+    <label class="seg"><span class="lab">Body</span> <select id="bodypick"></select></label>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="flanksvg" class="chart" role="img" aria-label="Bar chart: how often each LTR name sits next to the chosen body."></svg></div>
+    <p class="note" id="flanknote"></p>
+  </figure>
+</section>
+
+<section id="solo">
+  <h2>How many ends still have a body</h2>
+  <p>When the two ends of a copy recombine, the body between them is cut out and one end stays behind: a solo LTR. Recombination between two different proviruses can also leave one. The <a href="./#classes">homepage animation</a> shows it in the LTR mode.</p>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Distance rule">
+      <span class="lab">Next to means within</span>
+      <button type="button" data-d="50" aria-pressed="false">50 bp</button>
+      <button type="button" data-d="200" aria-pressed="true">200 bp</button>
+      <button type="button" data-d="1000" aria-pressed="false">1000 bp</button>
+    </div>
+  </div>
+  <p class="muted" style="font-size:0.9rem">Cases the rule gets wrong: a body broken by an insertion longer than 300 bp counts as two bodies with one end each; an LTR that later landed next to a body can be taken for its end; two proviruses in a row that share their middle LTR count as one with both ends and one with one end.</p>
+  <figure class="ice">
+    <div class="icebox"><svg id="solosvg" class="chart" role="img" aria-label="Two stacked bars for the chosen group: its LTRs split into with a body and solo, and its bodies split into both ends, one end, and alone."></svg></div>
+    <p class="note" id="solonote"></p>
+  </figure>
+  <div class="check" id="check"></div>
+</section>
+
+<section id="age">
+  <h2>Older groups have more solo LTRs</h2>
+  <p>Each dot is one group: a body name and its LTR names. Further right means older: its copies differ more from their reference sequence. Higher means a larger share of its LTRs are solo. Tap a dot to pick that group, or pick it in the Body menu above.</p>
+  <figure class="ice">
+    <div class="icebox scatterbox"><svg id="agesvg" class="chart" role="img" aria-label="Scatter plot: each group's age against its share of solo LTRs. Older groups have more solo LTRs."></svg><div class="tip" id="agetip" hidden></div></div>
+    <div class="legend" id="agelegend"></div>
+    <p class="note" id="agenote"></p>
+  </figure>
+</section>
+
+<section id="counts">
+  <h2>What this does to your counts</h2>
+  <p>Reads counted for an LTR name come from every row with that name. Pick a name to see what those rows are.</p>
+  <div class="controls">
+    <label class="seg"><span class="lab">LTR name</span> <select id="ltrpick"></select></label>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="rolesvg" class="chart" role="img" aria-label="One stacked bar: the copies of the chosen LTR name split into 5-prime end of a copy, 3-prime end of a copy, and solo."></svg></div>
+  </figure>
+  <ul class="takeaways" id="takeaways"></ul>
+</section>
+
+<footer>
+  <div class="sources" id="sources"></div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>

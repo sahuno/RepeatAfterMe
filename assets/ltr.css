@@ -1,0 +1,45 @@
+/* Repeat After Me: the "Body and ends" lesson. Needs site.css and names.css. */
+:root {
+  --f-ERVK: #009E73; --f-ERV1: #0072B2; --f-ERVL: #D55E00; --f-MaLR: #CC79A7; --f-other: #a3a9b3;
+  --part-ltr: #00785a; --part-ltr-ink: #ffffff; --part-body: #6cc5a8; --part-one: #a8dcc9; --part-none: #c9ced6;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --f-MaLR: #C06D9E; --f-other: #6b727d; --part-ltr: #2fbf94; --part-ltr-ink: #15181d; --part-body: #1f7a5e; --part-one: #2a5a4b; --part-none: #3a4049; } }
+:root[data-theme="dark"] { --f-MaLR: #C06D9E; --f-other: #6b727d; --part-ltr: #2fbf94; --part-ltr-ink: #15181d; --part-body: #1f7a5e; --part-one: #2a5a4b; --part-none: #3a4049; }
+
+.stickybar { position: sticky; top: 0; z-index: 10; background: var(--bg); padding: 8px 0; border-bottom: 1px solid var(--rule); }
+select { font: 0.9rem var(--mono); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; max-width: 100%; }
+label.seg { gap: 8px; }
+
+svg.chart { display: block; width: 100%; overflow: visible; }
+svg.chart text { font-family: var(--mono); font-size: 12px; fill: var(--ink); }
+svg.chart text.sm { font-size: 11px; fill: var(--muted); }
+svg.chart text.hd { font-family: var(--display); font-weight: 700; font-size: 12px; fill: var(--ink-2); letter-spacing: 0.04em; }
+svg.chart .axis { stroke: var(--muted); stroke-width: 1; }
+svg.chart .grid { stroke: var(--rule); stroke-width: 1; }
+svg.chart .dna { stroke: var(--ink-2); stroke-width: 1.5; }
+svg.chart .seg-gap { stroke: var(--surface); stroke-width: 2; }
+svg.chart [data-g] { cursor: pointer; }
+svg.chart circle.dot { stroke: var(--surface); stroke-width: 2; }
+svg.chart circle.dot:hover { stroke: var(--ink); }
+svg.chart circle.selring { fill: none; stroke: var(--ink); stroke-width: 2; pointer-events: none; }
+
+table.raw.rows td { color: var(--ink); }
+table.raw.rows td.m { color: var(--muted); }
+table.raw.rows .sw { margin-right: 6px; }
+
+.check { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; font-size: 0.95rem; }
+.check h3 { font-family: var(--display); font-size: 1rem; margin: 0; }
+.check table { border-collapse: collapse; font-size: 0.92rem; }
+.check th, .check td { padding: 4px 16px 4px 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+.check td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.check th { font-family: var(--display); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.88rem; color: var(--ink-2); align-items: center; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend i.sq { border-radius: 2px; }
+.scatterbox { position: relative; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 0.8rem/1.4 var(--mono); padding: 6px 9px; border-radius: 4px; max-width: 260px; z-index: 5; }
+
+ul.takeaways { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; max-width: 70ch; }
+ul.takeaways li { color: var(--ink); }
+ul.takeaways .q { color: var(--ink-2); font-style: italic; }

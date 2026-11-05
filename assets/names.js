@@ -343,7 +343,7 @@
     },
     iap: {
       go: { sp: 'mouse', zoom: 'LTR' + SEP + 'ERVK', sel: 'LTR' + SEP + 'ERVK' + SEP + 'IAPEz-int' },
-      note: function () { return '<b>IAPEz-int</b> is the inside, or body, of a mouse retrovirus called IAP ("-int" means internal). Its ends, the long terminal repeats, are filed under a different name, <b>IAPLTR1a_Mm</b>. One virus, two names, separate rows: ' + rowsOf('LTR|ERVK|IAPEz-int', 'mouse') + ' body rows and ' + rowsOf('LTR|ERVK|IAPLTR1a_Mm', 'mouse') + ' end rows in mouse.'; }
+      note: function () { return '<b>IAPEz-int</b> is the inside, or body, of a family of mouse endogenous retrovirus-like elements called IAP, for intracisternal A-particle ("-int" means internal). Its ends, the long terminal repeats, are filed under several other names, most often <b>IAPLTR1a_Mm</b> and <b>IAPLTR1_Mm</b>. One element, several names, separate rows: ' + rowsOf('LTR|ERVK|IAPEz-int', 'mouse') + ' body rows in mouse, and ' + rowsOf('LTR|ERVK|IAPLTR1a_Mm', 'mouse') + ' and ' + rowsOf('LTR|ERVK|IAPLTR1_Mm', 'mouse') + ' rows for those two end names. <a href="ltr.html">Body and ends</a> shows which ends sit next to which body.'; }
     },
     only: {
       go: { sp: 'mouse', zoom: 'SINE', sel: 'SINE' + SEP + 'B2' },
