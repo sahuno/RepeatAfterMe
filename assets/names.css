@@ -47,6 +47,11 @@ svg.ice [data-run] { cursor: zoom-in; }
 svg.ice rect.nr { fill: var(--surface); stroke: var(--muted); stroke-dasharray: 3 3; }
 svg.ice rect.sel { fill: none; stroke: var(--ink); stroke-width: 2.5; pointer-events: none; }
 svg.ice g.dim { opacity: 0.28; }
+svg.ice [data-chr] { cursor: pointer; }
+svg.ice g.off { opacity: 0.4; }
+svg.ice g.dim g.off { opacity: 1; } /* the row is already dimmed; do not multiply the two */
+svg.ice polygon.funnel { fill: var(--genome-2); opacity: 0.55; pointer-events: none; }
+.controls select { font: 0.9rem var(--mono); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; max-width: 100%; }
 figcaption, .foot { font-size: 0.9rem; color: var(--ink-2); max-width: 75ch; }
 
 /* Detail panel */

@@ -9,9 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="assets/site.css?v=4dad709a">
-<link rel="stylesheet" href="assets/names.css?v=5e90dbc8">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
 <script src="data/names.js?v=2d271042" defer></script>
-<script src="assets/names.js?v=b2774a1f" defer></script>
+<script src="assets/names.js?v=2205cb45" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -42,7 +42,7 @@
 
 <section id="tree">
   <h2>Class, family, subfamily</h2>
-  <p>Each row of boxes is one level of name. Box width is the share of the genome. Tap a box to look inside it.</p>
+  <p>Each row of boxes is one level of name. Box width is the share of the genome. Tap a box to look inside it. Tap a chromosome in the top row, or pick one from the Chromosome menu, to see the repeats on that chromosome alone.</p>
   <div class="controls">
     <div class="seg" role="group" aria-label="Species">
       <span class="lab">Species</span>
@@ -54,6 +54,7 @@
       <button type="button" data-size="bp" aria-pressed="true">Bases</button>
       <button type="button" data-size="rows" aria-pressed="false">Rows</button>
     </div>
+    <label class="seg"><span class="lab">Chromosome</span> <select id="chrpick"><option value="">Whole genome</option></select></label>
     <button type="button" class="reset" id="reset" title="Back to the start: mouse, bases, whole genome, nothing selected">↺ Reset view</button>
   </div>
   <figure class="ice" id="icicle">
@@ -63,7 +64,7 @@
     <p class="note" id="flagnote" aria-live="polite"></p>
     <div class="panel" id="panel" aria-live="polite"></div>
     <figcaption>
-      In the whole-genome view the top row is cut into chromosomes by length; the boxes below are shares of the genome, not positions on those chromosomes.
+      With Bases width and the whole tree in view, the top row is the genome cut into chromosomes by length. Pick a chromosome and the rows below show only that chromosome: box width becomes the share of that chromosome, and the panel compares it with the whole genome. Boxes are shares, never positions along a chromosome.
       Bases: box width = bases covered. Rows: box width = rows in the table; one inserted copy can be split over several rows.
       Mouse and human share one set of boxes, matched by identical label; a label missing from one table has no box there.
       Coloured boxes are transposons. Striped boxes have a "?" in their class. Grey boxes are other repeats. The dashed box is DNA with no repeat row, including assembly gaps. Pale strips are many names side by side, each too thin to draw at this zoom; tap one to zoom in.

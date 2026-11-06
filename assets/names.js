@@ -2,9 +2,10 @@
    A zoomable icicle (a tree drawn as rows of boxes) of RepeatMasker names for mouse and human,
    one raw table row whose name columns light up their level, four "labels that mislead" jumps,
    and a small double-counting toy. Vanilla JS, no dependencies. Data: window.NAMES_DATA from data/names.js.
-   Test hooks (render instantly): ?sp=mouse|human&size=bp|rows&zoom=LINE|L1&sel=LINE|L1|L1Md_T&level=1..3&flag=b1|q|iap|only
+   Test hooks (render instantly): ?sp=mouse|human&size=bp|rows&zoom=LINE|L1&sel=LINE|L1|L1Md_T&level=1..3&flag=b1|q|iap|only&chr=chr3
+   Per-chromosome numbers: window.CHROM_DATA from data/chrom_<species>.js, loaded the first time a chromosome is picked.
    Paths join class, family and subfamily with "|" because some names contain "/".
-   window.Names exposes go(patch), flag(id), state(), setInstant(bool), drawn(). */
+   window.Names exposes go(patch), flag(id), state(), setInstant(bool), drawn(), ready(). */
 (function () {
   'use strict';
   var D = window.NAMES_DATA;
@@ -52,13 +53,59 @@
   root.kids.push(noRep);
   var ALL = Object.keys(byPath).map(function (k) { return byPath[k]; });
 
+  // ---------- chromosomes ----------
+  // One script per species holds [bases, rows] per name per chromosome. Family and class
+  // values are sums of their subfamilies, as in the genome-wide tree. Stored on node.cv["species|chr"].
+  var CHFILE = { mouse: 'data/chrom_mouse.js?v=7e215ef6', human: 'data/chrom_human.js?v=c45e76e6' };
+  var chLoaded = {}, chLoading = {}, pendingChr = '';
+  function chromLen(sp, chr) { var c = D.species[sp].chroms.filter(function (x) { return x[0] === chr; })[0]; return c ? c[1] : 0; }
+  function chromSpan(sp, chr) {
+    var g = D.species[sp].genome, x = 0, out = null;
+    D.species[sp].chroms.forEach(function (c) { if (c[0] === chr) out = [x / g, (x + c[1]) / g]; x += c[1]; });
+    return out;
+  }
+  function attach(sp) {
+    var d = window.CHROM_DATA && window.CHROM_DATA[sp];
+    if (!d) return false;
+    var nodes = d.paths.map(function (p) { return byPath[p] || null; });
+    Object.keys(d.chr).forEach(function (chr) {
+      var a = d.chr[chr], key = sp + SEP + chr, bp = 0, rows = 0, len = chromLen(sp, chr);
+      nodes.forEach(function (n, i) {
+        var b = a[2 * i], r = a[2 * i + 1];
+        if (!n || !(b || r)) return;
+        bp += b; rows += r;
+        for (var x = n; x && x !== root; x = x.parent) {
+          var cv = x.cv || (x.cv = {}), v = cv[key] || (cv[key] = [0, 0]);
+          v[0] += b; v[1] += r;
+        }
+      });
+      (root.cv || (root.cv = {}))[key] = [len, rows];
+      (noRep.cv || (noRep.cv = {}))[key] = [Math.max(0, len - bp), 0];
+    });
+    chLoaded[sp] = true;
+    return true;
+  }
+  function ensure(sp, done) {
+    if (chLoaded[sp] || attach(sp)) return done(true);
+    if (chLoading[sp]) { chLoading[sp].push(done); return; }
+    chLoading[sp] = [done];
+    var el = document.createElement('script');
+    el.src = CHFILE[sp];
+    function finish(ok) { var w = chLoading[sp]; chLoading[sp] = null; w.forEach(function (f) { f(ok); }); }
+    el.onload = function () { finish(attach(sp)); };
+    el.onerror = function () { finish(false); };
+    document.head.appendChild(el);
+  }
+
   // ---------- state ----------
   var q = new URLSearchParams(location.search);
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var instant = true; // first render is always instant
-  var S = { sp: 'mouse', size: 'bp', zoom: '', sel: '', level: 0, flag: '' };
+  var S = { sp: 'mouse', size: 'bp', zoom: '', sel: '', level: 0, flag: '', chr: '' };
 
-  function val(n, sp, size) { var v = n.v[sp]; if (!v) return 0; return size === 'rows' ? v[1] : v[0]; }
+  // chr: '' = whole genome; left out = the chromosome picked now (S.chr)
+  function vec(n, sp, chr) { if (chr === undefined) chr = S.chr; return (chr ? n.cv && n.cv[sp + SEP + chr] : n.v[sp]) || null; }
+  function val(n, sp, size, chr) { var v = vec(n, sp, chr); if (!v) return 0; return size === 'rows' ? v[1] : v[0]; }
   function nodeOf(p) { return byPath[p] || null; }
   function isAnc(a, b) { for (var x = b; x; x = x.parent) if (x === a) return true; return false; } // a is b or above b
 
@@ -78,9 +125,9 @@
   var drawnCount = 0;
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-  function pct(bp, sp) { var p = bp / D.species[sp].genome * 100; return p >= 0.995 ? p.toFixed(1) + '%' : p >= 0.01 ? p.toFixed(2) + '%' : p > 0 ? '<0.01%' : '0%'; }
+  function pct(bp, sp, chr) { var p = bp / (chr ? chromLen(sp, chr) : D.species[sp].genome) * 100; return p >= 0.995 ? p.toFixed(1) + '%' : p >= 0.01 ? p.toFixed(2) + '%' : p > 0 ? '<0.01%' : '0%'; }
   function big(n) { return n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M' : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e4 ? 0 : 1) + 'k' : String(n); }
-  function metric(n) { var v = n.v[S.sp] || [0, 0]; return S.size === 'rows' ? big(v[1]) + ' rows' : pct(v[0], S.sp); }
+  function metric(n) { var v = vec(n, S.sp) || [0, 0]; return S.size === 'rows' ? big(v[1]) + ' rows' : pct(v[0], S.sp, S.chr); }
   function fill(n) {
     if (n.depth === 0) return 'var(--genome)';
     if (n.synthetic) return null;
@@ -100,9 +147,15 @@
       out.push('<pattern id="hatch-' + k + '" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="var(--surface)"/><rect width="3.5" height="7" fill="' + COL[k] + '"/></pattern>');
     });
     out.push('</defs>');
+    // A picked chromosome: a pale wedge from its slice of the genome row to the full width of the rows below.
+    var span = S.chr && S.size === 'bp' && !S.zoom ? chromSpan(S.sp, S.chr) : null;
+    if (span) {
+      var yb = rowTop[0] + ROWH[0], yt = rowTop[1];
+      out.push('<polygon class="funnel" points="' + (span[0] * W).toFixed(1) + ',' + yb + ' ' + (span[1] * W).toFixed(1) + ',' + yb + ' ' + W + ',' + yt + ' 0,' + yt + '"/>');
+    }
     for (var d = 0; d < 4; d++) {
       var on = S.level === d && d > 0;
-      out.push('<text class="rowlab' + (on ? ' on' : '') + '" x="0" y="' + (rowTop[d] - 7) + '">' + LEVEL[d].toUpperCase() + (d ? ' · ' + COLNAME[d] : '') + (on ? '  ◀ the name you tapped' : '') + '</text>');
+      out.push('<text class="rowlab' + (on ? ' on' : '') + '" x="0" y="' + (rowTop[d] - 7) + '">' + LEVEL[d].toUpperCase() + (d ? ' · ' + COLNAME[d] : S.chr ? ' · rows below: ' + S.chr + ' only' : '') + (on ? '  ◀ the name you tapped' : '') + '</text>');
     }
     var selBox = null;
     drawnCount = 0;
@@ -116,7 +169,7 @@
       var dim = S.level > 0 && n.depth !== S.level;
       var f = fill(n);
       var cls = n.synthetic ? 'nr' : (w >= 3 ? 'box' : 'box thin');
-      var name = n.depth === 0 ? SPNAME[S.sp] + ' genome' : label(n);
+      var name = n.depth === 0 ? SPNAME[S.sp] + (S.chr ? ' ' + S.chr : ' genome') : label(n);
       var tip = (n.depth ? LEVEL[n.depth] + ' ' : '') + name + ' · ' + metric(n);
       var txt = '';
       var lab = fit(name, w), sub = fit(metric(n), w);
@@ -139,17 +192,19 @@
     // Whole-genome view, width by bases: cut the genome row into chromosomes by length.
     // The rows below are shares of the genome, not positions on these chromosomes.
     function drawChroms() {
-      var ch = D.species[S.sp].chroms, g = D.species[S.sp].genome, x = 0, y = rowTop[0], h = ROWH[0], parts = [];
+      var ch = D.species[S.sp].chroms, g = D.species[S.sp].genome, x = 0, y = rowTop[0], h = ROWH[0], parts = [], picked = null;
       drawnCount++;
       ch.forEach(function (c, i) {
-        var w = W * c[1] / g, nm = c[0].replace(/^chr/, '');
-        var tip = c[0] + ' · ' + (c[1] / 1e6).toFixed(1) + ' Mb · ' + pct(c[1], S.sp) + ' of the ' + S.sp + ' genome';
-        parts.push('<g><title>' + esc(tip) + '</title><rect class="' + (w >= 3 ? 'box' : 'box thin') + '" x="' + x.toFixed(2) + '" y="' + y + '" width="' + w.toFixed(2) + '" height="' + h + '" fill="var(' + (i % 2 ? '--genome-2' : '--genome') + ')"/>' +
-          (w >= nm.length * CH + 6 ? '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (y + 19) + '" text-anchor="middle" fill="var(--ink)">' + esc(nm) + '</text>' : '') + '</g>');
+        var w = W * c[1] / g, nm = c[0].replace(/^chr/, ''), on = c[0] === S.chr;
+        var tip = c[0] + ' · ' + (c[1] / 1e6).toFixed(1) + ' Mb · ' + pct(c[1], S.sp) + ' of the ' + S.sp + ' genome · ' + (on ? 'tap again for the whole genome' : 'tap to see this chromosome alone');
+        parts.push('<g data-chr="' + esc(c[0]) + '"' + (S.chr && !on ? ' class="off"' : '') + '><title>' + esc(tip) + '</title><rect class="' + (w >= 3 ? 'box' : 'box thin') + '" x="' + x.toFixed(2) + '" y="' + y + '" width="' + w.toFixed(2) + '" height="' + h + '" fill="var(' + (i % 2 ? '--genome-2' : '--genome') + ')"/>' +
+          (w >= nm.length * CH + 6 ? '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (y + 19) + '" text-anchor="middle" fill="var(--ink)"' + (on ? ' font-weight="600"' : '') + '>' + esc(nm) + '</text>' : '') + '</g>');
+        if (on) picked = [x, w];
         x += w;
       });
       var dim = S.level > 0;
-      out.push('<g data-p=""' + (dim ? ' class="dim"' : '') + ' tabindex="0" role="button" aria-label="' + esc(SPNAME[S.sp] + ' genome, cut into ' + ch.length + ' chromosomes by length') + '">' + parts.join('') + '</g>');
+      out.push('<g data-p=""' + (dim ? ' class="dim"' : '') + ' role="group" aria-label="' + esc(SPNAME[S.sp] + ' genome, cut into ' + ch.length + ' chromosomes by length. Pick one with the Chromosome menu.') + '">' + parts.join('') + '</g>');
+      if (picked) { var pw = Math.max(3, picked[1]); out.push('<rect class="sel" x="' + (picked[0] + picked[1] / 2 - pw / 2 + 1.25).toFixed(2) + '" y="' + (y + 1.25) + '" width="' + (pw - 2.5).toFixed(2) + '" height="' + (h - 2.5) + '"/>'); }
     }
     function drawRun(r) {
       var x0 = Math.max(0, r.a), x1 = Math.min(W, r.b), w = x1 - x0;
@@ -208,11 +263,25 @@
   // ---------- state changes ----------
   function go(p) {
     p = p || {};
-    ['sp', 'size', 'zoom', 'sel', 'level', 'flag'].forEach(function (k) { if (k in p) S[k] = p[k]; });
+    ['sp', 'size', 'zoom', 'sel', 'level', 'flag', 'chr'].forEach(function (k) { if (k in p) S[k] = p[k]; });
     if (!('level' in p)) S.level = 0;
     if (!('flag' in p)) S.flag = '';
     if (S.sp !== 'human') S.sp = 'mouse';
     if (S.size !== 'rows') S.size = 'bp';
+    if ('chr' in p) pendingChr = '';
+    if (S.chr && !chromLen(S.sp, S.chr)) S.chr = ''; // e.g. human chr21 has no mouse counterpart
+    if (S.chr && !chLoaded[S.sp]) {
+      // Draw the whole genome now; switch to the chromosome when its numbers arrive.
+      var want = S.chr, wsp = S.sp, keep = { level: S.level, flag: S.flag, chr: want }, was = instant;
+      S.chr = ''; pendingChr = want;
+      ensure(wsp, function (ok) {
+        if (pendingChr !== want || S.sp !== wsp) return;
+        pendingChr = '';
+        if (!ok) { renderControls(); noteEl.textContent = 'Could not load the chromosome numbers. Check the connection and pick the chromosome again.'; return; }
+        instant = was; go(keep); instant = false;
+        ensure(wsp === 'mouse' ? 'human' : 'mouse', function () {}); // fetch the other species too, for a quick species switch
+      });
+    }
     var z = nodeOf(S.zoom) || root;
     while (z !== root && (z.synthetic || z.depth > 2 || val(z, S.sp, S.size) <= 0)) z = z.parent;
     S.zoom = z.path;
@@ -227,6 +296,7 @@
       if (S.zoom) u.set('zoom', S.zoom);
       if (S.sel) u.set('sel', S.sel);
       if (S.flag) u.set('flag', S.flag);
+      if (pendingChr || S.chr) u.set('chr', pendingChr || S.chr);
       var s = u.toString();
       history.replaceState(null, '', location.pathname + (s ? '?' + s : '') + location.hash);
     } catch (e) { /* file:// or sandboxed: the address bar just does not update */ }
@@ -242,6 +312,8 @@
     return go({ zoom: n.parent.path, sel: n.path });
   }
   svg.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-chr]');
+    if (c) { var ch = c.getAttribute('data-chr'); instant = false; go({ chr: ch === S.chr ? '' : ch }); return; }
     var r = e.target.closest('[data-run]');
     if (r) { var pn = nodeOf(r.getAttribute('data-run')); if (pn) { instant = false; go({ zoom: pn.path, sel: pn.path }); } return; }
     var g = e.target.closest('[data-p]'); if (g) clickNode(nodeOf(g.getAttribute('data-p')));
@@ -261,7 +333,9 @@
   Array.prototype.forEach.call(document.querySelectorAll('[data-size]'), function (b) {
     b.addEventListener('click', function () { instant = false; go({ size: b.getAttribute('data-size'), level: S.level, flag: S.flag }); });
   });
-  var START = { sp: 'mouse', size: 'bp', zoom: '', sel: '', level: 0, flag: '' };
+  var chrSel = document.getElementById('chrpick'), chrOptsFor = '';
+  if (chrSel) chrSel.addEventListener('change', function () { instant = false; go({ chr: chrSel.value, level: S.level }); });
+  var START = { sp: 'mouse', size: 'bp', zoom: '', sel: '', level: 0, flag: '', chr: '' };
   function reset() { instant = false; go(START); }
   document.getElementById('reset').addEventListener('click', reset);
   crumbsEl.addEventListener('click', function (e) { var b = e.target.closest('[data-go]'); if (b) { instant = false; go({ zoom: b.getAttribute('data-go'), sel: b.getAttribute('data-go') }); } });
@@ -269,54 +343,80 @@
   function renderControls() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-sp]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-sp') === S.sp)); });
     Array.prototype.forEach.call(document.querySelectorAll('[data-size]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-size') === S.size)); });
+    if (chrSel) {
+      if (chrOptsFor !== S.sp) {
+        chrSel.innerHTML = '<option value="">Whole genome</option>' + D.species[S.sp].chroms.map(function (c) { return '<option value="' + esc(c[0]) + '">' + esc(c[0]) + '</option>'; }).join('');
+        chrOptsFor = S.sp;
+      }
+      chrSel.value = pendingChr || S.chr;
+    }
   }
   function renderCrumbs() {
     var z = nodeOf(S.zoom) || root, chain = [];
     for (var x = z; x; x = x.parent) chain.unshift(x);
     crumbsEl.innerHTML = chain.map(function (n, i) {
-      var name = n.depth === 0 ? 'Whole genome' : n.n;
+      var name = n.depth === 0 ? (S.chr || 'Whole genome') : n.n;
       if (i === chain.length - 1) return '<span class="here">' + esc(name) + '</span>';
       return '<button type="button" data-go="' + esc(n.path) + '">' + esc(name) + '</button><span class="sep" aria-hidden="true">›</span>';
     }).join('') + (z !== root ? ' <button type="button" data-go="' + esc(z.parent.path) + '" aria-label="Zoom out one level">Zoom out</button>' : '');
   }
 
-  function countSubs(n, sp, teOnly) {
-    if (n.depth === 3) return n.fold ? n.fold[sp] || 0 : (val(n, sp, 'rows') > 0 ? 1 : 0);
-    var c = 0; n.kids.forEach(function (k) { if (!k.synthetic && (!teOnly || k.te)) c += countSubs(k, sp, teOnly); }); return c;
+  function countSubs(n, sp, teOnly, chr) {
+    if (n.depth === 3) {
+      if (!n.fold) return val(n, sp, 'rows', chr) > 0 ? 1 : 0;
+      return chr ? window.CHROM_DATA[sp].motifs[chr] || 0 : n.fold[sp] || 0;
+    }
+    var c = 0; n.kids.forEach(function (k) { if (!k.synthetic && (!teOnly || k.te)) c += countSubs(k, sp, teOnly, chr); }); return c;
   }
   function renderPanel() {
     var n = (S.sel && nodeOf(S.sel)) || (S.zoom && nodeOf(S.zoom)) || root;
-    var parts = [];
-    if (n.depth === 0) {
+    var parts = [], C = S.chr;
+    // Columns: mouse and human for the whole genome; with a chromosome picked, that chromosome and its own genome.
+    // (Mouse chr3 and human chr3 are not counterparts, so they are never set side by side.)
+    var cols = C ? [{ sp: S.sp, chr: C, head: SPNAME[S.sp] + ' ' + C, cur: true }, { sp: S.sp, chr: '', head: SPNAME[S.sp] + ' genome' }]
+                 : [{ sp: 'mouse', chr: '', head: 'Mouse', cur: S.sp === 'mouse' }, { sp: 'human', chr: '', head: 'Human', cur: S.sp === 'human' }];
+    if (n.depth === 0 && C) {
+      var len = chromLen(S.sp, C);
+      parts.push('<div class="path"><b>' + esc(C) + '</b> (' + (len / 1e6).toFixed(1) + ' Mb, ' + pct(len, S.sp) + ' of the ' + S.sp + ' genome; gaps included)</div>');
+    } else if (n.depth === 0) {
       var chs = D.species[S.sp].chroms.map(function (c) { return c[0].replace(/^chr/, ''); }), nums = chs.filter(function (c) { return /^\d+$/.test(c); });
       parts.push('<div class="path"><b>Whole genome</b> (' + SPNAME[S.sp].toLowerCase() + ' chromosomes ' + nums[0] + '–' + nums[nums.length - 1] + ', ' + chs.filter(function (c) { return !/^\d+$/.test(c); }).join(', ') + '; gaps included)</div>');
     }
     else if (n.synthetic) parts.push('<div class="path"><b>No repeat</b></div>');
     else {
       var chain = []; for (var x = n; x && x.depth > 0; x = x.parent) chain.unshift(LEVEL[x.depth] + ' <b>' + esc(x.n) + '</b>');
-      parts.push('<div class="path">' + chain.join(' › ') + '</div>');
+      parts.push('<div class="path">' + chain.join(' › ') + (C ? ' · on ' + esc(C) : '') + '</div>');
     }
     if (n.synthetic) {
-      parts.push('<p>Bases with no RepeatMasker row: ' + pct(n.v.mouse[0], 'mouse') + ' of the mouse genome, ' + pct(n.v.human[0], 'human') + ' of the human genome. This includes gaps in the assembly.</p>');
+      parts.push(C
+        ? '<p>Bases with no RepeatMasker row: ' + pct(val(n, S.sp, 'bp', C), S.sp, C) + ' of ' + esc(C) + ', ' + pct(val(n, S.sp, 'bp', ''), S.sp) + ' of the whole ' + S.sp + ' genome. This includes gaps in the assembly.</p>'
+        : '<p>Bases with no RepeatMasker row: ' + pct(n.v.mouse[0], 'mouse') + ' of the mouse genome, ' + pct(n.v.human[0], 'human') + ' of the human genome. This includes gaps in the assembly.</p>');
       panel.innerHTML = parts.join(''); return;
     }
     var rows = [
-      ['Share of genome', function (sp) { return pct(val(n, sp, 'bp'), sp); }],
-      ['Bases covered', function (sp) { return (val(n, sp, 'bp') / 1e6).toFixed(val(n, sp, 'bp') < 1e6 ? 2 : 1) + ' Mb'; }],
-      ['Rows in the table', function (sp) { return val(n, sp, 'rows').toLocaleString('en-US'); }]
+      n.depth === 0
+        ? ['Share in a repeat row', function (c) { var all = val(n, c.sp, 'bp', c.chr); return pct(all - val(noRep, c.sp, 'bp', c.chr), c.sp, c.chr); }]
+        : [C ? 'Share of the DNA' : 'Share of genome', function (c) { return pct(val(n, c.sp, 'bp', c.chr), c.sp, c.chr); }],
+      ['Bases covered', function (c) { var b = val(n, c.sp, 'bp', c.chr); return (b / 1e6).toFixed(b < 1e6 ? 2 : 1) + ' Mb'; }],
+      ['Rows in the table', function (c) { return val(n, c.sp, 'rows', c.chr).toLocaleString('en-US'); }]
     ];
-    if (n.depth < 3 || n.fold) rows.push([n.fold ? 'Motif names' : n.depth === 0 ? 'Transposon subfamilies' : 'Subfamilies', function (sp) { return countSubs(n, sp, n.depth === 0).toLocaleString('en-US'); }]);
-    var html = '<table class="cmp"><thead><tr><th></th><th>Mouse</th><th>Human</th></tr></thead><tbody>';
+    if (n.depth < 3 || n.fold) rows.push([n.fold ? 'Motif names' : n.depth === 0 ? 'Transposon subfamilies' : 'Subfamilies', function (c) { return countSubs(n, c.sp, n.depth === 0, c.chr).toLocaleString('en-US'); }]);
+    var html = '<table class="cmp"><thead><tr><th></th>' + cols.map(function (c) { return '<th>' + esc(c.head) + '</th>'; }).join('') + '</tr></thead><tbody>';
     rows.forEach(function (r) {
       html += '<tr><th scope="row">' + r[0] + '</th>';
-      ['mouse', 'human'].forEach(function (sp) {
-        var has = n.depth === 0 || val(n, sp, 'rows') > 0;
-        html += has ? '<td' + (sp === S.sp ? ' class="cur"' : '') + '>' + r[1](sp) + '</td>' : '<td class="none">No such label</td>';
+      cols.forEach(function (c) {
+        var has = n.depth === 0 || val(n, c.sp, 'rows', c.chr) > 0;
+        html += has ? '<td' + (c.cur ? ' class="cur"' : '') + '>' + r[1](c) + '</td>' : '<td class="none">' + (c.chr ? 'None on ' + esc(c.chr) : 'No such label') + '</td>';
       });
       html += '</tr>';
     });
+    if (C && n.depth > 0) {
+      var a = val(n, S.sp, 'bp', C) / chromLen(S.sp, C), g = val(n, S.sp, 'bp', '') / D.species[S.sp].genome;
+      if (a > 0 && g > 0) html += '<tr><th scope="row">' + esc(C) + ' share ÷ genome share</th><td class="cur">' + (a / g).toFixed(2) + '×</td><td></td></tr>';
+    }
     parts.push(html + '</tbody></table>');
     if (n.fold) parts.push('<p class="muted">Short repeated letters such as (CA)n. Each motif is its own name in the table; they are folded into one box here.</p>');
+    if (C && /^chr\d+$/.test(C)) parts.push('<p class="muted">Chromosome numbers are not matched between species: the genes on ' + S.sp + ' ' + esc(C) + ' are spread over several ' + (S.sp === 'mouse' ? 'human' : 'mouse') + ' chromosomes.</p>');
     panel.innerHTML = parts.join('');
   }
 
@@ -348,9 +448,9 @@
   });
 
   // ---------- labels that mislead ----------
-  function share(path, sp) { var n = nodeOf(path); return n ? pct(val(n, sp, 'bp'), sp) : '0%'; }
-  function rowsOf(path, sp) { var n = nodeOf(path); return n ? val(n, sp, 'rows').toLocaleString('en-US') : '0'; }
-  function qClasses(sp) { return root.kids.filter(function (c) { return /\?$/.test(c.n) && val(c, sp, 'rows') > 0; }).map(function (c) { return c.n; }); }
+  function share(path, sp) { var n = nodeOf(path); return n ? pct(val(n, sp, 'bp', ''), sp) : '0%'; }
+  function rowsOf(path, sp) { var n = nodeOf(path); return n ? val(n, sp, 'rows', '').toLocaleString('en-US') : '0'; }
+  function qClasses(sp) { return root.kids.filter(function (c) { return /\?$/.test(c.n) && val(c, sp, 'rows', '') > 0; }).map(function (c) { return c.n; }); }
   var FLAGS = {
     b1: {
       go: { sp: 'mouse', zoom: 'SINE' + SEP + 'Alu', sel: 'SINE' + SEP + 'Alu' },
@@ -372,7 +472,7 @@
   function flag(id, opts) {
     var f = FLAGS[id]; if (!f) return;
     instant = !!(opts && opts.instant);
-    var p = {}; Object.keys(f.go).forEach(function (k) { p[k] = f.go[k]; }); p.flag = id;
+    var p = {}; Object.keys(f.go).forEach(function (k) { p[k] = f.go[k]; }); p.flag = id; p.chr = ''; // the notes quote whole-genome numbers
     go(p);
   }
   function renderFlags() {
@@ -393,7 +493,7 @@
       s.push('<div>' + SPNAME[sp] + ' (' + m.assembly + '): UCSC RepeatMasker table <a class="mono" href="' + esc(m.url) + '">' + esc(m.url.replace('https://', '')) + '</a>, file dated ' + m.fileDate + ', downloaded ' + D.downloaded + ', md5 <span class="mono">' + m.md5 + '</span>. Primary chromosomes only (' + m.rowsDropped.toLocaleString('en-US') + ' rows on patches, alternate and unplaced sequences left out).</div>');
     });
     s.push('<div>IAP names: Dfam records <a href="https://dfam.org/family/DF000004146/summary">DF000004146</a> (IAPEz-int, Repbase name IAPLTR1a_I_MM) and <a href="https://dfam.org/family/DF000001785/summary">DF000001785</a> (IAPLTR1a_Mm). B1 and Alu from 7SL RNA: <a href="https://doi.org/10.1016/j.tig.2007.02.002">Kriegs et al. 2007</a>.</div>');
-    s.push('<div>Scripts that made the numbers: <a href="prep/rmsk_summary.py">rmsk_summary.py</a>, <a href="prep/link_families.py">link_families.py</a>, <a href="prep/build_names_json.py">build_names_json.py</a>.</div>');
+    s.push('<div>Scripts that made the numbers: <a href="prep/rmsk_summary.py">rmsk_summary.py</a>, <a href="prep/rmsk_by_chrom.py">rmsk_by_chrom.py</a>, <a href="prep/link_families.py">link_families.py</a>, <a href="prep/build_names_json.py">build_names_json.py</a>.</div>');
     document.getElementById('sources').innerHTML = s.join('');
   })();
 
@@ -419,7 +519,7 @@
   })();
 
   // ---------- start ----------
-  var start = { sp: q.get('sp') || 'mouse', size: q.get('size') || 'bp', zoom: q.get('zoom') || '', sel: q.get('sel') || '', level: Number(q.get('level')) || 0 };
+  var start = { sp: q.get('sp') || 'mouse', size: q.get('size') || 'bp', zoom: q.get('zoom') || '', sel: q.get('sel') || '', level: Number(q.get('level')) || 0, chr: q.get('chr') || '' };
   if (q.get('flag') && FLAGS[q.get('flag')]) flag(q.get('flag'), { instant: true });
   else go(start);
   instant = false;
@@ -430,6 +530,7 @@
     go: function (p) { go(p); }, flag: flag, reset: reset,
     state: function () { return JSON.parse(JSON.stringify(S)); },
     setInstant: function (b) { instant = !!b; },
-    drawn: function () { return drawnCount; }
+    drawn: function () { return drawnCount; },
+    ready: function () { return !pendingChr; }
   };
 })();
