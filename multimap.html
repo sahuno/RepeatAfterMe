@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One Read, Many Places</title>
+<meta name="description" content="Why an aligner throws away reads from the youngest repeats: young copies are nearly identical, so a short read fits many places. A model and real numbers for mouse and human.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=4dad709a">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<script src="data/multimap.js?v=ebe6c884" defer></script>
+<script src="assets/multimap.js?v=1e89b780" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Counting</div>
+  <h1>One read, many places</h1>
+  <p class="lede">Young copies of a repeat are nearly identical. A short read from one copy fits the others just as well, so the aligner cannot tell where it came from, and may throw it away.</p>
+</header>
+
+<section id="model">
+  <h2>One read, many copies</h2>
+  <p>Made-up copies of one repeat; the first 24 are drawn. Each tick is a letter where a copy differs from the original sequence. The blue band is one read taken from copy 1. Copies that match the read letter for letter light up: those are the places the read fits.</p>
+  <div class="mm-controls">
+    <label class="mm-range"><span class="lab">Read length</span><input type="range" id="len" min="36" max="150" step="1" value="100"><output id="lenout">100 bases</output></label>
+    <label class="mm-range"><span class="lab">Copy age</span><input type="range" id="div" min="0" max="15" step="0.1" value="1.4"><output id="divout">1.4% different</output></label>
+    <label class="mm-range"><span class="lab">Read position</span><input type="range" id="pos" min="0" max="900" step="1" value="260"><output id="posout">base 260</output></label>
+  </div>
+  <div class="seg presets" role="group" aria-label="Copies in the genome">
+    <span class="lab">Copies in the genome</span>
+    <button type="button" data-n="24">24</button>
+    <button type="button" data-n="200">200</button>
+    <button type="button" data-n="2000">2,000</button>
+  </div>
+  <div class="seg presets" role="group" aria-label="Copy age examples">
+    <span class="lab">Try</span>
+    <button type="button" data-div="0">Brand-new copies, 0%</button>
+    <button type="button" data-div="1.4">Like L1Md_A, 1.4%</button>
+    <button type="button" data-div="9.8">Like L1_Mus3, 9.8%</button>
+    <button type="button" id="shuffle">New random changes</button>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="copies" class="ice" role="img" aria-label="Twenty-four copies of one repeat drawn as rows. A band marks where the read sits; copies that match the read exactly are coloured."></svg></div>
+    <div class="verdict" id="verdict" aria-live="polite"></div>
+    <div class="sweep" id="sweep"></div>
+    <figcaption>Made-up sequences, not real copies. Each copy gets its own random changes at the rate set by Copy age, which is how RepeatMasker measures age: percent of letters different from the subfamily's original sequence. Real young subfamilies have hundreds to thousands of copies, so even a read that fits one copy in a hundred can fit dozens of places. The model is also kind to the aligner: here every change is new, but real copies were made from other copies and share many changes, so real reads fit more places than this. The real numbers are below.</figcaption>
+  </figure>
+</section>
+
+<section id="rules">
+  <h2>What STAR does with each read</h2>
+  <p>STAR is the aligner most RNA-seq pipelines use. With its default settings it sorts every read by how many places it fits equally well.</p>
+  <table class="cmp rulestable">
+    <thead><tr><th>Places the read fits</th><th>What STAR writes</th><th>MAPQ</th><th>Kept by a unique-only count?</th></tr></thead>
+    <tbody>
+      <tr data-k="1"><td>1</td><td>One alignment</td><td>255</td><td>Yes</td></tr>
+      <tr data-k="2"><td>2</td><td>Both alignments, one marked primary</td><td>3</td><td>No</td></tr>
+      <tr data-k="3"><td>3–4</td><td>All alignments, one marked primary</td><td>1</td><td>No</td></tr>
+      <tr data-k="5"><td>5–10</td><td>All alignments, one marked primary</td><td>0</td><td>No</td></tr>
+      <tr data-k="11"><td>More than 10</td><td>Nothing. Counted as "mapped to too many loci" in Log.final.out</td><td>none</td><td>No, and no other count sees it either</td></tr>
+      <tr><td>Every starting match in more than 50 places</td><td>Nothing. STAR never tries to align it; Log.final.out counts it as "unmapped: other"</td><td>none</td><td>No, and no other count sees it either</td></tr>
+    </tbody>
+  </table>
+  <p>The last row is easy to miss. STAR begins each alignment from short exact matches between the read and the genome, called anchors, and by default it ignores an anchor found in more than 50 places. In a young subfamily every anchor is found in hundreds or thousands of places, so the read is never aligned and looks like an ordinary failed read.</p>
+  <p class="muted" style="font-size:0.9rem">The model above shows only the 10-place limit. MAPQ is the aligner's confidence that a read is in the right place. "Fits equally well" means within 1 point of the best score; one different letter costs 2 points, so a copy that differs by one letter does not count as a place.</p>
+</section>
+
+<section id="real">
+  <h2>Which subfamilies lose their reads</h2>
+  <p>Real numbers. From every subfamily, 2,000 reads were cut from the genome at random spots and aligned back with STAR. Each dot is one subfamily: how different its copies are from their original sequence, against the share of its reads that land in one place, the only reads a unique-only count keeps.</p>
+  <div id="realbox"></div>
+</section>
+
+<section id="one">
+  <h2>Where one subfamily's reads go</h2>
+  <p>Tap a dot above, or find a subfamily by name. For each read length, one set of 2,000 reads is aligned twice: with STAR's default settings, and with both limits raised to 100.</p>
+  <div id="onebox"></div>
+</section>
+
+<section id="fix">
+  <h2>What to do</h2>
+  <ol class="fixlist">
+    <li><b>Do not test young subfamilies on unique reads alone.</b> Keeping only MAPQ 255 does this, and so does featureCounts with its default settings, which do not count multi-mapping reads at all.</li>
+    <li><b>Let the aligner keep more places.</b> The TEtranscripts authors report that keeping up to 100 alignments per read is a good compromise between file size and recovering multi-mappers; with STAR they set <span class="mono">--outFilterMultimapNmax</span> and <span class="mono">--winAnchorMultimapNmax</span> both to 100. In the runs above this rescues the reads that fit too many places, but most never-aligned reads of the youngest subfamilies stay never aligned, because their anchors sit in more than 100 places.</li>
+    <li><b>Read the "unmapped: other" line.</b> In Log.final.out it includes reads STAR never tried because of the anchor limit, as well as reads that are genuinely bad, such as adapter dimers or contamination. So a large value is not by itself a sign of poor sequencing. To tell the two apart, align again with a higher <span class="mono">--winAnchorMultimapNmax</span> and see whether the line shrinks.</li>
+    <li><b>Then count the multi-mappers on purpose.</b> Either add them up per subfamily, where it does not matter which copy a read came from (TEtranscripts does this), or share each read out between its places (featureCounts <span class="mono">-M --fraction</span> gives each place 1/n of a read; other tools estimate the split from the unique reads).</li>
+    <li><b>Say which copy only when the reads can tell.</b> A read that fits 500 copies says the subfamily is expressed, not which copy is.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>STAR rules from the STAR source code, release 2.7.11b: <a class="mono" href="https://github.com/alexdobin/STAR/blob/2.7.11b/source/parametersDefault">parametersDefault</a> (outFilterMultimapNmax 10, outFilterMultimapScoreRange 1, outSAMmapqUnique 255) and <a class="mono" href="https://github.com/alexdobin/STAR/blob/2.7.11b/source/ReadAlign_alignBAM.cpp">ReadAlign_alignBAM.cpp</a> (MAPQ 3, 1, 0 for 2, 3–4, 5 or more places).</div>
+    <div>TEtranscripts: Jin Y, Tam OH, Paniagua E, Hammell M (2015) Bioinformatics 31:3593–9; settings from the <a href="https://github.com/mhammell-laboratory/TEtranscripts">TEtranscripts README</a>. featureCounts multi-mapping options: <a href="https://github.com/ShiLab-Bioinformatics/subread/tree/master/doc">Subread users guide</a>.</div>
+    <div>Real data: for every subfamily covering at least 1,000 bases (Simple_repeat and Low_complexity left out), 2,000 perfect single-end reads were cut from the primary chromosomes, each centred on a random base of the subfamily's rows (so near the edge of a short row a read runs into neighbouring DNA), and aligned with STAR 2.7.11b to indexes built from the GENCODE primary assemblies (no alternate haplotypes; chromosome lengths identical to the UCSC assemblies). Totals agree with STAR's Log.final.out in every run, and reads placed in one place landed where they were cut (all but 1 of 2,066,035 in mouse at 50 bases). Anchor limit: winAnchorMultimapNmax 50, "max number of loci anchors are allowed to map to", in the same parametersDefault file.</div>
+    <div>Divergence: RepeatMasker milliDiv from the UCSC tables named on <a href="names.html">Three names</a>. Scripts: <a href="prep/rmsk_divergence.py">rmsk_divergence.py</a>, <a href="prep/sim_reads.py">sim_reads.py</a>, <a href="prep/tally_star.py">tally_star.py</a>, <a href="prep/build_multimap_json.py">build_multimap_json.py</a>.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>
