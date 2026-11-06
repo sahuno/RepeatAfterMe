@@ -108,6 +108,7 @@
     drawnCount = 0;
     var MIN = 0.35; // px; narrower boxes are merged into one lighter strip with their thin neighbours
     function drawOne(n) {
+      if (n.depth === 0 && S.size === 'bp' && !S.zoom) { drawChroms(); return; }
       var a = n.c0 * W, b = n.c1 * W;
       if (!(b - a >= MIN) || b < 0 || a > W) return;
       var x0 = Math.max(0, a), x1 = Math.min(W, b), w = x1 - x0, y = rowTop[n.depth], h = ROWH[n.depth];
@@ -134,6 +135,21 @@
         '<title>' + esc(tip) + '</title>' +
         '<rect class="' + cls + '" x="' + x0.toFixed(2) + '" y="' + y + '" width="' + w.toFixed(2) + '" height="' + h + '"' + (f ? ' fill="' + f + '"' : '') + '/>' + txt + '</g>');
       if (n.path === S.sel && n.depth > 0) selBox = [x0, y, w, h];
+    }
+    // Whole-genome view, width by bases: cut the genome row into chromosomes by length.
+    // The rows below are shares of the genome, not positions on these chromosomes.
+    function drawChroms() {
+      var ch = D.species[S.sp].chroms, g = D.species[S.sp].genome, x = 0, y = rowTop[0], h = ROWH[0], parts = [];
+      drawnCount++;
+      ch.forEach(function (c, i) {
+        var w = W * c[1] / g, nm = c[0].replace(/^chr/, '');
+        var tip = c[0] + ' · ' + (c[1] / 1e6).toFixed(1) + ' Mb · ' + pct(c[1], S.sp) + ' of the ' + S.sp + ' genome';
+        parts.push('<g><title>' + esc(tip) + '</title><rect class="' + (w >= 3 ? 'box' : 'box thin') + '" x="' + x.toFixed(2) + '" y="' + y + '" width="' + w.toFixed(2) + '" height="' + h + '" fill="var(' + (i % 2 ? '--genome-2' : '--genome') + ')"/>' +
+          (w >= nm.length * CH + 6 ? '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (y + 19) + '" text-anchor="middle" fill="var(--ink)">' + esc(nm) + '</text>' : '') + '</g>');
+        x += w;
+      });
+      var dim = S.level > 0;
+      out.push('<g data-p=""' + (dim ? ' class="dim"' : '') + ' tabindex="0" role="button" aria-label="' + esc(SPNAME[S.sp] + ' genome, cut into ' + ch.length + ' chromosomes by length') + '">' + parts.join('') + '</g>');
     }
     function drawRun(r) {
       var x0 = Math.max(0, r.a), x1 = Math.min(W, r.b), w = x1 - x0;
@@ -271,7 +287,10 @@
   function renderPanel() {
     var n = (S.sel && nodeOf(S.sel)) || (S.zoom && nodeOf(S.zoom)) || root;
     var parts = [];
-    if (n.depth === 0) parts.push('<div class="path"><b>Whole genome</b> (primary chromosomes, gaps included)</div>');
+    if (n.depth === 0) {
+      var chs = D.species[S.sp].chroms.map(function (c) { return c[0].replace(/^chr/, ''); }), nums = chs.filter(function (c) { return /^\d+$/.test(c); });
+      parts.push('<div class="path"><b>Whole genome</b> (' + SPNAME[S.sp].toLowerCase() + ' chromosomes ' + nums[0] + '–' + nums[nums.length - 1] + ', ' + chs.filter(function (c) { return !/^\d+$/.test(c); }).join(', ') + '; gaps included)</div>');
+    }
     else if (n.synthetic) parts.push('<div class="path"><b>No repeat</b></div>');
     else {
       var chain = []; for (var x = n; x && x.depth > 0; x = x.parent) chain.unshift(LEVEL[x.depth] + ' <b>' + esc(x.n) + '</b>');

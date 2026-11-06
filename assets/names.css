@@ -1,7 +1,7 @@
 /* Repeat After Me: the "Three names" lesson. Needs site.css. */
-:root { --genome: #e4e7ec; --otherrep: #a3a9b3; --ink-on-col: #15181d; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --genome: #2a2f37; --otherrep: #59606b; } }
-:root[data-theme="dark"] { --genome: #2a2f37; --otherrep: #59606b; }
+:root { --genome: #e4e7ec; --genome-2: #d2d6dd; --otherrep: #a3a9b3; --ink-on-col: #15181d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --genome: #2a2f37; --genome-2: #353b45; --otherrep: #59606b; } }
+:root[data-theme="dark"] { --genome: #2a2f37; --genome-2: #353b45; --otherrep: #59606b; }
 
 header.lesson { padding: 40px 0 16px; display: flex; flex-direction: column; gap: 12px; }
 

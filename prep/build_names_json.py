@@ -84,6 +84,7 @@ def main(a_path, b_path, out_path):
             "genome": genome[sp],
             "rowsDropped": int(m["rows_skipped_non_primary"]),
             "firstRow": m["first_te_row"].split("\t"),
+            "chroms": [[c.split(":")[0], int(c.split(":")[1])] for c in m["chrom_sizes"].split(",")],
         }
     with open(out_path, "w") as out:
         # A script file, not .json, so the page also works opened straight from disk.

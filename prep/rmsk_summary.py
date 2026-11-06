@@ -12,7 +12,7 @@ haplotypes are not counted twice.
 
 Output columns: class, family, subfamily, copies (rows in the table), bp (bases
 covered, summed over rows), te (1 if the class is a transposon class).
-Header comments record the assembly, the input file's md5 and modification time
+Header comments record the primary chromosome sizes, the assembly, the input file's md5 and modification time
 (curl -R keeps the server's date), the genome length used as the denominator,
 and the first transposon row on the primary chromosomes, verbatim.
 """
@@ -26,12 +26,17 @@ def main(rmsk_path, sizes_path, out_path, assembly):
     md5 = hashlib.md5(open(rmsk_path, 'rb').read()).hexdigest()
     mtime = time.strftime('%Y-%m-%d', time.gmtime(os.path.getmtime(rmsk_path)))
     first_te = None
-    genome = 0
+    genome, chroms = 0, []
     with open(sizes_path) as fh:
         for line in fh:
             chrom, size = line.split()[:2]
             if PRIMARY.match(chrom):
                 genome += int(size)
+                chroms.append((chrom, int(size)))
+    def chrom_order(c):
+        n = c[0][3:]
+        return (0, int(n)) if n.isdigit() else (1, {"X": 0, "Y": 1, "M": 2}.get(n, 3))
+    chroms.sort(key=chrom_order)
     copies, bp = defaultdict(int), defaultdict(int)
     skipped = 0
     with gzip.open(rmsk_path, "rt") as fh:
@@ -52,6 +57,7 @@ def main(rmsk_path, sizes_path, out_path, assembly):
         out.write(f"# source_file_date\t{mtime}\n")
         out.write(f"# first_te_row\t{first_te}\n")
         out.write(f"# genome_bp_primary_chromosomes\t{genome}\n")
+        out.write("# chrom_sizes\t" + ",".join(f"{c}:{n}" for c, n in chroms) + "\n")
         out.write(f"# rows_skipped_non_primary\t{skipped}\n")
         out.write("class\tfamily\tsubfamily\tcopies\tbp\tte\n")
         for key in sorted(copies, key=lambda k: (k[0], k[1], -bp[k])):
