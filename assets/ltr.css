@@ -8,7 +8,8 @@
 
 .stickybar { position: sticky; top: 0; z-index: 10; background: var(--bg); padding: 8px 0; border-bottom: 1px solid var(--rule); }
 select { font: 0.9rem var(--mono); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 8px; max-width: 100%; }
-label.seg { gap: 8px; }
+label.seg { gap: 8px; display: flex; flex-wrap: nowrap; width: 100%; max-width: 560px; }
+label.seg select { flex: 1 1 0; min-width: 0; width: 100%; }
 
 svg.chart { display: block; width: 100%; overflow: visible; }
 svg.chart text { font-family: var(--mono); font-size: 12px; fill: var(--ink); }
@@ -29,7 +30,8 @@ table.raw.rows .sw { margin-right: 6px; }
 
 .check { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; font-size: 0.95rem; }
 .check h3 { font-family: var(--display); font-size: 1rem; margin: 0; }
-.check table { border-collapse: collapse; font-size: 0.92rem; }
+.check table { border-collapse: collapse; font-size: 0.92rem; width: 100%; table-layout: fixed; }
+.check td, .check th { overflow-wrap: anywhere; }
 .check th, .check td { padding: 4px 16px 4px 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
 .check td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .check th { font-family: var(--display); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }

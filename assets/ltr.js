@@ -131,11 +131,12 @@
       y += 28;
     });
     var anyOther = fl.some(function (f) { return spread[f[0]] && spread[f[0]][0][0] !== S.body; });
-    if (anyOther) { o.push('<text class="sm" x="' + lw + '" y="' + (y + 12) + '">* this end name sits next to another body more often (hover for which)</text>'); y += 20; }
+
     put(svg, W, y + 4, o.join(''));
     var g = main().groups[S.body], all = main().sameEnds;
     $('flanknote').innerHTML = 'The table files these as separate subfamilies; in the genome most of them sit at the ends of the same body, <b>' + esc(S.body) + '</b>. Short bars can be chance neighbours. ' +
-      'Of its ' + fmt(g.b[0]) + ' copies with an end on both sides, <b>' + pc(g.se, g.b[0]) + '%</b> carry the same name at both ends. Across all ' + SPNAME[S.sp] + ' groups it is ' + pc(all[0], all[1]) + '%. Different names at the two ends of one copy can be naming noise or a real recombinant.';
+      'Of its ' + fmt(g.b[0]) + ' copies with an end on both sides, <b>' + pc(g.se, g.b[0]) + '%</b> carry the same name at both ends. Across all ' + SPNAME[S.sp] + ' groups it is ' + pc(all[0], all[1]) + '%. Different names at the two ends of one copy can be naming noise or a real recombinant.' +
+      (anyOther ? ' Bars marked * sit next to another body more often: ' + fl.filter(function (f) { return spread[f[0]] && spread[f[0]][0][0] !== S.body; }).map(function (f) { return esc(f[0]) + ' next to ' + esc(spread[f[0]][0][0]); }).join('; ') + '.' : '');
   }
 
   // ---------- 3. how many ends still have a body ----------
@@ -152,18 +153,25 @@
       x += sw;
     });
   }
+  // Legend items in a row, wrapping to a new line before they run past the chart. Returns the last baseline.
+  function legend(o, W, ly, items) {
+    var lx = 0;
+    items.forEach(function (l) {
+      var iw = l[0].length * 6.8 + 16;
+      if (lx > 0 && lx + iw > W) { lx = 0; ly += 18; }
+      o.push('<rect x="' + lx + '" y="' + (ly - 10) + '" width="11" height="11" rx="2" fill="var(' + l[1] + ')"/><text class="sm" x="' + (lx + 16) + '" y="' + ly + '">' + l[0] + '</text>');
+      lx += iw + 18;
+    });
+    return ly;
+  }
   function drawSolo() {
     var svg = $('solosvg'), W = width(svg), g = cur().groups[S.body], o = [];
     Array.prototype.forEach.call(document.querySelectorAll('[data-d]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-d') === S.d)); });
     if (!g) { put(svg, W, 40, '<text x="0" y="24">Fewer than 50 LTRs in this group at this distance.</text>'); $('solonote').innerHTML = ''; return; }
     stacked(o, 26, 0, W, 'Ends (LTRs) of ' + S.body, g.l[0] + g.l[1], [['with a body', g.l[0], '--part-ltr'], ['solo', g.l[1], '--part-none']]);
     stacked(o, 98, 0, W, 'Bodies (' + S.body + ')', g.b[0] + g.b[1] + g.b[2], [['both ends', g.b[0], '--part-ltr'], ['one end', g.b[1], '--part-one'], ['alone', g.b[2], '--part-none']]);
-    var ly = 150, lx = 0;
-    [['with a body / both ends', '--part-ltr'], ['one end', '--part-one'], ['solo / alone', '--part-none']].forEach(function (l) {
-      o.push('<rect x="' + lx + '" y="' + (ly - 10) + '" width="11" height="11" rx="2" fill="var(' + l[1] + ')"/><text class="sm" x="' + (lx + 16) + '" y="' + ly + '">' + l[0] + '</text>');
-      lx += l[0].length * 6.8 + 34;
-    });
-    put(svg, W, 158, o.join(''));
+    var ly = legend(o, W, 150, [['with a body / both ends', '--part-ltr'], ['one end', '--part-one'], ['solo / alone', '--part-none']]);
+    put(svg, W, ly + 8, o.join(''));
     var shares = ['50', '200', '1000'].map(function (D) { var x = sp().byD[D].groups[S.body]; return x ? pc(x.l[1], x.l[0] + x.l[1]) + '%' : 'n/a'; });
     var boths = ['50', '200', '1000'].map(function (D) { var x = sp().byD[D].groups[S.body]; return x ? fmt(x.b[0]) : 'n/a'; });
     $('solonote').innerHTML = '<b>' + pc(g.l[1], g.l[0] + g.l[1]) + '%</b> of these LTRs have no body within ' + S.d + ' bp; ' + fmt(g.sf) + ' of those solo LTRs are near full length (at least 80% of their reference sequence). ' +
@@ -182,7 +190,7 @@
   }
 
   // ---------- 4. older groups have fewer bodies left ----------
-  var tip = $('agetip');
+  var tip = $('agetip'), DOTS = [];
   function drawAge() {
     var svg = $('agesvg'), W = width(svg), H = Math.round(Math.min(420, Math.max(300, W * 0.55)));
     var g = cur().groups, keys = Object.keys(g).filter(function (k) { return g[k].div != null; });
@@ -198,9 +206,11 @@
     o.push('<text class="sm" x="' + ml + '" y="' + (H - 4) + '">solo LTRs (%) ↑</text>');
     keys.sort(function (a, b) { return (g[b].l[0] + g[b].l[1]) - (g[a].l[0] + g[a].l[1]); });
     var selXY = null;
+    DOTS = [];
     keys.forEach(function (k) {
       var n = g[k].l[0] + g[k].l[1], r = 4 + 9 * Math.sqrt(n / nmax), x = X(g[k].div / 10), y = Y(100 * g[k].l[1] / n);
       o.push('<circle class="dot" data-g="' + esc(k) + '" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + famCol(g[k].f) + '"/>');
+      DOTS.push({ k: k, x: x, y: y, r: r });
       if (k === S.body) selXY = [x, y, r];
     });
     if (selXY) {
@@ -217,10 +227,19 @@
       'That fits solo LTRs piling up over time by recombination. But old bodies also decay until RepeatMasker breaks them up, renames them or misses them, and LTR fragments of any length count as solo here; both raise the solo share without recombination. It is a pattern in these tables, not a measured rate.' +
       (gs ? ' <b>' + esc(S.body) + '</b>: ' + (gs.div / 10).toFixed(1) + '% median difference, ' + pc(gs.l[1], gs.l[0] + gs.l[1]) + '% solo.' : '');
   }
+  // Dots overlap on small screens, so a tap or hover picks the dot whose centre is nearest the pointer.
+  function nearestDot(svg, e) {
+    var m = svg.getScreenCTM(); if (!m) return null;
+    var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    var p = pt.matrixTransform(m.inverse()), best = null, bd = Infinity;
+    DOTS.forEach(function (d) { var dd = Math.hypot(d.x - p.x, d.y - p.y); if (dd < bd) { bd = dd; best = d; } });
+    return best && bd <= best.r + 12 ? best.k : null;
+  }
   $('agesvg').addEventListener('mousemove', function (e) {
-    var c = e.target.closest('[data-g]');
-    if (!c) { tip.hidden = true; return; }
-    var k = c.getAttribute('data-g'), g = cur().groups[k], n = g.l[0] + g.l[1];
+    var k = nearestDot(this, e);
+    if (!k) { tip.hidden = true; this.style.cursor = ''; return; }
+    this.style.cursor = 'pointer';
+    var g = cur().groups[k], n = g.l[0] + g.l[1];
     tip.innerHTML = esc(k) + '<br>' + esc(g.f) + ' · ' + fmt(n) + ' LTRs<br>' + pc(g.l[1], n) + '% solo · ' + (g.div / 10).toFixed(1) + '% from reference';
     var box = this.parentNode.getBoundingClientRect();
     tip.hidden = false;
@@ -229,7 +248,7 @@
     tip.style.left = x + 'px'; tip.style.top = y + 'px';
   });
   $('agesvg').addEventListener('mouseleave', function () { tip.hidden = true; });
-  $('agesvg').addEventListener('click', function (e) { var c = e.target.closest('[data-g]'); if (c) set({ body: c.getAttribute('data-g') }); });
+  $('agesvg').addEventListener('click', function (e) { var k = nearestDot(this, e); if (k) { tip.hidden = true; set({ body: k }); } });
 
   // ---------- 5. what this does to your counts ----------
   function fillLtrPick() {
@@ -243,12 +262,8 @@
     if (!r) { put(svg, W, 40, '<text x="0" y="24">Fewer than 50 copies of this name.</text>'); return; }
     var n = tot(r), sp5 = r['5p'] || 0, sp3 = r['3p'] || 0, so = r.solo || 0;
     stacked(o, 26, 0, W, S.ltr, n, [['5′ end of a copy', sp5, '--part-ltr'], ['3′ end of a copy', sp3, '--part-body'], ['solo', so, '--part-none']]);
-    var ly = 78, lx = 0;
-    [['5′ end of a copy', '--part-ltr'], ['3′ end of a copy', '--part-body'], ['solo, no body nearby', '--part-none']].forEach(function (l) {
-      o.push('<rect x="' + lx + '" y="' + (ly - 10) + '" width="11" height="11" rx="2" fill="var(' + l[1] + ')"/><text class="sm" x="' + (lx + 16) + '" y="' + ly + '">' + l[0] + '</text>');
-      lx += l[0].length * 6.8 + 34;
-    });
-    put(svg, W, 86, o.join(''));
+    var ly = legend(o, W, 78, [['5′ end of a copy', '--part-ltr'], ['3′ end of a copy', '--part-body'], ['solo, no body nearby', '--part-none']]);
+    put(svg, W, ly + 8, o.join(''));
     var partner = (main().spread[S.ltr] || [])[0];
     var pr = sp().pair;
     var items = [
