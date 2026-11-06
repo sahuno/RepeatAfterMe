@@ -9,8 +9,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="assets/site.css?v=4dad709a">
-<link rel="stylesheet" href="assets/classes.css?v=85c7cde2">
-<script src="assets/classes.js?v=3bd9d974" defer></script>
+<link rel="stylesheet" href="assets/classes.css?v=57329d64">
+<script src="assets/classes.js?v=affc9824" defer></script>
 <style>
 /* Landing page only */
 header.hero { padding: 48px 0 24px; display: flex; flex-direction: column; gap: 18px; }
@@ -49,15 +49,15 @@ header.hero { padding: 48px 0 24px; display: flex; flex-direction: column; gap: 
 
 <section id="classes">
   <h2>Focus on 4 main classes</h2>
-  <p>Each class copies itself in its own way. Pick one, then press the button and watch.</p>
+  <p>Each class copies itself in its own way. Pick one to see how.</p>
   <div class="classes" role="group" aria-label="Pick a class">
-    <button type="button" class="class" data-stage-tab="LINE" aria-pressed="true" style="--c: var(--LINE)"><b><span class="sw LINE"></span>LINE</b><span class="desc">Long. Has its own copying machinery.</span></button>
+    <button type="button" class="class" data-stage-tab="LINE" aria-pressed="false" style="--c: var(--LINE)"><b><span class="sw LINE"></span>LINE</b><span class="desc">Long. Has its own copying machinery.</span></button>
     <button type="button" class="class" data-stage-tab="SINE" aria-pressed="false" style="--c: var(--SINE)"><b><span class="sw SINE"></span>SINE</b><span class="desc">Short. Uses the LINE machinery.</span></button>
     <button type="button" class="class" data-stage-tab="LTR" aria-pressed="false" style="--c: var(--LTR)"><b><span class="sw LTR"></span>LTR</b><span class="desc">Retrovirus-like.</span></button>
     <button type="button" class="class" data-stage-tab="DNA" aria-pressed="false" style="--c: var(--DNA)"><b><span class="sw DNA"></span>DNA</b><span class="desc">Cut and paste. Inactive in mouse and human.</span></button>
   </div>
 
-  <figure class="stage" id="stage" data-mode="LINE">
+  <figure class="stage" id="stage" data-mode="LINE" hidden>
     <svg class="stage-svg" role="group" aria-label="Animated stage: a cell with its nucleus and a stretch of DNA. Pressing the button plays how the chosen class copies itself. The caption below describes each step."></svg>
     <p class="stage-caption" aria-live="polite">This is a LINE. Press Copy.</p>
     <div class="stage-controls">
@@ -67,7 +67,6 @@ header.hero { padding: 48px 0 24px; display: flex; flex-direction: column; gap: 
       <button type="button" class="stage-reset">Reset</button>
     </div>
     <div class="stage-count">Copies: 0. Full length: 0. Stopped early: 0.</div>
-    <noscript><p>This stage needs JavaScript to play.</p></noscript>
     <details>
       <summary>Real names</summary>
       <p class="names LINE-n">LINE stands for long interspersed nuclear element; in mouse and human the family is L1. The head is the promoter and 5′ untranslated region. The tools are two proteins the element encodes, ORF1p and ORF2p. The nick and the backwards writing are target-primed reverse transcription, done by ORF2p. The second strand is cut a few bases away, so a new copy is flanked by a short duplicated stretch of host DNA, the target-site duplication. Stopped early is called 5′ truncation.</p>
@@ -77,6 +76,7 @@ header.hero { padding: 48px 0 24px; display: flex; flex-direction: column; gap: 
     </details>
     <figcaption class="sources">Sources: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5980640/">Kazazian and Moran 2017</a> (LINE, SINE and DNA transposon mechanisms); <a href="https://www.hal.inserm.fr/inserm-03261002">Lanciano and Cristofari 2020</a> (LTR promoter, solo LTRs, 5′ truncation); <a href="https://doi.org/10.1186/s13059-018-1577-z">Bourque et al. 2018</a> (overview); <a href="https://doi.org/10.1007/s10577-017-9570-z">Platt, Vandewege and Ray 2018</a> (DNA transposons inactive in mammals other than some bats); <a href="https://doi.org/10.1038/nature01262">Mouse Genome Sequencing Consortium 2002</a> and <a href="https://doi.org/10.1371/journal.pgen.0020002">Maksakova et al. 2006</a> (mouse B1, B2, IAP, MuERV-L).</figcaption>
   </figure>
+  <noscript><p>The animation needs JavaScript to play.</p></noscript>
 </section>
 
 <section id="lessons">

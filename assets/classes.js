@@ -1,6 +1,7 @@
 /* Repeat After Me: the four-class stage.
    One stage, four modes. Each mode animates how that class of repeat copies itself.
    Vanilla JS, no dependencies. Needs classes.css and the <figure id="stage"> markup from index.html.
+   The stage starts hidden with no class picked; the first tap on a class card opens it. Any test hook below opens it at once.
    Test hooks: ?class=LTR&step=3&seed=1 renders that step with no animation; ?n=8 pre-runs eight actions;
    ?tools=1 (SINE) and ?today=1 (DNA) preset the switches; ?act=recombine with step runs the LTR Recombine scene.
    window.RepeatStage exposes copy(), recombine(), many(n), reset(), setMode(), setInstant(), setTools(), setToday(), state(). */
@@ -413,11 +414,26 @@
   actBtn.addEventListener('click', function () { run(scene); });
   x10Btn.addEventListener('click', function () { many(10); });
   resetBtn.addEventListener('click', reset);
-  tabs.forEach(function (t) { t.addEventListener('click', function () { setMode(t.getAttribute('data-stage-tab')); }); });
+  function open(m) {
+    if (busy) return;
+    var wasHidden = fig.hidden;
+    fig.hidden = false;
+    setMode(m);
+    if (wasHidden) {
+      // Scroll just enough to show the Copy button, without pushing the top of the stage off screen.
+      var need = actBtn.getBoundingClientRect().bottom + 16 - window.innerHeight;
+      var dy = Math.min(need, fig.getBoundingClientRect().top - 8);
+      if (dy > 0) window.scrollBy({ top: dy, behavior: reduced ? 'auto' : 'smooth' });
+    }
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { open(t.getAttribute('data-stage-tab')); }); });
 
   // ----- start, and the still-frame hooks -----
   var m0 = (q.get('class') || 'LINE').toUpperCase();
   setMode(CLS[m0] ? m0 : 'LINE');
+  var hooked = ['class', 'step', 'n', 'act', 'tools', 'today'].some(function (k) { return q.has(k); });
+  if (hooked) fig.hidden = false;
+  else tabs.forEach(function (t) { t.setAttribute('aria-pressed', 'false'); });
   if (q.get('tools') === '1') { S.toolsNearby = true; secondary(); }
   if (q.get('today') === '1') { S.today = true; secondary(); render(); }
   (function stills() {
@@ -439,7 +455,7 @@
   window.RepeatStage = {
     copy: function () { return run(scene); },
     recombine: function () { return run(sceneRecombine); },
-    many: many, reset: reset, setMode: setMode,
+    many: many, reset: reset, setMode: open,
     setInstant: function (v) { instant = !!v; },
     setTools: function (v) { S.toolsNearby = !!v; secondary(); },
     setToday: function (v) { S.today = !!v; secondary(); render(); },
