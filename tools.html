@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
 <link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
 <link rel="stylesheet" href="assets/tools.css?v=eabf14cc">
-<script src="data/tools_bench.js?v=f2787ac1" defer></script>
+<script src="data/tools_bench.js?v=0e6e5973" defer></script>
 <script src="assets/bench.js?v=5d01fa58" defer></script>
 <script src="assets/tools.js?v=b2639954" defer></script>
 <script src="assets/lessonnav.js?v=ffbfaf30" defer></script>
@@ -79,7 +79,12 @@
 
 <section id="bench">
   <h2>Tested on simulated reads</h2>
-  <p>Each tool counted the same 2,322,000 reads, cut from the mouse genome (mm10) so that the true copy of every read is known: 2,000 perfect 100-base reads for each of 1,161 subfamilies, aligned with STAR keeping up to 100 places per read, the TEtranscripts setting. The reads were cut two ways: evenly from every copy of each subfamily, and from three copies per subfamily with the rest silent.</p>
+  <p>Each tool counted the same simulated reads, cut from the mouse (mm10) and human (hg38) genomes so that the true copy of every read is known: 2,000 perfect 100-base reads per subfamily, 2,322,000 reads from 1,161 mouse subfamilies and 2,474,000 from 1,237 human ones. STAR aligned them keeping up to 100 places per read, the TEtranscripts setting. The reads were cut two ways: evenly from every copy of each subfamily, and from three copies per subfamily with the rest silent.</p>
+  <div class="seg presets" role="group" aria-label="Species">
+    <span class="lab">Species</span>
+    <button type="button" data-bsp="mouse">Mouse</button>
+    <button type="button" data-bsp="human">Human</button>
+  </div>
   <div class="seg presets" role="group" aria-label="Which copies made the reads">
     <span class="lab">Copies on</span>
     <button type="button" data-bsc="all">Every copy</button>
@@ -94,14 +99,14 @@
   <div class="sumwrap"><table class="sum" id="benchtable" aria-label="Reads counted and reads on a wrong copy, by rule"></table></div>
   <p class="muted" id="benchnote" style="font-size:0.9rem"></p>
   <ul class="picklist">
-    <li>Every rule except -M, which counts reads several times, leaves out at least 17% of young-subfamily reads when every copy is on. 18.0% of those reads never aligned, so no counting rule can recover them (<a href="multimap.html">One read, many places</a>).</li>
-    <li>With every copy on, -M --fraction puts the fewest reads on a wrong copy among the rules that count at least 70% of young-subfamily reads: 9.2%, against 11.9% for TElocal and 15.8% for Telescope's default.</li>
-    <li>With three copies on, the copy-level tools find them: Telescope's default puts 0.5% of young-subfamily reads on a wrong copy and TElocal 5.1%, against 27.8% for -M --fraction.</li>
-    <li>Subfamily totals barely depend on the rule once multi-mapping reads are shared out: TEcount and -M --fraction count 97.5% to 99.4% of middle and old subfamily reads in both versions.</li>
-    <li>TElocal writes each copy's count as a whole number and drops the fraction (<span class="mono">int(val)</span> in its output code), so reads spread thinly over many copies vanish. With every copy on it counts 95.8% of old-subfamily reads, against 99.4% for -M --fraction.</li>
-    <li>Telescope's confident-only column puts 2.0% of reads or fewer on a wrong copy in every case, but leaves out up to 45.3% of young-subfamily reads.</li>
+    <li>Every rule except -M, which counts reads several times, leaves out at least 17% of young-subfamily reads in mouse and 15% in human when every copy is on. 18.0% of those mouse reads and 12.5% of the human ones never aligned, so no counting rule can recover them (<a href="multimap.html">One read, many places</a>).</li>
+    <li>With every copy on, -M --fraction puts the fewest reads on a wrong copy among the rules that count at least 70% of young-subfamily reads: 9.2% in mouse, against 11.9% for TElocal and 15.8% for Telescope's default, and 4.2% in human, against 7.9% and 10.5%.</li>
+    <li>With three copies on, the copy-level tools find them. Telescope's default puts 0.5% of young-subfamily reads on a wrong copy in mouse and 1.9% in human, and TElocal 5.1% and 6.5%, against 27.8% and 15.2% for -M --fraction.</li>
+    <li>Subfamily totals barely depend on the rule once multi-mapping reads are shared out: TEcount and -M --fraction count 95.6% to 99.9% of middle and old subfamily reads, in both species and both versions.</li>
+    <li>TElocal writes each copy's count as a whole number and drops the fraction (<span class="mono">int(val)</span> in its output code), so reads spread thinly over many copies vanish. With every copy on it counts 95.8% of old-subfamily reads in mouse and 95.7% in human, against 99.4% and 99.7% for -M --fraction.</li>
+    <li>Telescope's confident-only column puts 2.0% of reads or fewer on a wrong copy in every case, but leaves out up to 45.3% of young-subfamily reads in mouse and 32.0% in human.</li>
   </ul>
-  <p class="muted" style="font-size:0.9rem">Limits: perfect single-end reads with no sequencing errors and no strain differences; mouse only; every tool on its default settings (Telescope's EM stopped at its 100-round limit); the tools saw repeat annotations only, no genes. One copy is one RepeatMasker row, which can be a fragment of one insertion (<a href="ltr.html">Body and ends</a>). "On a wrong copy" is a lower bound worked out from per-copy counts. SQuIRE was not run, because it insists on its own STAR alignment, and neither was SalmonTE, whose Repbase names do not line up with RepeatMasker's.</p>
+  <p class="muted" style="font-size:0.9rem">Limits: perfect single-end reads with no sequencing errors and no strain or population differences; every tool on its default settings (Telescope's EM stopped at its 100-round limit); the tools saw repeat annotations only, no genes. One copy is one RepeatMasker row, which can be a fragment of one insertion (<a href="ltr.html">Body and ends</a>). "On a wrong copy" is a lower bound worked out from per-copy counts. SQuIRE was not run, because it insists on its own STAR alignment, and neither was SalmonTE, whose Repbase names do not line up with RepeatMasker's.</p>
 </section>
 
 <section id="tools">
@@ -142,7 +147,7 @@
     <div>Telescope: <a href="https://github.com/mlbendall/telescope/tree/4cf1859">README at 4cf1859</a> (--reassign_mode); <a href="https://github.com/mlbendall/telescope_annotation_db/tree/a8a282b/builds">telescope_annotation_db builds</a>; Bendall ML et al. (2019) PLoS Comput Biol 15:e1006453.</div>
     <div>SalmonTE: <a href="https://github.com/LiuzLab/SalmonTE/tree/0a40519">README and reference/mm/mm.fa at 0a40519</a> (301 sequences, 536,993 bases); Jeong HH, Yalamanchili HK, Guo C, Shulman JM, Liu Z (2018) Pac Symp Biocomput 23:168–79.</div>
     <div>The model is written for this page: <a href="assets/tools.js?v=b2639954">tools.js</a>.</div>
-    <div>Simulated-read test, run 2026-11-07 on the MSK cluster: TEcount 2.2.4, TElocal 1.1.3, featureCounts 2.1.1 (--largestOverlap), Telescope 1.0.4.1, STAR 2.7.11b (--outFilterMultimapNmax 100 --winAnchorMultimapNmax 100), UCSC mm10 RepeatMasker table (3,738,395 rows after the filters of <a href="names.html">Three names</a>). Scripts: <a href="prep/q10/sim_reads_k.py">sim_reads_k.py</a>, <a href="prep/q10/run_sim_k.sh">run_sim_k.sh</a>, <a href="prep/q10/build_annots.py">build_annots.py</a>, <a href="prep/q10/build_locind.py">build_locind.py</a>, <a href="prep/q10/install.sh">install.sh</a>, <a href="prep/q10/run_tool.sh">run_tool.sh</a>, <a href="prep/q10/check_fc.py">check_fc.py</a>, <a href="prep/q10/summarize.py">summarize.py</a>, <a href="prep/q10/bin_by_age.py">bin_by_age.py</a>, <a href="prep/q10/build_bench_json.py">build_bench_json.py</a>.</div>
+    <div>Simulated-read test, run 2026-11-07 on the MSK cluster: TEcount 2.2.4, TElocal 1.1.3, featureCounts 2.1.1 (--largestOverlap), Telescope 1.0.4.1, STAR 2.7.11b (--outFilterMultimapNmax 100 --winAnchorMultimapNmax 100), UCSC RepeatMasker tables for mm10 (3,738,395 rows after the filters of <a href="names.html">Three names</a>) and hg38 (4,540,009 rows), the same tables and STAR indexes as <a href="multimap.html">One read, many places</a>. Scripts: <a href="prep/q10/sim_reads_k.py">sim_reads_k.py</a>, <a href="prep/q10/run_sim_k.sh">run_sim_k.sh</a>, <a href="prep/q10/build_annots.py">build_annots.py</a>, <a href="prep/q10/build_locind.py">build_locind.py</a>, <a href="prep/q10/install.sh">install.sh</a>, <a href="prep/q10/run_tool.sh">run_tool.sh</a>, <a href="prep/q10/check_fc.py">check_fc.py</a>, <a href="prep/q10/summarize.py">summarize.py</a>, <a href="prep/q10/bin_by_age.py">bin_by_age.py</a>, <a href="prep/q10/build_bench_json.py">build_bench_json.py</a>.</div>
   </div>
   <div>Made by Samuel Ahuno. Colours for A and B: Okabe-Ito blue and vermillion, colour-blind safe.</div>
 </footer>
