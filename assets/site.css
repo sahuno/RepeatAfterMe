@@ -48,3 +48,26 @@ footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--rule);
 .LINE { background: var(--LINE); } .SINE { background: var(--SINE); } .LTR { background: var(--LTR); } .DNA { background: var(--DNA); } .notrepeat { background: var(--notrepeat); }
 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+
+/* Lesson navigation (assets/lessonnav.js): side menu and previous/next lesson links */
+section[id] { scroll-margin-top: 16px; }
+.lnav details { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 12px; margin-top: 4px; }
+.lnav summary { font-family: var(--display); font-weight: 700; font-size: 0.88rem; color: var(--ink-2); cursor: pointer; }
+.lnav-body { padding-top: 6px; }
+.lnav-h { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 6px 0 2px; }
+.lnav ol { list-style: none; margin: 0 0 6px; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.lnav a { display: block; padding: 3px 8px; border-left: 2px solid transparent; border-radius: 0 4px 4px 0; color: var(--ink-2); text-decoration: none; font-size: 0.9rem; line-height: 1.35; }
+.lnav a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.lnav a.on, .lnav a[aria-current="page"] { color: var(--ink); border-left-color: var(--accent); font-weight: 600; }
+@media (min-width: 1280px) {
+  .lnav { position: fixed; top: 96px; left: max(12px, calc(50% - 440px - 200px)); width: 184px; max-height: calc(100vh - 120px); overflow-y: auto; z-index: 5; }
+  .lnav details { background: transparent; border: 0; padding: 0; margin: 0; }
+  .lnav summary { display: none; }
+}
+.lpager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 40px; }
+.lpager a { display: flex; flex-direction: column; gap: 2px; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; color: var(--ink); text-decoration: none; }
+.lpager a:hover { border-color: var(--ink-2); }
+.lpager a span { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lpager a b { font-family: var(--display); font-size: 1.05rem; }
+.lpager .next { grid-column: 2; text-align: right; }
+@media (max-width: 520px) { .lpager { grid-template-columns: 1fr; } .lpager .next { grid-column: 1; } }
