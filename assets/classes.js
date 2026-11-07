@@ -211,7 +211,7 @@
       { text: 'The tool nicks one strand of the DNA.', run: function () { return nick(site.x + w, site.row, true); } },
       { text: 'Starting at the nick, it writes the copy from the tail end, backwards.', run: function () { return growCopy(site, w, 'var(--LINE)', 1100); } },
       { text: 'Then it cuts the other strand, a little further along.', run: function () { return nick(site.x + w - 14, site.row, false).then(function () { return hold(300); }); } },
-      { text: f >= 1 ? 'Full length, head and all. A copy like this can copy itself again.' : 'Stopped early. No head, so this copy can never copy itself.',
+      { text: f >= 1 ? 'Full length, head and all. A copy like this can copy itself again.' : 'This copy stopped early. With no head, it cannot copy itself.',
         run: function () { return tween(500, function (p) { A.fade(1 - p); }).then(function () { A.remove(); S.items.push({ cls: 'LINE', kind: f >= 1 ? 'full' : 'short', row: site.row, x: site.x, w: w }); S.counts.copies++; if (f >= 1) S.counts.full++; else S.counts.short++; render(); }); } }
     ];
   }

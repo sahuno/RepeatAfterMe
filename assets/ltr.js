@@ -97,8 +97,8 @@
     if (pr && endsRows.length === 2 && pr.chrom === pv.chrom && pr.ltr1[0] === endsRows[0][0] && pr.ltr2[1] === endsRows[1][1]) {
       t += 'Its two ends, compared base by base, match at <b>' + fmt(pr.identical) + ' of ' + fmt(pr.len1) + '</b> positions. ' +
         '<span class="q">"Because the LTRs are identical at the time of integration, the number of differences between the LTRs can be used to infer the relative age of a provirus"</span> (Subramanian et al. 2011). ' +
-        'So this is a young copy; the page picked the youngest intact copy it could find, so this is a best case. Gene conversion or recombination can also make two ends look more alike than their age suggests. ' +
-        'A sequencing read lying wholly inside one end fits the other end just as well, unless it covers one of the few differences. ';
+        'This is therefore a young copy. The script picked the youngest intact copy it could find, so it is a best case. Gene conversion or recombination can also make two ends look more alike than their age suggests. ' +
+        'A sequencing read lying wholly inside one end fits the other end equally well, unless it covers one of the few differences. ';
     } else {
       t += 'The base-by-base comparison of the two ends is shown for the default copy of each species. ';
     }
@@ -224,7 +224,7 @@
       (fams.other ? '<span><i style="background:var(--f-other)"></i>other families</span>' : '') + '<span class="muted">Dot size: number of LTRs</span>';
     var gs = g[S.body];
     $('agenote').innerHTML = 'Rank correlation (Spearman: 1 means older groups always have a higher solo share, 0 means no link) between age and solo share: <b>' + cur().rho.toFixed(2) + '</b> across ' + cur().nGroups + ' ' + SPNAME[S.sp] + ' groups with at least 50 LTRs. ' +
-      'That fits solo LTRs piling up over time by recombination. But old bodies also decay until RepeatMasker breaks them up, renames them or misses them, and LTR fragments of any length count as solo here; both raise the solo share without recombination. It is a pattern in these tables, not a measured rate.' +
+      'That fits solo LTRs piling up over time by recombination. But old bodies also decay until RepeatMasker breaks them up, renames them or misses them, and LTR fragments of any length count as solo here; both raise the solo share without recombination. The correlation describes these tables and gives no recombination rate.' +
       (gs ? ' <b>' + esc(S.body) + '</b>: ' + (gs.div / 10).toFixed(1) + '% median difference, ' + pc(gs.l[1], gs.l[0] + gs.l[1]) + '% solo.' : '');
   }
   // Dots overlap on small screens, so a tap or hover picks the dot whose centre is nearest the pointer.
@@ -270,8 +270,8 @@
       'Of ' + fmt(n) + ' copies of <b>' + esc(S.ltr) + '</b>, <b>' + pc(so, n) + '%</b> are solo, ' + pc(sp5, n) + '% start a copy and ' + pc(sp3, n) + '% end one. A read count for ' + esc(S.ltr) + ' adds all of them together.' +
         (partner ? ' When a copy of this name has a body, it is most often ' + esc(partner[0]) + '.' : ''),
       'Reads on a body row can only come from places where body sequence remains. Reads on an LTR row can also come from solo LTRs. Either can come from a host gene\'s transcript that runs through the copy, for example inside an intron.',
-      'A solo LTR can still act as a promoter: <span class="q">"their inherent promoter activity can affect expression of neighboring genes"</span> (Subramanian et al. 2011). So a higher count for an LTR name does not by itself mean full-length proviral RNA is being made.',
-      'The two ends of a young copy are identical or nearly so (the ' + SPNAME[S.sp] + ' example in the first figure: ' + fmt(pr.identical) + ' of ' + fmt(pr.len1) + ' bases match), and so are many copies of the same name. A read lying wholly inside one of them fits several places equally well, so the aligner (the program that places each read on the genome) cannot choose. That is the multi-mapping problem, the subject of a later lesson.'
+      'A solo LTR can still act as a promoter: <span class="q">"their inherent promoter activity can affect expression of neighboring genes"</span> (Subramanian et al. 2011). A higher count for an LTR name therefore does not show, by itself, that full-length proviral RNA is being made.',
+      'The two ends of a young copy are identical or nearly so (the ' + SPNAME[S.sp] + ' example in the first figure: ' + fmt(pr.identical) + ' of ' + fmt(pr.len1) + ' bases match), and so are many copies of the same name. A read lying wholly inside one of them fits several places equally well, so the aligner (the program that places each read on the genome) cannot choose. That is the multi-mapping problem; the lesson <a href="multimap.html">One read, many places</a> covers it.'
     ];
     $('takeaways').innerHTML = items.map(function (t) { return '<li>' + t + '</li>'; }).join('');
   }

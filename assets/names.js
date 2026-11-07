@@ -462,11 +462,11 @@
     },
     iap: {
       go: { sp: 'mouse', zoom: 'LTR' + SEP + 'ERVK', sel: 'LTR' + SEP + 'ERVK' + SEP + 'IAPEz-int' },
-      note: function () { return '<b>IAPEz-int</b> is the inside, or body, of a family of mouse endogenous retrovirus-like elements called IAP, for intracisternal A-particle ("-int" means internal). Its ends, the long terminal repeats, are filed under several other names, most often <b>IAPLTR1a_Mm</b> and <b>IAPLTR1_Mm</b>. One element, several names, separate rows: ' + rowsOf('LTR|ERVK|IAPEz-int', 'mouse') + ' body rows in mouse, and ' + rowsOf('LTR|ERVK|IAPLTR1a_Mm', 'mouse') + ' and ' + rowsOf('LTR|ERVK|IAPLTR1_Mm', 'mouse') + ' rows for those two end names. <a href="ltr.html">Body and ends</a> shows which ends sit next to which body.'; }
+      note: function () { return '<b>IAPEz-int</b> is the inside, or body, of a family of mouse endogenous retrovirus-like elements called IAP, for intracisternal A-particle ("-int" means internal). Its ends, the long terminal repeats, are filed under several other names, most often <b>IAPLTR1a_Mm</b> and <b>IAPLTR1_Mm</b>. That one element has several names and separate rows: ' + rowsOf('LTR|ERVK|IAPEz-int', 'mouse') + ' body rows in mouse, and ' + rowsOf('LTR|ERVK|IAPLTR1a_Mm', 'mouse') + ' and ' + rowsOf('LTR|ERVK|IAPLTR1_Mm', 'mouse') + ' rows for those two end names. <a href="ltr.html">Body and ends</a> shows which ends sit next to which body.'; }
     },
     only: {
       go: { sp: 'mouse', zoom: 'SINE', sel: 'SINE' + SEP + 'B2' },
-      note: function () { return 'The human table has no family labelled <b>B2</b> or <b>B4</b>. In mouse they cover ' + share('SINE|B2', 'mouse') + ' and ' + share('SINE|B4', 'mouse') + ' of the genome. Switch to human and their boxes shrink to nothing. The reverse: human <b>SVA</b> (class Retroposon, ' + share('Retroposon|SVA', 'human') + ' of the human genome) has no mouse label.'; }
+      note: function () { return 'The human table has no family labelled <b>B2</b> or <b>B4</b>. In mouse they cover ' + share('SINE|B2', 'mouse') + ' and ' + share('SINE|B4', 'mouse') + ' of the genome. Switch to human and their boxes shrink to nothing. In the other direction, human <b>SVA</b> (class Retroposon, ' + share('Retroposon|SVA', 'human') + ' of the human genome) has no mouse label.'; }
     }
   };
   function flag(id, opts) {
