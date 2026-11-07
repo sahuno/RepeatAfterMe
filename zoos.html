@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Two Zoos</title>
+<meta name="description" content="Why mouse repeat results look nothing like human ones: different families, far more young copies in mouse, most of them ERVs, and ERVs that still cause new mutations in mice but not in people.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/zoos.css?v=65874199">
+<script src="data/zoo.js?v=6700092e" defer></script>
+<script src="assets/zoos.js?v=74157247" defer></script>
+<script src="assets/lessonnav.js?v=4651a82d" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Naming</div>
+  <h1>Two zoos</h1>
+  <p class="lede">Mouse and human carry different repeat families, and mouse has far more young copies, most of them ERVs that still cause new mutations. A mouse analysis that follows a human tutorial meets different names, more reads that fit many places, and copies that differ between strains.</p>
+</header>
+
+<section id="zoo">
+  <h2>Families side by side</h2>
+  <div class="zstats">
+    <div class="zstat"><div class="k">Young transposon bases, mouse</div><div class="v" data-stat="mouse.young"></div></div>
+    <div class="zstat"><div class="k">Young transposon bases, human</div><div class="v" data-stat="human.young"></div></div>
+    <div class="zstat"><div class="k">Young LTR bases, mouse</div><div class="v" data-stat="mouse.youngLTR"></div></div>
+    <div class="zstat"><div class="k">Young LTR bases, human</div><div class="v" data-stat="human.youngLTR"></div></div>
+  </div>
+  <p>Each row is one RepeatMasker family label. Bar length is the family's share of the genome; the dark part is bases in young copies. A label missing from one table reads "no such label". Tap a row to see its subfamilies.</p>
+  <div class="legend zlegend"><span><i class="mouse"></i>mouse</span><span><i class="human"></i>human</span><span><i class="young"></i>young copies</span><span><span class="mk">●</span>&nbsp;new insertions documented</span></div>
+  <figure class="ice">
+    <div class="zoo" id="zoogrid"></div>
+    <div class="zpanel" id="zoopanel" aria-live="polite"></div>
+    <figcaption>Young here means a copy under 3% different from its subfamily's original sequence, counted copy by copy; other pages sort whole subfamilies by their median instead. Young is a guide to recent activity, not proof of it: B2 SINEs caused 7 of the 8 mouse SINE insertion mutations below, yet few B2 bases are in young copies. A marker means the sources below document new insertions of that element; no marker means no case in these sources, not that the element is inactive. Shares of the genome are the same numbers as on <a href="names.html">Three names</a>.</figcaption>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+</section>
+
+<section id="moving">
+  <h2>Which ones still move</h2>
+  <p>In the laboratory mouse, new insertions cause about 100 times the share of mutations they cause in people: about 0.1% of de novo mutations in humans (Maksakova et al. 2006). ERV insertions alone account for 10% to 12% of all spontaneous mouse mutations.</p>
+  <table class="mut" aria-label="Published mouse germline mutations caused by new insertions, by element">
+    <tbody>
+      <tr><td>IAP (ERV)</td><td class="n">46</td><td class="b"><div class="bar" style="width:100%"></div></td></tr>
+      <tr><td>ETn/MusD (ERV)</td><td class="n">31</td><td class="b"><div class="bar" style="width:67.4%"></div></td></tr>
+      <tr><td>L1</td><td class="n">12</td><td class="b"><div class="bar" style="width:26.1%"></div></td></tr>
+      <tr><td>SINE (7 B2, 1 B1)</td><td class="n">8</td><td class="b"><div class="bar" style="width:17.4%"></div></td></tr>
+      <tr><td>MLV (ERV)</td><td class="n">7</td><td class="b"><div class="bar" style="width:15.2%"></div></td></tr>
+      <tr><td>ERV-β2 (ETnERV3)</td><td class="n">4</td><td class="b"><div class="bar" style="width:8.7%"></div></td></tr>
+      <tr><td>Other groups</td><td class="n">7</td><td class="b"><div class="bar" style="width:15.2%"></div></td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="font-size:0.9rem">The 115 published mouse germline mutations caused by new insertions, from Gagnier et al. 2019; "other groups" is the remainder, including VL30 and ERV-β4.</p>
+  <ul class="picklist">
+    <li>L1: the mouse reference genome holds 2,811 structurally intact L1s and the human 146 (Gagnier et al. 2019). The original estimates were about 3,000 potentially active mouse L1s in three subfamilies, TF, A and GF (Goodier et al. 2001), and 80 to 100 retrotransposition-competent L1s in an average person (Brouha et al. 2003).</li>
+    <li>Human: "Human retrotransposons are LINE-1, Alu, and SVA" (Kazazian and Moran 2017); Alu and SVA move with LINE-1's proteins. "Unlike in inbred mice, infectious human ERVs have not been described, no new insertions have been found" (Maksakova et al. 2006).</li>
+  </ul>
+</section>
+
+<section id="analysis">
+  <h2>What this means for your analysis</h2>
+  <ol class="fixlist">
+    <li>Expect different names. The mouse table has no SVA, no HERV-K and no HERV-H; its only rows named HERV are 630 copies of four ERVL subfamilies such as HERV16-int and HERVL40-int. Its ERVs that still move are IAP, ETn, MLV and their relatives. Mouse B1 is filed in family Alu (<a href="names.html">Three names</a> explains why), and mouse B2 and B4 have no human label at all.</li>
+    <li>Expect more multi-mapping. Young copies are nearly identical, so their reads fit many places (<a href="multimap.html">One read, many places</a>). In the simulated-read test, the 16 young mouse subfamilies kept 50.4% of their reads as unique, the 16 young human ones 65.5% (<a href="tools.html">Counting tools</a>).</li>
+    <li>Expect your strain to differ from the reference. "Like mouse L1s and ERVs, these mouse SINEs are insertionally polymorphic in inbred strains" (Gagnier et al. 2019), and 84% of the IAP mutations with a known strain arose in C3H mice. Copies in your mice can be missing from the C57BL/6 reference, and reference copies can be missing from your mice.</li>
+    <li>Do not read a human tutorial's list of active elements as a mouse list. In mouse, the ERVs are the main source of new insertions; in human, they cause none.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>Gagnier L, Belancio VP, Mager DL (2019) Mouse germ line mutations due to retrotransposon insertions. Mob DNA 10:15. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6466679/">PMC6466679</a>.</div>
+    <div>Maksakova IA, Romanish MT, Gagnier L, Dunn CA, van de Lagemaat LN, Mager DL (2006) Retroviral elements and their hosts: insertional mutagenesis in the mouse germ line. PLoS Genet 2:e2. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1331978/">PMC1331978</a>.</div>
+    <div>Goodier JL, Ostertag EM, Du K, Kazazian HH (2001) A novel active L1 retrotransposon subfamily in the mouse. Genome Res 11:1677–1685. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC311137/">PMC311137</a>.</div>
+    <div>Brouha B, Schustak J, Badge RM, Lutz-Prigge S, Farley AH, Moran JV, Kazazian HH (2003) Hot L1s account for the bulk of retrotransposition in the human population. Proc Natl Acad Sci USA 100:5280–5285. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC154336/">PMC154336</a>.</div>
+    <div>Kazazian HH, Moran JV (2017) Mobile DNA in health and disease. N Engl J Med 377:361–370. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5980640/">PMC5980640</a>.</div>
+    <div>Real data: UCSC RepeatMasker tables for mm10 and hg38, the rows of <a href="names.html">Three names</a>. Scripts: <a href="prep/q6/family_youth.py">family_youth.py</a>, <a href="prep/q6/build_zoo_json.py">build_zoo_json.py</a>. Markers follow the name lookups recorded in build_zoo_json.py: an element is marked only where a RepeatMasker name matches the name a source uses (for example, MusD is not marked, because no source here gives its RepeatMasker name).</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+/* Repeat After Me: "Two zoos" lesson. Builds on site.css and names.css. */
+:root { --mouse: #E69F00; --human: #0072B2; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --human: #56a8e0; } }
+:root[data-theme="dark"] { --human: #56a8e0; }
+
+.zstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; max-width: 640px; }
+.zstat { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; }
+.zstat .k { font-family: var(--display); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.zstat .v { font-family: var(--mono); font-size: 1.25rem; font-weight: 600; }
+
+.zoo { display: flex; flex-direction: column; gap: 18px; }
+.zclass h3 { font-size: 1.05rem; display: flex; align-items: center; margin-bottom: 4px; }
+.zhead, .zrow { display: grid; grid-template-columns: minmax(6rem, 9rem) 1fr 1fr; gap: 10px; align-items: center; }
+.zhead { font-family: var(--display); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); padding: 0 8px; }
+.zrow { width: 100%; text-align: left; background: transparent; border: 1px solid transparent; border-radius: 6px; padding: 6px 8px; cursor: pointer; color: var(--ink); font: inherit; }
+.zrow:hover { background: var(--surface); border-color: var(--rule); }
+.zrow.on { background: var(--surface); border-color: var(--accent); }
+.zlab { font-family: var(--mono); font-size: 0.85rem; overflow-wrap: anywhere; }
+.zb .track { height: 12px; background: var(--rule); border-radius: 3px; overflow: hidden; }
+.zb .all { display: block; height: 100%; opacity: 0.45; position: relative; }
+.zb .all.mouse { background: var(--mouse); } .zb .all.human { background: var(--human); }
+.zb .all .young { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); opacity: 0.9; display: block; }
+.zb .num { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-2); margin-top: 2px; }
+.zb.none { font-family: var(--body); font-style: italic; font-size: 0.8rem; color: var(--muted); }
+.mk { color: var(--LTR); font-size: 0.8em; }
+.zmore { font-size: 0.85rem; color: var(--muted); margin: 4px 8px 0; }
+@media (max-width: 520px) {
+  .zhead { display: none; }
+  .zrow { grid-template-columns: 1fr 1fr; }
+  .zrow .zlab { grid-column: 1 / -1; }
+}
+
+.zpanel { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.zpanel:empty { display: none; }
+.zcols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 720px) { .zcols { grid-template-columns: 1fr; } }
+.zcols h4 { font-family: var(--display); font-size: 0.95rem; margin: 0 0 4px; }
+.zpanel table.cmp { max-width: none; }
+.zpanel table.cmp td:first-child { font-family: var(--mono); overflow-wrap: anywhere; }
+.zpanel details.more summary { cursor: pointer; font-family: var(--display); font-size: 0.85rem; color: var(--ink-2); margin-top: 6px; }
+ul.marks { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.88rem; color: var(--ink-2); }
+.zlegend i.young { background: var(--ink); } .zlegend i.mouse { background: var(--mouse); opacity: 0.45; } .zlegend i.human { background: var(--human); opacity: 0.45; }
+
+table.mut { border-collapse: collapse; font-size: 0.92rem; max-width: 560px; width: 100%; }
+table.mut td { padding: 4px 10px 4px 0; border-bottom: 1px solid var(--rule); }
+table.mut td.n { font-family: var(--mono); text-align: right; width: 3rem; }
+table.mut td.b { width: 55%; }
+table.mut .bar { height: 12px; background: var(--mouse); border-radius: 3px; opacity: 0.75; }
+.zpanel .tw { overflow-x: auto; }
+.zpanel table.cmp td:first-child { white-space: nowrap; overflow-wrap: normal; }
+@media (max-width: 520px) { .zpanel table.cmp { font-size: 0.82rem; } .zpanel table.cmp th { font-size: 0.68rem; } }
