@@ -94,7 +94,7 @@
     var k = kind(n), html;
     if (k === 'unique') html = '<b>Fits 1 place.</b> STAR writes it with MAPQ 255, and a unique-only count keeps it.' + (S.pos !== null && changes(0, S.pos, S.pos + S.len) ? ' Copy 1 has a change of its own inside the read, so no other copy matches.' : '');
     else if (k === 'multi') html = '<b>Fits ' + n + ' places equally well' + hidden + '.</b> STAR writes all ' + n + ', marks one at random as primary, and gives each MAPQ ' + mapq(n) + '. A unique-only count drops it.';
-    else html = '<b>Fits ' + n.toLocaleString('en-US') + ' places' + hidden + '.</b> More than 10: STAR writes nothing for this read and counts it as "mapped to too many loci" (or, when every starting match is also in too many places, as "unmapped: other"; see the table below). No count ever sees it.';
+    else html = '<b>Fits ' + n.toLocaleString('en-US') + ' places' + hidden + '.</b> More than 10: STAR writes nothing for this read and counts it as "mapped to too many loci" (or, when every starting match is also in too many places, as "unmapped: other"; see the table below). Neither a unique-only count nor a multi-mapper count sees it.';
     verdictEl.className = 'verdict ' + k;
     verdictEl.innerHTML = html;
     Array.prototype.forEach.call(document.querySelectorAll('.rulestable tr[data-k]'), function (tr) {
@@ -253,7 +253,7 @@
       html += '</div><div class="legend">' + SEGS.filter(function (g) { return g[0] !== 'other' || otherSeen; }).map(function (g) { return '<span><i class="s ' + g[0] + '"></i>' + g[1] + '</span>'; }).join('') + '</div>';
       var d = s[5 + runIdx('default', RS.rl)], t = s[5 + runIdx('te100', RS.rl)], nd = d[I.reads] || 1;
       var lostD = (d[I.too_many] + d[I.no_window]) / nd, lostT = (t[I.too_many] + t[I.no_window]) / (t[I.reads] || 1);
-      html += '<p>With default settings and ' + RS.rl + '-base reads, STAR writes nothing for ' + pc(lostD) + ' of these reads (' + pc(d[I.no_window] / nd) + ' never aligned, ' + pc(d[I.too_many] / nd) + ' in too many places). Raising both limits to 100 brings that to ' + pc(lostT) + '. The share in one place hardly changes: raising the limits keeps more multi-mappers, it does not make them unique.</p></div>';
+      html += '<p>With default settings and ' + RS.rl + '-base reads, STAR writes nothing for ' + pc(lostD) + ' of these reads (' + pc(d[I.no_window] / nd) + ' never aligned, ' + pc(d[I.too_many] / nd) + ' in too many places). Raising both limits to 100 brings that to ' + pc(lostT) + '. The share in one place hardly changes, because higher limits keep more multi-mapped reads but leave each one in several places.</p></div>';
       onebox.innerHTML = html;
     }
     function renderRealControls() {

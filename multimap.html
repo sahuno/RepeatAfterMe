@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
 <link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
 <script src="data/multimap.js?v=ebe6c884" defer></script>
-<script src="assets/multimap.js?v=1e89b780" defer></script>
+<script src="assets/multimap.js?v=1891c90f" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -31,11 +31,11 @@
 <header class="lesson">
   <div class="eyebrow">Lesson · Counting</div>
   <h1>One read, many places</h1>
-  <p class="lede">Young copies of a repeat are nearly identical. A short read from one copy fits the others just as well, so the aligner cannot tell where it came from, and may throw it away.</p>
+  <p class="lede">Young copies of a repeat are nearly identical. A short read from one copy fits the others equally well, so the aligner cannot tell where it came from, and may throw it away.</p>
 </header>
 
 <section id="model">
-  <h2>One read, many copies</h2>
+  <h2>A model with made-up copies</h2>
   <p>Made-up copies of one repeat; the first 24 are drawn. Each tick is a letter where a copy differs from the original sequence. The blue band is one read taken from copy 1. Copies that match the read letter for letter light up: those are the places the read fits.</p>
   <div class="mm-controls">
     <label class="mm-range"><span class="lab">Read length</span><input type="range" id="len" min="36" max="150" step="1" value="100"><output id="lenout">100 bases</output></label>
@@ -59,13 +59,13 @@
     <div class="icebox"><svg id="copies" class="ice" role="img" aria-label="Twenty-four copies of one repeat drawn as rows. A band marks where the read sits; copies that match the read exactly are coloured."></svg></div>
     <div class="verdict" id="verdict" aria-live="polite"></div>
     <div class="sweep" id="sweep"></div>
-    <figcaption>Made-up sequences, not real copies. Each copy gets its own random changes at the rate set by Copy age, which is how RepeatMasker measures age: percent of letters different from the subfamily's original sequence. Real young subfamilies have hundreds to thousands of copies, so even a read that fits one copy in a hundred can fit dozens of places. The model is also kind to the aligner: here every change is new, but real copies were made from other copies and share many changes, so real reads fit more places than this. The real numbers are below.</figcaption>
+    <figcaption>Made-up sequences, not real copies. Each copy gets its own random changes at the rate set by Copy age, which is how RepeatMasker measures age: percent of letters different from the subfamily's original sequence. Real young subfamilies have hundreds to thousands of copies, so even a read that fits one copy in a hundred can fit dozens of places. The model also understates the problem. Here every change is new, but real copies were made from other copies and share many changes, so real reads fit more places than this.</figcaption>
   </figure>
 </section>
 
 <section id="rules">
   <h2>What STAR does with each read</h2>
-  <p>STAR is the aligner most RNA-seq pipelines use. With its default settings it sorts every read by how many places it fits equally well.</p>
+  <p>STAR is the default aligner in nf-core/rnaseq and in the ENCODE RNA-seq pipeline. With its default settings it sorts every read by how many places it fits equally well.</p>
   <table class="cmp rulestable">
     <thead><tr><th>Places the read fits</th><th>What STAR writes</th><th>MAPQ</th><th>Kept by a unique-only count?</th></tr></thead>
     <tbody>
@@ -73,17 +73,17 @@
       <tr data-k="2"><td>2</td><td>Both alignments, one marked primary</td><td>3</td><td>No</td></tr>
       <tr data-k="3"><td>3–4</td><td>All alignments, one marked primary</td><td>1</td><td>No</td></tr>
       <tr data-k="5"><td>5–10</td><td>All alignments, one marked primary</td><td>0</td><td>No</td></tr>
-      <tr data-k="11"><td>More than 10</td><td>Nothing. Counted as "mapped to too many loci" in Log.final.out</td><td>none</td><td>No, and no other count sees it either</td></tr>
-      <tr><td>Every starting match in more than 50 places</td><td>Nothing. STAR never tries to align it; Log.final.out counts it as "unmapped: other"</td><td>none</td><td>No, and no other count sees it either</td></tr>
+      <tr data-k="11"><td>More than 10</td><td>Nothing. Counted as "mapped to too many loci" in Log.final.out</td><td>none</td><td>No, and neither does a multi-mapper count</td></tr>
+      <tr><td>Every starting match in more than 50 places</td><td>Nothing. STAR never tries to align it; Log.final.out counts it as "unmapped: other"</td><td>none</td><td>No, and neither does a multi-mapper count</td></tr>
     </tbody>
   </table>
-  <p>The last row is easy to miss. STAR begins each alignment from short exact matches between the read and the genome, called anchors, and by default it ignores an anchor found in more than 50 places. In a young subfamily every anchor is found in hundreds or thousands of places, so the read is never aligned and looks like an ordinary failed read.</p>
+  <p>STAR begins each alignment from short exact matches between the read and the genome, called anchors, and by default it ignores an anchor found in more than 50 places. That limit is the table's last row. In a young subfamily every anchor is found in hundreds or thousands of places, so the read is never aligned and looks like an ordinary failed read.</p>
   <p class="muted" style="font-size:0.9rem">The model above shows only the 10-place limit. MAPQ is the aligner's confidence that a read is in the right place. "Fits equally well" means within 1 point of the best score; one different letter costs 2 points, so a copy that differs by one letter does not count as a place.</p>
 </section>
 
 <section id="real">
   <h2>Which subfamilies lose their reads</h2>
-  <p>Real numbers. From every subfamily, 2,000 reads were cut from the genome at random spots and aligned back with STAR. Each dot is one subfamily: how different its copies are from their original sequence, against the share of its reads that land in one place, the only reads a unique-only count keeps.</p>
+  <p>These numbers come from the real mouse and human genomes. From every subfamily, 2,000 reads were cut from the genome at random spots and aligned back with STAR. Each dot is one subfamily: how different its copies are from their original sequence, against the share of its reads that land in one place, the only reads a unique-only count keeps.</p>
   <div id="realbox"></div>
 </section>
 
@@ -96,11 +96,11 @@
 <section id="fix">
   <h2>What to do</h2>
   <ol class="fixlist">
-    <li><b>Do not test young subfamilies on unique reads alone.</b> Keeping only MAPQ 255 does this, and so does featureCounts with its default settings, which do not count multi-mapping reads at all.</li>
-    <li><b>Let the aligner keep more places.</b> The TEtranscripts authors report that keeping up to 100 alignments per read is a good compromise between file size and recovering multi-mappers; with STAR they set <span class="mono">--outFilterMultimapNmax</span> and <span class="mono">--winAnchorMultimapNmax</span> both to 100. In the runs above this rescues the reads that fit too many places, but most never-aligned reads of the youngest subfamilies stay never aligned, because their anchors sit in more than 100 places.</li>
-    <li><b>Read the "unmapped: other" line.</b> In Log.final.out it includes reads STAR never tried because of the anchor limit, as well as reads that are genuinely bad, such as adapter dimers or contamination. So a large value is not by itself a sign of poor sequencing. To tell the two apart, align again with a higher <span class="mono">--winAnchorMultimapNmax</span> and see whether the line shrinks.</li>
-    <li><b>Then count the multi-mappers on purpose.</b> Either add them up per subfamily, where it does not matter which copy a read came from (TEtranscripts does this), or share each read out between its places (featureCounts <span class="mono">-M --fraction</span> gives each place 1/n of a read; other tools estimate the split from the unique reads).</li>
-    <li><b>Say which copy only when the reads can tell.</b> A read that fits 500 copies says the subfamily is expressed, not which copy is.</li>
+    <li>Do not test young subfamilies on unique reads alone. Keeping only MAPQ 255 does this, and so does featureCounts with its default settings, which do not count multi-mapping reads at all.</li>
+    <li>Let the aligner keep more places. The TEtranscripts authors report that keeping up to 100 alignments per read is a good compromise between file size and recovering multi-mappers; with STAR they set <span class="mono">--outFilterMultimapNmax</span> and <span class="mono">--winAnchorMultimapNmax</span> both to 100. In the runs above, raising both limits rescues the reads that fit too many places, but most never-aligned reads of the youngest subfamilies stay never aligned, because their anchors sit in more than 100 places.</li>
+    <li>Read the "unmapped: other" line in Log.final.out. It counts reads STAR never tried because of the anchor limit, along with bad reads such as adapter dimers or contamination, so a large value can come from young repeats as well as from poor sequencing. To tell the two apart, align again with a higher <span class="mono">--winAnchorMultimapNmax</span> and see whether the line shrinks.</li>
+    <li>Then count the multi-mappers on purpose. Either add them up per subfamily, where it does not matter which copy a read came from (TEtranscripts does this), or share each read out between its places (featureCounts <span class="mono">-M --fraction</span> gives each place 1/n of a read; other tools estimate the split from the unique reads).</li>
+    <li>Name a single copy only when its reads fit that copy alone. A read that fits 500 copies tells you the subfamily is expressed and nothing about which copy.</li>
   </ol>
 </section>
 
