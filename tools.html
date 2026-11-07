@@ -36,7 +36,7 @@
 
 <section id="model">
   <h2>Seven counts from the same reads</h2>
-  <p>Six made-up copies: four of subfamily A and two of subfamily B. Each copy has a stretch of its own, a stretch it shares with its subfamily, and a stretch both subfamilies share. Tap a copy to switch it off, on, or twice as on. Each tick is one read; a read fits every copy that has the stretch it came from.</p>
+  <p>Six made-up copies: four of subfamily A and two of subfamily B. Each copy has a stretch of its own, a stretch it shares with its subfamily, and a stretch both subfamilies share. Tap a copy to switch it off, on, or twice as on. Each tick is one read; a read fits every copy that has the stretch it came from. Several rules use EM (expectation-maximization): a read that fits several copies is split by how busy each copy looks from the reads that fit it alone, and the split is repeated until it stops changing.</p>
   <div class="mm-controls">
     <label class="mm-range"><span class="lab">Own stretch</span><input type="range" id="u" min="0" max="60" step="5" value="20"><output id="uout">20%</output></label>
   </div>
