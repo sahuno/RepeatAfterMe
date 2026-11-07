@@ -269,7 +269,7 @@
     var items = [
       'Of ' + fmt(n) + ' copies of <b>' + esc(S.ltr) + '</b>, <b>' + pc(so, n) + '%</b> are solo, ' + pc(sp5, n) + '% start a copy and ' + pc(sp3, n) + '% end one. A read count for ' + esc(S.ltr) + ' adds all of them together.' +
         (partner ? ' When a copy of this name has a body, it is most often ' + esc(partner[0]) + '.' : ''),
-      'Reads on a body row can only come from places where body sequence remains. Reads on an LTR row can also come from solo LTRs. Either can come from a host gene\'s transcript that runs through the copy, for example inside an intron.',
+      'Reads on a body row can only come from places where body sequence remains. Reads on an LTR row can also come from solo LTRs. Either can come from a host gene\'s transcript that runs through the copy, for example inside an intron; <a href="passenger.html">Passenger or driver</a> shows how to tell.',
       'A solo LTR can still act as a promoter: <span class="q">"their inherent promoter activity can affect expression of neighboring genes"</span> (Subramanian et al. 2011). A higher count for an LTR name therefore does not show, by itself, that full-length proviral RNA is being made.',
       'The two ends of a young copy are identical or nearly so (the ' + SPNAME[S.sp] + ' example in the first figure: ' + fmt(pr.identical) + ' of ' + fmt(pr.len1) + ' bases match), and so are many copies of the same name. A read lying wholly inside one of them fits several places equally well, so the aligner (the program that places each read on the genome) cannot choose. That is the multi-mapping problem; the lesson <a href="multimap.html">One read, many places</a> covers it.'
     ];

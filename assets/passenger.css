@@ -1,0 +1,44 @@
+/* Repeat After Me: "Passenger or driver" lesson. Builds on site.css, names.css and multimap.css. */
+:root { --gene: #0072B2; --erv: #009E73; --own: #009E73; --genecol: #0072B2; --mixed: #E69F00; --cant: #9aa1ad; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --gene: #56a8e0; --genecol: #56a8e0; --cant: #6b7280; } }
+:root[data-theme="dark"] { --gene: #56a8e0; --genecol: #56a8e0; --cant: #6b7280; }
+
+.pctl { display: flex; flex-direction: column; gap: 8px; }
+svg#locus { display: block; max-width: 100%; }
+svg#locus text { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
+svg#locus text.lab { font-family: var(--display); font-weight: 700; font-size: 11px; fill: var(--muted); }
+svg#locus text.sm { font-size: 10px; fill: var(--muted); }
+svg#locus line.intron { stroke: var(--ink-2); stroke-width: 1.5; }
+svg#locus path.chev { fill: none; stroke: var(--ink-2); stroke-width: 1.2; }
+svg#locus rect.exon { fill: var(--rule); stroke: var(--gene); stroke-width: 1.5; }
+svg#locus rect.exon.on { fill: var(--gene); }
+svg#locus rect.ervbody { fill: color-mix(in srgb, var(--erv) 35%, var(--surface)); }
+svg#locus rect.ltr { fill: var(--rule); stroke: var(--erv); stroke-width: 1.5; }
+svg#locus rect.ltr.on { fill: var(--erv); }
+svg#locus path.arrow { fill: none; stroke: var(--erv); stroke-width: 2; }
+svg#locus rect.band { fill: var(--erv); fill-opacity: 0.08; }
+svg#locus polygon.cov.plus { fill: var(--gene); fill-opacity: 0.55; }
+svg#locus polygon.cov.minus { fill: var(--LINE); fill-opacity: 0.6; }
+svg#locus line.base { stroke: var(--rule); }
+
+ul.tests { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-width: 70ch; }
+ul.tests li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; background: var(--surface); border: 1px solid var(--rule); border-left: 5px solid var(--cant); border-radius: 6px; padding: 8px 12px; }
+ul.tests li b { font-family: var(--display); font-size: 0.92rem; }
+ul.tests li .pill { font-family: var(--display); font-size: 0.78rem; font-weight: 700; color: var(--ink-2); align-self: start; }
+ul.tests li .why { grid-column: 1 / -1; font-size: 0.92rem; color: var(--ink-2); }
+ul.tests li.t-own { border-left-color: var(--own); }
+ul.tests li.t-gene { border-left-color: var(--genecol); }
+ul.tests li.t-mixed { border-left-color: var(--mixed); }
+
+svg#scatter circle.dot.other { fill: var(--otherrep); }
+.subbox { display: flex; flex-direction: column; gap: 8px; }
+.subbox h3 { font-size: 1.1rem; }
+.subbox .bar { display: flex; height: 20px; border-radius: 4px; overflow: hidden; background: var(--rule); max-width: 620px; }
+.subbox .bar .s { display: block; height: 100%; }
+.s.p-exon { background: var(--ink-2); }
+.s.p-intron_same { background: var(--gene); }
+.s.p-intron_opp { background: var(--LINE); }
+.s.p-intron_both { background: var(--DNA); }
+.s.p-intergenic { background: color-mix(in srgb, var(--erv) 55%, var(--surface)); }
+svg#scatter circle.dot.LINE { fill: var(--LINE); } svg#scatter circle.dot.SINE { fill: var(--SINE); }
+svg#scatter circle.dot.LTR { fill: var(--LTR); } svg#scatter circle.dot.DNA { fill: var(--DNA); }

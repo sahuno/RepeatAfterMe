@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Passenger or Driver</title>
+<meta name="description" content="An ERV copy inside a gene can show reads because the gene's RNA runs through it, not because the copy is switched on. A model of the two cases, the tests that tell them apart, and where every mouse and human subfamily's copies sit relative to genes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/passenger.css?v=ac613102">
+<script src="data/passenger.js?v=15899344" defer></script>
+<script src="assets/passenger.js?v=bc4dfa45" defer></script>
+<script src="assets/lessonnav.js?v=6d295661" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Counting</div>
+  <h1>Passenger or driver</h1>
+  <p class="lede">An ERV copy inside a gene gets reads whenever the gene is transcribed, because the gene's unspliced RNA carries the copy along. A count over the copy cannot tell those passenger reads from RNA the copy's own LTR made. The shape and the strand of the reads can.</p>
+</header>
+
+<section id="model">
+  <h2>One copy, two ways to get reads</h2>
+  <p>A made-up gene with three exons, and an ERV copy in its first intron. The gene's promoter makes pre-mRNA, which covers the introns thinly, and mRNA, which covers only the exons. The copy's own 5′ LTR can start an RNA that runs to its 3′ LTR. Switch each on and off and watch the reads and the four tests below.</p>
+  <div class="pctl">
+    <div class="seg presets" role="group" aria-label="Examples">
+      <span class="lab">Try</span>
+      <button type="button" data-preset="1,0">Gene on, LTR off</button>
+      <button type="button" data-preset="0,1">Gene off, LTR on</button>
+      <button type="button" data-preset="1,1">Both on</button>
+    </div>
+    <div class="seg" role="group" aria-label="Gene promoter">
+      <span class="lab">Gene</span>
+      <button type="button" data-g="1">On</button>
+      <button type="button" data-g="0">Off</button>
+    </div>
+    <div class="seg" role="group" aria-label="ERV's own LTR">
+      <span class="lab">LTR</span>
+      <button type="button" data-e="1">On</button>
+      <button type="button" data-e="0">Off</button>
+    </div>
+    <div class="seg" role="group" aria-label="Which way the copy points">
+      <span class="lab">Copy points</span>
+      <button type="button" data-o="opp">Against the gene</button>
+      <button type="button" data-o="same">Same way as the gene</button>
+    </div>
+    <div class="seg" role="group" aria-label="Library">
+      <span class="lab">Library</span>
+      <button type="button" data-lib="stranded">Stranded</button>
+      <button type="button" data-lib="unstranded">Unstranded</button>
+    </div>
+    <div class="seg" role="group" aria-label="RNA">
+      <span class="lab">RNA</span>
+      <button type="button" data-rna="whole">Whole-cell, total</button>
+      <button type="button" data-rna="polya">Poly-A, cytoplasmic</button>
+    </div>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="locus" role="img" aria-label="A gene with three exons and an ERV copy in its first intron, with read coverage below on each strand. The tests below describe the coverage."></svg></div>
+    <ul class="tests" id="tests" aria-live="polite"></ul>
+    <div class="controls"><button type="button" class="reset" id="reset">↺ Reset view</button></div>
+    <figcaption>Made-up levels, not measurements: exons get about nine times the reads of introns in whole-cell RNA, and far more in poly-A cytoplasmic RNA, where most unspliced RNA is gone. The copy's own RNA is set so that, in whole-cell RNA, it puts about as many reads on the copy as the gene's pre-mRNA does. Plus-strand reads are blue, minus-strand reads orange; the gene runs on the plus strand.</figcaption>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+</section>
+
+<section id="where">
+  <h2>Where the copies sit</h2>
+  <p>Real numbers: every RepeatMasker copy in mouse and human, placed by where it sits relative to protein-coding genes. Copies outside genes cannot be passengers of a gene's RNA; copies in introns pointing against their gene are the ones the strand test can check.</p>
+  <div class="seg presets" role="group" aria-label="Species">
+    <span class="lab">Species</span>
+    <button type="button" data-dsp="mouse">Mouse</button>
+    <button type="button" data-dsp="human">Human</button>
+  </div>
+  <label class="seg findsub"><span class="lab">Find</span> <input id="subfind" type="text" placeholder="e.g. MERVL-int" autocomplete="off" spellcheck="false"></label>
+  <figure class="ice">
+    <div class="icebox"><svg id="scatter" role="img" aria-label="Scatter plot: each dot is one subfamily, its age against the share of its copies inside protein-coding genes. Tap a dot to see where its copies sit."></svg></div>
+    <div class="subbox" id="subbox" aria-live="polite"></div>
+    <figcaption>Each dot is one subfamily covering at least 1,000 bases; colour is class, as on every page; grey is other repeats. Tap a dot or find a subfamily by name. A copy is one RepeatMasker row. It counts as exon if it touches an exon of any protein-coding gene on either strand, then as intron if it lies inside one, then as outside genes. Rule from Kong et al. 2019.</figcaption>
+  </figure>
+  <ul class="picklist">
+    <li>Most copies of the young ERVs sit outside protein-coding genes: 81% of IAPEz-int, 92% of MMERVK10C-int and 73% of MERVL-int copies in mouse; 79% of HERVK-int and 83% of HERVH-int copies in human.</li>
+    <li>Most young ERV copies in introns point against their gene: IAPEz-int 1,049 against and 277 the same way, MMERVK10C-int 211 and 35, HERVK-int 35 and 10, HERVH-int 780 and 161. For these, a stranded library can tell the copy's own RNA from the gene's.</li>
+    <li>Host gene here means protein-coding gene. Counting long non-coding RNA genes as well would file copies that make their own RNA as passengers: 1,515 of the 2,406 HERVH-int copies inside any annotated gene overlap a long non-coding RNA gene.</li>
+    <li>Check against a published count: with every gene type, as Kong et al. did, 798 of the 1,620 human L1HS copies here are outside genes, 772 in introns and 50 in exons; they report 951, 654 and 5 of 1,610 with an older, smaller annotation.</li>
+  </ul>
+</section>
+
+<section id="checks">
+  <h2>Checks before calling an ERV activated</h2>
+  <p>The published tests below were worked out on human L1, not on ERVs; the logic carries over because it rests on how transcription runs, not on the element.</p>
+  <ol class="fixlist">
+    <li>Look at the reads around the copy, not only the count. Reads that stop at the copy's edges and start inside its 5′ end were made by the copy; reads that run at the same depth through the copy and the intron around it belong to the gene. Deininger et al. found unstranded or whole-cell data "would require extensive manual curation looking at the pattern of expression around each L1 locus".</li>
+    <li>Use a stranded library. Reads carried by a gene's RNA run the gene's way; on a copy pointing against the gene, reads running the copy's way can only come from the copy (Deininger et al. used the strand to estimate this background).</li>
+    <li>Know which RNA was sequenced. Whole-cell and total RNA keep unspliced pre-mRNA, so introns, and the copies in them, get many more reads: "any RNA sample containing the nuclear component is heavily contaminated with introns" (Deininger et al.); Kong et al. saw more intronic repeat reads in rRNA-depleted than in poly-A libraries.</li>
+    <li>Split the subfamily's reads by where the copies sit, and test the copies outside genes. Kong et al. divided each subfamily into exonic, intronic and intergenic copies "To further distinguish autonomous TE expression from co-expression with host genes or intron retention".</li>
+    <li>If the host gene is up as much as the copy, suspect a passenger. In the model, switching the gene on raises the copy's count with no step at its edges.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>Deininger P, Morales ME, White TB, Baddoo M, Hedges DJ, Servant G, Srivastav S, Smither ME, Concha M, DeHaro DL, Flemington EK, Belancio VP (2017) A comprehensive approach to expression of L1 loci. Nucleic Acids Res 45:e31. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5389711/">PMC5389711</a>.</div>
+    <div>Kong Y, Rose CM, Cass AA, Williams AG, Darwish M, Lianoglou S, Haverty PM, Tong AJ, Blanchette C, Albert ML, Mellman I, Bourgon R, Greally J, Jhunjhunwala S, Chen-Harris H (2019) Transposable element expression in tumors is associated with immune infiltration and increased antigenicity. Nat Commun 10:5228. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6864081/">PMC6864081</a>.</div>
+    <div>Real data: UCSC RepeatMasker tables for mm10 and hg38 (the rows of <a href="names.html">Three names</a>), placed against the gene annotation that built the STAR indexes of <a href="multimap.html">One read, many places</a> (55,401 mouse genes, 62,703 human; 21,859 and 20,042 protein-coding). Scripts: <a href="prep/q12/locus_context.py">locus_context.py</a>, <a href="prep/q12/gene_types.py">gene_types.py</a>, <a href="prep/q12/run_context.sh">run_context.sh</a>, <a href="prep/q12/build_passenger_json.py">build_passenger_json.py</a>. The model is written for this page: <a href="assets/passenger.js?v=bc4dfa45">passenger.js</a>.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>
