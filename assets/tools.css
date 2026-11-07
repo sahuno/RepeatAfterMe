@@ -1,0 +1,59 @@
+/* Repeat After Me: "Counting tools" lesson. Builds on site.css, names.css and multimap.css (sliders, presets). */
+:root { --sfA: #0072B2; --sfB: #D55E00; --bad: #b4462b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sfA: #56a8e0; --sfB: #f08a4b; --bad: #e8805f; } }
+:root[data-theme="dark"] { --sfA: #56a8e0; --sfB: #f08a4b; --bad: #e8805f; }
+
+.methods { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.mdesc { font-size: 0.95rem; }
+
+svg#copysvg { display: block; max-width: 100%; overflow: visible; }
+svg#copysvg text { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
+svg#copysvg text.colhead { font-family: var(--display); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; fill: var(--muted); }
+svg#copysvg text.clab { font-family: var(--display); font-size: 12px; font-weight: 700; fill: var(--ink); }
+svg#copysvg text.clab .lv { font-family: var(--mono); font-weight: 400; font-size: 11px; fill: var(--muted); }
+svg#copysvg text.num.bad { fill: var(--bad); font-weight: 600; }
+svg#copysvg text.na { fill: var(--muted); font-style: italic; font-family: var(--body); font-size: 12px; }
+svg#copysvg g.copy { cursor: pointer; }
+svg#copysvg g.copy:focus { outline: none; }
+svg#copysvg g.copy:focus-visible rect.hit { stroke: var(--accent); stroke-width: 2; }
+svg#copysvg rect.hit { fill: transparent; rx: 4; }
+svg#copysvg g.copy:hover rect.hit { fill: color-mix(in srgb, var(--ink) 5%, transparent); }
+svg#copysvg .sfA rect.uniq, svg#copysvg rect.est.sfA { fill: var(--sfA); }
+svg#copysvg .sfB rect.uniq, svg#copysvg rect.est.sfB { fill: var(--sfB); }
+svg#copysvg .sfA rect.shared { fill: var(--sfA); fill-opacity: 0.35; }
+svg#copysvg .sfB rect.shared { fill: var(--sfB); fill-opacity: 0.35; }
+svg#copysvg g.offc rect.z { opacity: 0.45; }
+svg#copysvg rect.hatchbg { fill: var(--surface); }
+svg#copysvg line.hatchline { stroke: var(--ink-2); stroke-width: 2; }
+svg#copysvg rect.rd { fill: var(--ink); }
+svg#copysvg rect.track { fill: var(--rule); }
+svg#copysvg rect.truth { fill: var(--ink); }
+svg#copysvg line.sep { stroke: var(--rule); }
+
+.zlegend i.u { background: var(--sfA); } .zlegend i.s { background: color-mix(in srgb, var(--sfA) 35%, var(--surface)); }
+.zlegend i.x { background: repeating-linear-gradient(45deg, var(--ink-2) 0 2px, var(--surface) 2px 5px); }
+.zlegend i.t { background: var(--ink); width: 3px; }
+
+.sumwrap { overflow-x: auto; }
+table.sum { border-collapse: collapse; font-size: 0.92rem; }
+@media (max-width: 520px) {
+  table.sum { font-size: 0.8rem; width: 100%; }
+  table.sum th, table.sum td { padding-right: 6px; }
+  table.sum th { font-size: 0.64rem; letter-spacing: 0.02em; }
+  table.sum td.r { font-size: 0.78rem; }
+}
+table.sum th, table.sum td { padding: 5px 12px 5px 0; border-bottom: 1px solid var(--rule); text-align: left; }
+table.sum th { font-family: var(--display); font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+table.sum td.r, table.sum th.r { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+table.sum td.bad { color: var(--bad); font-weight: 600; }
+table.sum td.na { font-family: var(--body); font-style: italic; color: var(--muted); }
+table.sum tr[data-m] { cursor: pointer; }
+table.sum tr.on td { background: color-mix(in srgb, var(--accent) 12%, transparent); font-weight: 600; }
+table.sum tr.truthrow td { font-weight: 600; }
+
+table.tooltab { border-collapse: collapse; font-size: 0.9rem; min-width: 680px; }
+table.tooltab th, table.tooltab td { padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+table.tooltab th { font-family: var(--display); font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+table.tooltab td:first-child { font-family: var(--display); font-weight: 700; white-space: nowrap; }
+table.tooltab td.d { font-family: var(--mono); font-size: 0.82rem; white-space: nowrap; }
+.picklist { margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 10px; max-width: 66ch; }

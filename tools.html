@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Counting Tools</title>
+<meta name="description" content="TEtranscripts, TElocal, SQuIRE, Telescope, SalmonTE and featureCounts share out multi-mapping reads in different ways. Run each rule on the same made-up reads and see which numbers you can trust.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=4dad709a">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/tools.css?v=eabf14cc">
+<script src="assets/tools.js?v=b2639954" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Tooling</div>
+  <h1>Counting tools</h1>
+  <p class="lede">Every repeat-counting tool makes two choices: whether it reports one count per copy or one per subfamily, and how it splits a read that fits several places. Subfamily totals survive most choices. Copy counts depend on the reads that fit one copy alone.</p>
+</header>
+
+<section id="model">
+  <h2>Seven counts from the same reads</h2>
+  <p>Six made-up copies: four of subfamily A and two of subfamily B. Each copy has a stretch of its own, a stretch it shares with its subfamily, and a stretch both subfamilies share. Tap a copy to switch it off, on, or twice as on. Each tick is one read; a read fits every copy that has the stretch it came from.</p>
+  <div class="mm-controls">
+    <label class="mm-range"><span class="lab">Own stretch</span><input type="range" id="u" min="0" max="60" step="5" value="20"><output id="uout">20%</output></label>
+  </div>
+  <div class="seg presets" role="group" aria-label="Copy age examples">
+    <span class="lab">Try</span>
+    <button type="button" data-u="0">Young copies, 0%</button>
+    <button type="button" data-u="0.5">Old copies, 50%</button>
+    <button type="button" data-x="1">A and B share a stretch</button>
+    <button type="button" data-x="0">They share nothing</button>
+  </div>
+  <div class="seg presets" role="group" aria-label="Which copies are on">
+    <span class="lab">Switched on</span>
+    <button type="button" data-lv="0,2,0,0,1,0">A2 and B1</button>
+    <button type="button" data-lv="1,1,1,1,0,0">All of A</button>
+    <button type="button" data-lv="0,0,0,0,1,1">Only B</button>
+  </div>
+  <div class="methods seg" role="group" aria-label="Counting rule">
+    <span class="lab">Count with</span>
+    <button type="button" data-m="uniq">Unique only</button>
+    <button type="button" data-m="fcm">-M</button>
+    <button type="button" data-m="fcfrac">-M --fraction</button>
+    <button type="button" data-m="tetx">TEtranscripts</button>
+    <button type="button" data-m="emcopy">Copy EM</button>
+    <button type="button" data-m="telescope">Telescope default</button>
+    <button type="button" data-m="salmonte">SalmonTE</button>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="copysvg" role="group" aria-label="Six made-up copies drawn as bars with their reads as ticks. To the right, the chosen rule's count for each copy against the true count, then the totals for subfamilies A and B."></svg></div>
+    <div class="legend zlegend"><span><i class="u"></i>own stretch</span><span><i class="s"></i>shared with its subfamily</span><span><i class="x"></i>shared by A and B</span><span><i class="t"></i>true count</span></div>
+    <p class="note" id="modelnote" aria-live="polite"></p>
+    <div class="sumwrap"><table class="sum" id="sumtable" aria-label="Every rule's counts for the same reads"></table></div>
+    <div class="controls"><button type="button" class="reset" id="reset">↺ Reset view</button></div>
+    <figcaption>Made-up copies of equal length, with reads spread evenly along each switched-on copy, so nothing here is random. Each rule is a simplified version of what the tool does: the EM here shares reads by how many reads each copy has, and leaves out the read-length and fragment details the real tools add. Tap a row of the table to draw that rule above. Numbers in red differ from the truth by more than half a read; "Counted" is all reads the rule counted; "Off by" adds up how far each copy's count is from its truth, and is red when at least one copy is off by more than half a read. A dash marks a rule that reports subfamilies only.</figcaption>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+</section>
+
+<section id="tools">
+  <h2>What each tool does</h2>
+  <p>All but SalmonTE start from a genome alignment that keeps multi-mapping reads; <a href="multimap.html">One read, many places</a> shows why the aligner's limits matter.</p>
+  <div class="sumwrap">
+    <table class="tooltab">
+      <thead><tr><th>Tool</th><th>Starts from</th><th>Splits a read that fits several places</th><th>Reports</th><th>Last code change</th></tr></thead>
+      <tbody>
+        <tr><td>featureCounts</td><td>BAM</td><td>By default it does not count the read. With -M each place gets a whole read; with -M --fraction each gets 1/n.</td><td>One count per feature in your annotation, or per gene_id</td><td class="d">2026-11-02</td></tr>
+        <tr><td>TEtranscripts, TEcount</td><td>BAM, up to 100 alignments per read recommended</td><td>EM between the copies the read fits (default multi mode); uniq mode drops it</td><td>One count per subfamily: copies are added up by gene_id. TEtranscripts then runs DESeq2.</td><td class="d">2026-08-10</td></tr>
+        <tr><td>TElocal</td><td>BAM</td><td>EM, with the same multi and uniq modes</td><td>One count per copy</td><td class="d">2026-05-11</td></tr>
+        <tr><td>SQuIRE</td><td>FASTQ; it runs STAR itself</td><td>First in proportion to each copy's unique reads, then EM; copies left with less than one read are set to 0</td><td>Counts per copy and per subfamily</td><td class="d">2022-06-20</td></tr>
+        <tr><td>Telescope</td><td>BAM</td><td>A statistical model fitted by EM; by default a read with several equally likely copies is left out</td><td>One count per copy in its annotation; the ready-made annotations are human only (HERVs and L1)</td><td class="d">2023-02-22</td></tr>
+        <tr><td>SalmonTE</td><td>FASTQ; no genome alignment</td><td>Salmon shares reads between the reference sequences</td><td>One count per reference sequence: 301 for mouse, with Repbase names such as L1MdA_I rather than RepeatMasker's L1Md_A</td><td class="d">2023-01-26</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted" style="font-size:0.9rem">Last code change is the date of the newest commit on each project's GitHub page, checked 2026-11-07.</p>
+</section>
+
+<section id="pick">
+  <h2>Which to pick</h2>
+  <ol class="picklist" id="picklist">
+    <li>To ask whether a subfamily goes up or down, use a subfamily count that shares out multi-mapping reads: TEcount in multi mode, or featureCounts -M --fraction with gene_id set to the subfamily. In the model, the EM rules keep both subfamily totals within half a read of the truth in every setting. -M --fraction gives part of the shared stretch to a silent subfamily: switch on all of A and it counts 6.7 reads for B, which made none.</li>
+    <li>To ask which copy is expressed, use a copy-level tool (TElocal, SQuIRE or Telescope), and check how many reads fit each reported copy alone. Set the own stretch to 0% in the model: copy EM then spreads a subfamily's reads evenly over its copies, and Telescope's default drops them. Telescope's default also drops shared reads when several copies are equally busy: switch on all of A and it keeps 24 of 120 reads.</li>
+    <li>Without a genome alignment, SalmonTE gives one count per reference sequence. It cannot say which copy, and its names have to be matched to RepeatMasker names by hand.</li>
+    <li>For young subfamilies, leave out unique-only counts and featureCounts -M without --fraction. The first drops most of their reads, and the second counts one read once for every place it fits.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>featureCounts: <a href="https://github.com/ShiLab-Bioinformatics/subread/tree/8021ab5/doc">Subread users guide</a> (sections on -M, --fraction and --primary).</div>
+    <div>TEtranscripts 2.2.4: <a href="https://github.com/mhammell-laboratory/TEtranscripts/tree/e7f9b93">README and code at e7f9b93</a> (EM over copies in <span class="mono">TEToolkit/EMAlgorithm.py</span>; copies summed by gene_id in <span class="mono">TEToolkit/TEindex.py</span>); the <a href="https://www.mghlab.org/software/tetranscripts">lab page</a> on the TE GTF files. Jin Y, Tam OH, Paniagua E, Hammell M (2015) Bioinformatics 31:3593–9.</div>
+    <div>TElocal 1.1.3: <a href="https://github.com/mhammell-laboratory/TElocal/tree/1a168c2">README at 1a168c2</a> and the <a href="https://www.mghlab.org/software/telocal">lab page</a> ("a locus-specific version of our popular TEtranscripts tool").</div>
+    <div>SQuIRE: <a href="https://github.com/wyang17/SQuIRE/tree/7c4c79a">README at 7c4c79a</a>; Yang WR, Ardeljan D, Pacyna CN, Payer LM, Burns KH (2019) Nucleic Acids Res 47:e27 (Count method).</div>
+    <div>Telescope: <a href="https://github.com/mlbendall/telescope/tree/4cf1859">README at 4cf1859</a> (--reassign_mode); <a href="https://github.com/mlbendall/telescope_annotation_db/tree/a8a282b/builds">telescope_annotation_db builds</a>; Bendall ML et al. (2019) PLoS Comput Biol 15:e1006453.</div>
+    <div>SalmonTE: <a href="https://github.com/LiuzLab/SalmonTE/tree/0a40519">README and reference/mm/mm.fa at 0a40519</a> (301 sequences, 536,993 bases); Jeong HH, Yalamanchili HK, Guo C, Shulman JM, Liu Z (2018) Pac Symp Biocomput 23:168–79.</div>
+    <div>The model is written for this page: <a href="assets/tools.js?v=b2639954">tools.js</a>.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours for A and B: Okabe-Ito blue and vermillion, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>
