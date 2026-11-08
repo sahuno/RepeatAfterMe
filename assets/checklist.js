@@ -128,7 +128,7 @@
   function copies(state) {
     var r = state === 'pass' ? ['chr7 copy, 1,014 bases', 0.353] : ['chrX copy, 6,458 bases', 0.015];
     var w = (W - 8) * r[1];
-    return frame(62, '<text class="fh" x="4" y="11">' + r[0] + '</text><rect class="trk" x="4" y="20" width="' + (W - 8) + '" height="16" rx="2"/><rect class="fb" x="4" y="20" width="' + Math.max(1.5, w).toFixed(1) + '" height="16" rx="2"/><text class="fv" x="' + (8 + Math.max(1.5, w)).toFixed(1) + '" y="52">' + (100 * r[1]).toFixed(1) + '% of its reads fit it alone</text>');
+    return frame(62, '<text class="fh" x="4" y="11">' + r[0] + '</text><rect class="trk" x="4" y="20" width="' + (W - 8) + '" height="16" rx="2"/><rect class="fb" x="4" y="20" width="' + Math.max(1.5, w).toFixed(1) + '" height="16" rx="2"/><text class="fv" x="4" y="52">' + (100 * r[1]).toFixed(1) + '% of its reads fit it alone</text>');
   }
   function dots(state) {
     var fc = state === 'pass' ? [1.9, 2.1, 2.0] : [1.1, 1.2, 4.0];
