@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What Keeps Copies Silent</title>
+<meta name="description" content="In mouse cells, what stops transposon copies from being read into RNA, and which families switch on when SETDB1, KAP1, DNA methylation or the piRNA pathway is removed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/silencing.css?v=af4600ac">
+<script src="assets/silencing.js?v=ff0cf473" defer></script>
+<script src="assets/lessonnav.js?v=9f5b4a0c" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Interpretation</div>
+  <h1>What keeps copies silent</h1>
+  <p class="lede">In mouse cells, what stops transposon copies from being read into RNA, and which families switch on when one of those brakes is removed? Silent here means the copy makes little or no RNA. Cells use more than one brake, which brake matters depends on the cell, and so each knockout wakes its own set of families.</p>
+</header>
+
+<section id="brakes">
+  <h2>The brakes</h2>
+  <p>DNA in the nucleus is wrapped around histone proteins. A chemical tag on a histone or on the DNA itself can keep a stretch from being read. The tags that silence transposons come from a chain of proteins.</p>
+  <dl class="brk">
+    <dt>KRAB zinc-finger proteins</dt>
+    <dd>Proteins that each recognise a DNA sequence. "KAP1 is recruited to TEs by Kruppel-associated box zinc fingers, which evolved in tandem with TEs to mediate their silencing" (Griffin et al. 2021; TE, transposable element).</dd>
+    <dt>KAP1</dt>
+    <dd>Also called TRIM28, KAP1 "represses genes by recruiting the histone methyltransferase SETDB1" (Rowe et al. 2010).</dd>
+    <dt>SETDB1</dt>
+    <dd>SETDB1 writes H3K9me3, three methyl groups on lysine 9 of histone H3, a mark of silent DNA. It "is the catalytic subunit of the KAP1 and HUSH complexes"; HUSH "is recruited via chromodomain interactions with H3K9me3 and also maintains TE silencing" (Griffin et al.).</dd>
+    <dt>DNA methylation</dt>
+    <dd>A methyl tag on the DNA's cytosines. It "has an important role in proviral silencing in somatic and germ-lineage cells" (Matsui et al. 2010); a provirus is a retrovirus copy built into the genome, and an ERV is one.</dd>
+    <dt>piRNAs</dt>
+    <dd>Small RNAs made in germ cells. "piRNAs and Piwi proteins have been implicated in transposon control and are linked to transposon methylation in mammals", acting "as specificity determinants of DNA methylation in germ cells" (Aravin et al. 2008).</dd>
+  </dl>
+</section>
+
+<section id="remove">
+  <h2>Remove one brake</h2>
+  <p>Published experiments in mouse cells, each removing one brake and reading which families made RNA. Pick an experiment. Families are named as each paper names them; a family not listed was not reported in that source.</p>
+  <label class="pick"><span class="lab">Experiment</span> <select id="expick" aria-label="Experiment"></select></label>
+  <figure class="ice">
+    <div class="icebox"><svg id="layersvg" role="img" aria-label="A transposon copy under its silencing layers, with the removed layer lifted off. The text below names what woke."></svg></div>
+    <div class="exread" id="exread" aria-live="polite"></div>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+  <ul class="picklist">
+    <li>In embryonic stem cells, SETDB1 is the main brake on ERVs and DNA methylation is not: removing SETDB1 woke 4% to 20% of the copies of ten ERV subfamilies, and removing all three DNA methyltransferases woke no ERV subfamily at that level (Karimi et al. 2011).</li>
+    <li>L1 copies did not respond to either: "L1 elements show no consistent changes in expression or H3K9me3 in either KO line" (Karimi et al.).</li>
+    <li>In tumour cells, SETDB1 still holds ERVs: "Induced TEs were predominantly LTR-type (79–84%), including MMERGLN, MMVL30, and MMERVK10C elements" (Griffin et al., B16 and LLC).</li>
+  </ul>
+</section>
+
+<section id="cells">
+  <h2>It depends on the cell</h2>
+  <ol class="fixlist">
+    <li>Embryonic stem cells and the early embryo: a pathway "involving KAP1 and ESET/ESET-mediated H3K9me3 is required for proviral silencing during the period early in embryogenesis when DNA methylation is dynamically reprogrammed" (Matsui et al.; ESET is another name for SETDB1).</li>
+    <li>Body cells: "DNA methylation may be critical for silencing of these ERVs in somatic cells and at specific stages in germline development" (Karimi et al., citing Walsh et al. 1998, whose title reads "Transcription of IAP endogenous retroviruses is constrained by cytosine methylation").</li>
+    <li>The male germline: removing the piRNA protein MIWI2 caused "inappropriate activation of transposable elements" and loss of germ cells (Carmell et al. 2007).</li>
+    <li>Tumour lines: in B16 melanoma and Lewis lung carcinoma (LLC), SETDB1 keeps "hundreds of TE insertions" silent, and works with different partners: "Trim28 scored selectively in B16, and HUSH members ... scored preferentially in LLC" (Griffin et al.).</li>
+  </ol>
+</section>
+
+<section id="means">
+  <h2>Reading a knockout's RNA-seq</h2>
+  <ol class="fixlist">
+    <li>Expect ERVs, not L1, after losing SETDB1 or KAP1. The families that rise tell you which brake was holding them; a rise in L1 after SETDB1 loss would be unexpected from these studies.</li>
+    <li>Expect few copies of each family to wake. 4% to 20% of copies, in the ES cell experiment above: a subfamily's fold change averages the woken copies with many still silent ones (<a href="copies.html">Which copies</a>).</li>
+    <li>Check for genes switched on by the woken copies. In SETDB1-knockout ES cells, "~15% of up-regulated genes are induced in association with de-repression of promoter proximal ERVs, half in the context of 'chimaeric' transcripts that initiate within these retroelements and splice to genic exons" (Karimi et al.). Those reads cover both the ERV and the gene (<a href="passenger.html">Passenger or driver</a>).</li>
+    <li>Use names your source can be matched to. Papers write GLN or MMERGLN, ERVK10C or MMERVK10C, IAP-d or IAPE-z; the mm10 table has its own names (<a href="names.html">Three names</a>). Match by name before you compare your list with theirs.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>Rowe HM, Jakobsson J, Mesnard D, et al. (2010) KAP1 controls endogenous retroviruses in embryonic stem cells. Nature 463:237–240. <a href="https://doi.org/10.1038/nature08674">doi:10.1038/nature08674</a> (quoted from the abstract, <a href="https://pubmed.ncbi.nlm.nih.gov/20075919/">PubMed 20075919</a>).</div>
+    <div>Matsui T, Leung D, Miyashita H, et al. (2010) Proviral silencing in embryonic stem cells requires the histone methyltransferase ESET. Nature 464:927–931. <a href="https://doi.org/10.1038/nature08858">doi:10.1038/nature08858</a> (quoted from the abstract, <a href="https://pubmed.ncbi.nlm.nih.gov/20164836/">PubMed 20164836</a>).</div>
+    <div>Karimi MM, Goyal P, Maksakova IA, et al. (2011) DNA methylation and SETDB1/H3K9me3 regulate predominantly distinct sets of genes, retroelements, and chimeric transcripts in mESCs. Cell Stem Cell 8:676–687. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3857791/">PMC3857791</a>.</div>
+    <div>Walsh CP, Chaillet JR, Bestor TH (1998) Transcription of IAP endogenous retroviruses is constrained by cytosine methylation. Nat Genet 20:116–117. <a href="https://doi.org/10.1038/2413">doi:10.1038/2413</a> (cited through Karimi et al.).</div>
+    <div>Griffin GK, Wu J, Iracheta-Vellve A, et al. (2021) Epigenetic silencing by SETDB1 suppresses tumour intrinsic immunogenicity. Nature 595:309–314. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9166167/">PMC9166167</a>.</div>
+    <div>Aravin AA, Sachidanandam R, Bourc'his D, et al. (2008) A piRNA pathway primed by individual transposons is linked to de novo DNA methylation in mice. Mol Cell 31:785–799. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2730041/">PMC2730041</a>.</div>
+    <div>Carmell MA, Girard A, van de Kant HJ, et al. (2007) MIWI2 is essential for spermatogenesis and repression of transposons in the mouse male germline. Dev Cell 12:503–514. <a href="https://doi.org/10.1016/j.devcel.2007.03.001">doi:10.1016/j.devcel.2007.03.001</a> (quoted from the abstract, <a href="https://pubmed.ncbi.nlm.nih.gov/17395546/">PubMed 17395546</a>).</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>

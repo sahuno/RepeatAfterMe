@@ -15,6 +15,7 @@
     { href: 'copies.html', title: 'Which copies' },
     { href: 'units.html', title: 'Rows or subfamilies' },
     { href: 'passenger.html', title: 'Passenger or driver' },
+    { href: 'silencing.html', title: 'What keeps copies silent' },
     { href: 'checklist.html', title: 'Before you show it' }
   ];
   var here = location.pathname.split('/').pop() || 'index.html';
