@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Not in the Reference</title>
+<meta name="description" content="The mouse repeat table lists the copies in C57BL/6J DNA. Other strains lack thousands of them and carry thousands more; how many, for 17 strains, and what that does to your reads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/strains.css?v=55b47b99">
+<script src="data/strains.js?v=f7959b72" defer></script>
+<script src="assets/strains.js?v=0577a1c3" defer></script>
+<script src="assets/lessonnav.js?v=75ddf936" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Naming</div>
+  <h1>Not in the reference</h1>
+  <p class="lede">Does your mouse carry the same repeat copies as the reference genome? The mouse reference, mm10 (GRCm38), was sequenced from C57BL/6J mice, so its RepeatMasker table lists the copies in C57BL/6J DNA. If your RNA came from another strain, that strain lacks thousands of the listed copies and carries thousands the table never lists. C57BL/6NJ, the other C57BL/6 strain in one large catalogue, differs at 115 places.</p>
+</header>
+
+<section id="ref">
+  <h2>One strain in the table</h2>
+  <p>Every lesson on this site counts rows of the mm10 repeat table, and every row is a copy found in C57BL/6J. Lilue et al. (2018) list GRCm38 as a C57BL/6J reference genome, and Nellåker et al. (2012) note that what we know about repeats in laboratory mice "is limited primarily to those present in the C57BL/6J reference genome".</p>
+  <p>Young repeat families still insert new copies, so strains carry different ones. A copy that is present at a place in some mice of a species and absent in others is an insertion polymorphism: "a TE insertion can be present or absent at a given locus or allele in a subset of individuals from the same species" (Lanciano and Cristofari, p. 721; TE, transposable element, is the usual name for the repeats that move). In the mouse, L1 and ERVs such as IAP and ETn make "even more TE insertional polymorphisms than in humans" (p. 723).</p>
+  <p>One copy can matter on its own. The viable yellow allele of the agouti gene "contains an intra-cisternal A particle (IAP) retrotransposon upstream of the promoter that causes ectopic expression of the agouti protein leading to variation in fur color, obesity, diabetes and tumor susceptibility" (Nellåker et al.).</p>
+</section>
+
+<section id="strains">
+  <h2>Seventeen strains against the reference</h2>
+  <p>Nellåker et al. sequenced the DNA of 17 mouse strains and compared each with the C57BL/6J reference. Their catalogue lists every place where a strain lacks a reference copy, and every copy a strain carries that the reference lacks. Bars to the left count reference copies the strain lacks; bars to the right count copies it carries that are not in the reference. Tap a strain.</p>
+  <div class="seg" role="group" aria-label="Repeat family">
+    <span class="lab">Family</span>
+    <button type="button" data-fam="all">All</button>
+    <button type="button" data-fam="IAP">IAP</button>
+    <button type="button" data-fam="L1">L1</button>
+    <button type="button" data-fam="ETn">ETn</button>
+    <button type="button" data-fam="SINE">SINE</button>
+    <button type="button" data-fam="oLTR">Other LTR</button>
+  </div>
+  <figure class="ice">
+    <div class="sbars" id="sbars" role="group" aria-label="For each of 17 strains, the number of reference copies it lacks and the number of copies it carries that are not in the reference. Tap a strain to pick it."></div>
+    <p class="sread" id="sread" aria-live="polite"></p>
+    <div class="legend slegend"><span><i class="both"></i>in both</span><span><i class="lack"></i>only in the reference</span><span><i class="extra"></i>only in the picked strain</span></div>
+    <div class="icebox"><svg id="chrsvg" role="img" aria-label="Chromosome 19 drawn twice, the reference above and the picked strain below, with a tick at every catalogued copy. The sentence above gives the counts."></svg></div>
+    <figcaption>Chromosome 19, at mm9 positions (the build the catalogue was made on). Only copies that differ between at least two of the 18 strains are drawn; the copies all strains share would fill the bar. Counts are rows of the catalogue tables, with a place counted once per strain. SINE here is B1 and B2 together, which the catalogue does not separate. "Other LTR" is MaLR, RLTR10, MuLV, VL30, RLTR1B, RLTR45 and IS2. Nellåker et al. checked 688 calls by PCR and estimate that 11% to 22% of calls are false and 5% to 28% of real differences are missed.</figcaption>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+  <ul class="picklist">
+    <li>C57BL/6NJ lacks 42 reference copies and carries 73 extra. The other twelve classical laboratory strains each lack between 6,480 (BALB/cJ) and 7,426 (LP/J) reference copies and carry between 5,044 (129S5/SvEvBrd) and 7,821 (NOD/ShiLtJ) extra.</li>
+    <li>Wild-derived strains differ most: SPRET/EiJ lacks 35,573 reference copies and carries 26,436 extra.</li>
+    <li>IAP, the family with the most new insertion mutations in mice (<a href="zoos.html">Two zoos</a>): BALB/cJ lacks 755 reference IAP copies and carries 1,097 extra.</li>
+  </ul>
+</section>
+
+<section id="reads">
+  <h2>What happens to the reads</h2>
+  <p>You align your reads to the reference, so every read has to find a home in C57BL/6J DNA. Pick a case.</p>
+  <div class="seg" role="group" aria-label="Case">
+    <span class="lab">Case</span>
+    <button type="button" data-case="mouse">Copy only in your mouse</button>
+    <button type="button" data-case="ref">Copy only in the reference</button>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="readsvg" role="img" aria-label="Diagram: your mouse's DNA above, the reference below, and where reads from the copy go. The list below says the same."></svg></div>
+    <ul class="rlist" id="rlist" aria-live="polite"></ul>
+    <figcaption>A diagram, not data. The copy is drawn as an IAP; the same holds for L1, ETn or SINE copies.</figcaption>
+  </figure>
+  <p>Lanciano and Cristofari name the problem: mapping errors come from polymorphic copies' "absence in conventional reference genomes" (p. 732), and "it is critical not to dismiss polymorphic TEs when one is analysing TE expression" (p. 724).</p>
+</section>
+
+<section id="do">
+  <h2>What to do</h2>
+  <ol class="fixlist">
+    <li>Write down the strain and substrain your RNA came from, or the cell line and the strain it came from. B16 melanoma cells came from a C57BL/6 mouse (Cellosaurus CVCL_F936). The catalogue has no cell lines, so it cannot tell you about copies a line gained after it left the mouse; "some of these polymorphisms can even be private to a single individual" (Lanciano and Cristofari, p. 723).</li>
+    <li>C57BL/6J, or C57BL/6NJ: the reference fits. The catalogue lists 115 differences for C57BL/6NJ; other C57BL/6N lines were not sequenced. For these mice, copy-level results are as good as the tools allow (<a href="copies.html">Which copies</a>).</li>
+    <li>Any other strain: before a claim about one copy, check that your strain has it. The catalogue's positions are on mm9, so lift them to mm10 first (UCSC liftOver), or test the copy by PCR or in your own DNA sequencing.</li>
+    <li>Comparing two strains at the subfamily level: part of a difference can be copy number. BALB/cJ has 1,097 IAP copies the reference lacks and lacks 755 it has, so its IAP count includes copies a C57BL/6J sample does not have. At the copy level, a copy that one strain lacks reads as switched off.</li>
+    <li>To see the extra copies, sequence your strain's DNA and call insertions; Nellåker et al. used read pairs with one end anchored next to the insertion (RetroSeq). Long reads find more: "long-read sequencing can significantly improve the detection of polymorphic TEs" (Lanciano and Cristofari, p. 733). Assembled genomes now exist for 16 strains (Lilue et al. 2018), but long repeats in them are incomplete: "the total sequence lengths are consistently shorter than GRCm38".</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>Nellåker C, Keane TM, Yalcin B, Wong K, Agam A, Belgard TG, Flint J, Adams DJ, Frankel WN, Ponting CP (2012) The genomic landscape shaped by selection on transposable elements across 18 mouse strains. Genome Biol 13:R45. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3446317/">PMC3446317</a>. The strain counts come from its Additional file 13.</div>
+    <div>Lanciano S, Cristofari G (2020) Measuring and interpreting transposable element expression. Nat Rev Genet 21:721–736. <a href="https://doi.org/10.1038/s41576-020-0251-y">doi:10.1038/s41576-020-0251-y</a>; open author manuscript at <a href="https://inserm.hal.science/inserm-03261002">HAL inserm-03261002</a>. Page numbers are the journal's.</div>
+    <div>Lilue J, Doran AG, Fiddes IT, et al. (2018) Sixteen diverse laboratory mouse reference genomes define strain specific haplotypes and novel functional loci. Nat Genet 50:1574–1583. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6205630/">PMC6205630</a>.</div>
+    <div>Cellosaurus entry for B16, <a href="https://www.cellosaurus.org/CVCL_F936">CVCL_F936</a>.</div>
+    <div>Script: <a href="prep/q7/build_strains_json.py">build_strains_json.py</a> counts the catalogue tables; chromosome 19's length is from the UCSC mm9 chromInfo table.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>

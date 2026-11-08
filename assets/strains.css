@@ -1,0 +1,54 @@
+/* Repeat After Me: "Not in the reference" lesson. Builds on site.css, names.css and multimap.css. */
+:root { --lack: #D55E00; --extra: #0072B2; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --extra: #2A8FD6; } }
+:root[data-theme="dark"] { --extra: #2A8FD6; }
+
+.sbars { display: flex; flex-direction: column; gap: 2px; max-width: 720px; }
+.sbars .shead, .sbars .srow { display: grid; grid-template-columns: minmax(6.6rem, 9.5rem) 1fr 1fr; align-items: center; column-gap: 6px; }
+.sbars .shead { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); padding-bottom: 4px; border-bottom: 1px solid var(--rule); }
+.sbars .shead .l { text-align: right; }
+.sbars .sgrp { font-family: var(--display); font-size: 0.74rem; font-weight: 700; color: var(--muted); margin: 8px 0 2px; }
+.sbars .srow { font: inherit; color: inherit; background: none; border: 1px solid transparent; border-radius: 5px; padding: 3px 4px; cursor: pointer; text-align: left; width: 100%; min-height: 30px; }
+.sbars .srow:hover { border-color: var(--rule); }
+.sbars .srow[aria-pressed="true"] { background: var(--surface); border-color: var(--ink-2); }
+.sbars .srow:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sbars .nm { font-family: var(--mono); font-size: 0.78rem; overflow-wrap: anywhere; }
+.sbars .srow[aria-pressed="true"] .nm { font-weight: 600; }
+.sbars .side { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.sbars .side.l { justify-content: flex-end; border-right: 1px solid var(--ink-2); }
+.sbars .bar { height: 12px; border-radius: 0; min-width: 1px; flex: none; width: calc(var(--p) * 0.7%); }
+@media (max-width: 520px) { .sbars .bar { width: calc(var(--p) * 0.36%); } }
+.sbars .side.l .bar { background: var(--lack); border-radius: 4px 0 0 4px; }
+.sbars .side.r .bar { background: var(--extra); border-radius: 0 4px 4px 0; }
+.sbars .v { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-2); white-space: nowrap; }
+
+.sread { font-size: 0.95rem; margin: 6px 0 0; max-width: 70ch; }
+.slegend i { display: inline-block; width: 4px; height: 14px; vertical-align: -2px; margin-right: 5px; border-radius: 1px; }
+.slegend i.both { background: var(--muted); }
+.slegend i.lack { background: var(--lack); }
+.slegend i.extra { background: var(--extra); }
+
+svg#chrsvg, svg#readsvg { display: block; max-width: 100%; }
+svg#chrsvg text, svg#readsvg text { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
+svg#chrsvg text.tl { font-family: var(--display); font-weight: 700; font-size: 11px; fill: var(--ink-2); }
+svg#chrsvg text.ax { font-size: 10px; fill: var(--muted); }
+svg#chrsvg rect.trk { fill: var(--rule); fill-opacity: 0.5; }
+svg#chrsvg line.t { stroke-width: 1; }
+svg#chrsvg line.t.both { stroke: var(--muted); stroke-opacity: 0.55; }
+svg#chrsvg line.t.lack { stroke: var(--lack); }
+svg#chrsvg line.t.extra { stroke: var(--extra); }
+svg#chrsvg line.axl { stroke: var(--rule); }
+
+svg#readsvg text.tl { font-family: var(--display); font-weight: 700; font-size: 11px; fill: var(--ink-2); }
+svg#readsvg text.sm { font-size: 10px; fill: var(--muted); }
+svg#readsvg line.dna { stroke: var(--ink-2); stroke-width: 2; }
+svg#readsvg rect.cp { fill: var(--LTR); }
+svg#readsvg rect.cp.lack { fill: var(--lack); }
+svg#readsvg rect.cp.other { fill: var(--LTR); fill-opacity: 0.55; }
+svg#readsvg rect.rd { fill: var(--ink-2); }
+svg#readsvg rect.rd.cut { fill: none; stroke: var(--ink-2); stroke-dasharray: 2 2; }
+svg#readsvg path.arr { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 3; }
+svg#readsvg text.x { font-weight: 600; fill: var(--lack); }
+
+ul.rlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-width: 70ch; }
+ul.rlist li { background: var(--surface); border: 1px solid var(--rule); border-left: 5px solid var(--muted); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; }

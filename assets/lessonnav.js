@@ -8,6 +8,7 @@
     { href: 'names.html', title: 'Three names' },
     { href: 'ltr.html', title: 'Body and ends' },
     { href: 'zoos.html', title: 'Two zoos' },
+    { href: 'strains.html', title: 'Not in the reference' },
     { href: 'multimap.html', title: 'One read, many places' },
     { href: 'tools.html', title: 'Counting tools' },
     { href: 'copies.html', title: 'Which copies' },
