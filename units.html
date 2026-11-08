@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rows or Subfamilies</title>
+<meta name="description" content="Why one subfamily fills thousands of rows of the mm10 repeat table, how rows group into insertions, and what changes when you test rows instead of subfamilies.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/units.css?v=d9b44c71">
+<script src="data/units.js?v=99c4dffb" defer></script>
+<script src="assets/units.js?v=03f45988" defer></script>
+<script src="assets/lessonnav.js?v=8ba96ea2" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Counting</div>
+  <h1>Rows or subfamilies</h1>
+  <p class="lede">Why does one subfamily fill thousands of rows of the mm10 repeat table, and do you test rows or subfamilies? A row is a piece of one insertion, and one insertion can be several rows. Testing subfamilies gives about a thousand tests that lose where the RNA came from; testing rows keeps the place but gives millions of features, most with no reads and several per insertion.</p>
+</header>
+
+<section id="row">
+  <h2>What one row is</h2>
+  <p>RepeatMasker, the program that made the table, writes one line for each stretch of DNA that matches one repeat's consensus (the reconstructed original sequence). Its help page shows why one element can take several lines: "This is a sequence in which a Tigger1 DNA transposon has integrated into a MER7 DNA transposon copy. Subsequently two Alus integrated in the Tigger1 sequence." The Tigger1 appears as three lines, cut apart by the two Alus, and the MER7A as two, on either side of the Tigger1.</p>
+  <p>RepeatMasker's output files carry an ID column for this: "Fragments of a single element, separated from each other by subsequent insertions of other elements, deletions or recombinations, carry the same number" (RepeatMasker help text). The UCSC table keeps the rows, but its id column does not hold these numbers (on chr7 every row has the same id).</p>
+  <ul class="picklist">
+    <li>On this page, a row is one line of the table, and an insertion is the set of rows RepeatMasker gives one ID: its judgement that they are one element. A subfamily is a repeat name, such as L1Md_T.</li>
+    <li><a href="copies.html">Which copies</a> and <a href="tools.html">Counting tools</a> call a row a copy, as the copy-level tools do.</li>
+  </ul>
+</section>
+
+<section id="insertion">
+  <h2>One insertion, several rows</h2>
+  <p>Two real insertions from the mm10 RepeatMasker output. The top line is the genome, with the insertion's rows in colour and other rows in grey. The bar below is the subfamily's consensus; each coloured row is joined to the part of the consensus it matches.</p>
+  <div class="seg" role="group" aria-label="Example insertion">
+    <span class="lab">Example</span>
+    <button type="button" data-ex="0">L1Md_T on chr7</button>
+    <button type="button" data-ex="1">IAP on chr19</button>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="exsvg" role="img" aria-label="One insertion drawn to scale: its rows along the genome, joined to the parts of the subfamily consensus they match. The table below lists the rows."></svg></div>
+    <p class="exnote" id="exnote" aria-live="polite"></p>
+    <div class="tw"><table class="rows" id="extable" aria-label="Rows in the drawing"></table></div>
+    <figcaption>Positions are mm10, 1-based as in the RepeatMasker file. "% different" is RepeatMasker's share of bases that differ from the consensus; a row much closer to its own consensus than the rows around it fits a later insertion, but the number is a guide to age, not proof.</figcaption>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+  <p>Across the genome, 407,034 of 3,072,079 transposon insertions have more than one row. Between two neighbouring rows of one insertion there are 579,099 gaps. This is what lies inside them:</p>
+  <div class="tw"><table class="gaps" id="gaptable" aria-label="What lies between two rows of one insertion"></table></div>
+  <p class="muted" style="font-size:0.9rem">A gap with nothing inside is where RepeatMasker's alignment broke: a deletion, a stretch that no longer matches, or, when the name changes, the border between an ERV's LTR and its body (<a href="ltr.html">Body and ends</a>). 145 insertions span more than 20 kb; a group that long may join rows that are not one element.</p>
+</section>
+
+<section id="size">
+  <h2>How big the table is</h2>
+  <p>The same transposon rows of mm10, counted by each unit. The bars are on a log scale, so each step to the right is ten times more.</p>
+  <div class="ubars" id="ubars" role="img" aria-label="Number of features when transposons are counted by class, family, subfamily, insertion and row, on a log scale. The numbers are written beside the bars."></div>
+  <p>Pick a subfamily to see how many features it becomes.</p>
+  <label class="pick"><span class="lab">Subfamily</span> <select id="subpick" aria-label="Subfamily"></select></label>
+  <div class="subread" id="subread" aria-live="polite"></div>
+  <p class="muted" style="font-size:0.9rem">Transposon rows only: classes LINE, SINE, LTR and DNA on the main chromosomes, from the UCSC mm10 RepeatMasker run (RepeatMasker open-3-3-0, library 20110920). Simple repeats, low-complexity rows, satellites and RNA genes are left out.</p>
+</section>
+
+<section id="test">
+  <h2>Which unit to test</h2>
+  <ol class="fixlist">
+    <li>A subfamily test adds up every row of the subfamily, so you test about a thousand features. TEtranscripts works this way: "quantification by TEtranscripts is limited to the family level" (Lanciano and Cristofari, p. 730). The sum loses the place: subfamily studies "are unable to distinguish TE-intrinsic expression via TE-derived regulatory sequences from TE-extrinsic expression due to TE inclusion in a longer transcript" (Yang et al. 2019; see <a href="passenger.html">Passenger or driver</a>), and it cannot say which copies changed (<a href="copies.html">Which copies</a>).</li>
+    <li>A row test keeps the place. SQuIRE's locus is one row: its code builds one name per table line from chromosome, start, end and repeat name. Expect most rows to have no reads: Yang et al. found subfamily-level expression came "from fewer than 7% of each subfamily's loci", and Lanciano and Cristofari note that "each locus contributes only minimally to the whole transcriptome" (p. 726).</li>
+    <li>The number of rows costs less than it looks, but not nothing. DESeq2 "omits all genes with mean normalized counts below a filtering threshold from multiple testing adjustment", so rows with almost no reads do not count against you; the rows that do have reads still number far more than subfamilies, and "multiple testing adjustment tends to be associated with a loss of power" (Love et al. 2014). For the youngest families the row counts themselves are uncertain: "identifying the exact expressed loci remains approximate, particularly for the youngest TE families" (p. 731).</li>
+    <li>One insertion is several features. A split L1, or an IAP with two LTRs and a body, enters a row test as several rows under different names, and its reads are divided among them. Before you call one copy changed, join its rows: by RepeatMasker's ID, from the .out files (UCSC bigZips chromOut.tar.gz for mm10), or by distance, as Teissandier et al. (2019) did, merging pieces of one copy "if the distance between them is less than 1000 bp". The two rules do not give the same insertions, so say which you used.</li>
+    <li>Name the unit and the table version in your methods: "rows of the UCSC mm10 RepeatMasker table (open-3-3-0, library 20110920)" is a different feature set from insertions, and from another RepeatMasker run.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>RepeatMasker help text, repeatmasker.help, in <a href="https://github.com/rmhubley/RepeatMasker">rmhubley/RepeatMasker</a> (commit 74d2b41), option -no_id; and the web help page, <a href="https://www.repeatmasker.org/webrepeatmaskerhelp.html">repeatmasker.org/webrepeatmaskerhelp.html</a>, for the Tigger1 example.</div>
+    <div>Lanciano S, Cristofari G (2020) Measuring and interpreting transposable element expression. Nat Rev Genet 21:721–736. <a href="https://doi.org/10.1038/s41576-020-0251-y">doi:10.1038/s41576-020-0251-y</a>; open author manuscript at <a href="https://inserm.hal.science/inserm-03261002">HAL inserm-03261002</a>. Page numbers are the journal's.</div>
+    <div>Yang WR, Ardeljan D, Pacyna CN, Payer LM, Burns KH (2019) SQuIRE reveals locus-specific regulation of interspersed repeat expression. Nucleic Acids Res 47:e27. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6411935/">PMC6411935</a>. Code: <a href="https://github.com/wyang17/SQuIRE">wyang17/SQuIRE</a> at 7c4c79a, squire/Clean.py.</div>
+    <div>Teissandier A, Servant N, Barillot E, Bourc'his D (2019) Tools and best practices for retrotransposon analysis using high-throughput sequencing data. Mob DNA 10:52. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6935493/">PMC6935493</a>.</div>
+    <div>Love MI, Huber W, Anders S (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biol 15:550. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4302049/">PMC4302049</a>.</div>
+    <div>Real data: UCSC mm10 RepeatMasker .out files (<a href="https://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/">bigZips</a> chromOut.tar.gz), the same run as the UCSC rmsk table. Script: <a href="prep/q8/build_units_json.py">build_units_json.py</a>.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>

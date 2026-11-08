@@ -12,6 +12,7 @@
     { href: 'multimap.html', title: 'One read, many places' },
     { href: 'tools.html', title: 'Counting tools' },
     { href: 'copies.html', title: 'Which copies' },
+    { href: 'units.html', title: 'Rows or subfamilies' },
     { href: 'passenger.html', title: 'Passenger or driver' },
     { href: 'checklist.html', title: 'Before you show it' }
   ];

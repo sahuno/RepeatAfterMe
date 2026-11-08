@@ -1,0 +1,40 @@
+/* Repeat After Me: "Rows or subfamilies" lesson. Builds on site.css, names.css and multimap.css. */
+svg#exsvg { display: block; max-width: 100%; }
+svg#exsvg text { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
+svg#exsvg text.tl { font-family: var(--display); font-weight: 700; font-size: 11px; fill: var(--ink-2); }
+svg#exsvg text.ax { font-size: 10px; fill: var(--muted); }
+svg#exsvg text.num { font-size: 10.5px; font-weight: 600; fill: var(--ink); }
+svg#exsvg text.num.o { fill: var(--muted); }
+svg#exsvg line.dna { stroke: var(--rule); stroke-width: 2; }
+svg#exsvg rect.gr.LINE, svg#exsvg rect.cseg.LINE { fill: var(--LINE); }
+svg#exsvg rect.gr.LTR, svg#exsvg rect.cseg.LTR { fill: var(--LTR); }
+svg#exsvg rect.gr.SINE { fill: var(--SINE); }
+svg#exsvg rect.gr.other { fill: var(--muted); }
+svg#exsvg rect.cbar { fill: var(--rule); fill-opacity: 0.6; }
+svg#exsvg path.fan { stroke: none; fill-opacity: 0.16; }
+svg#exsvg path.fan.LINE { fill: var(--LINE); }
+svg#exsvg path.fan.LTR { fill: var(--LTR); }
+.exnote { font-size: 0.95rem; margin: 6px 0 0; max-width: 70ch; }
+
+.tw { overflow-x: auto; max-width: 100%; }
+table.rows, table.gaps { border-collapse: collapse; font-size: 0.88rem; width: 100%; max-width: 760px; }
+table.rows th, table.gaps th { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule); vertical-align: bottom; }
+table.rows td, table.gaps td { padding: 5px 8px 5px 0; border-bottom: 1px solid var(--rule); }
+table.rows td { white-space: nowrap; font-family: var(--mono); font-size: 0.8rem; }
+table.rows tr.out td { color: var(--muted); }
+table.gaps td:nth-child(n+2) { font-family: var(--mono); font-size: 0.82rem; white-space: nowrap; }
+i.sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
+i.sw.LINE { background: var(--LINE); } i.sw.LTR { background: var(--LTR); } i.sw.other { background: var(--muted); }
+
+.ubars, .pib { display: flex; flex-direction: column; gap: 6px; max-width: 640px; }
+.ub, .pi { display: grid; grid-template-columns: 6.5rem 1fr 5.8rem; align-items: center; gap: 8px; }
+.pi { grid-template-columns: 5.5rem 1fr 4.5rem; }
+.ub .k, .pi .k { font-family: var(--display); font-size: 0.82rem; font-weight: 700; color: var(--ink-2); }
+.ub .track, .pi .track { display: block; height: 14px; }
+.ub .bar, .pi .bar { display: block; height: 14px; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 2px; }
+.pi .bar { background: var(--LTR); height: 12px; }
+.ub .v, .pi .v { font-family: var(--mono); font-size: 0.82rem; text-align: right; }
+label.pick { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+label.pick .lab { font-family: var(--display); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+label.pick select { font: 0.9rem var(--mono); padding: 4px 6px; max-width: 100%; background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; }
+.subread p { margin: 0 0 8px; max-width: 70ch; }
