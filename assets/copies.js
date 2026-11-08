@@ -130,7 +130,7 @@
 
   // ---- Real data: share of each L1Md_T row's reads that fit it alone ---------------------------
   var G = { grp: 'all' };
-  var GRP_LAB = { all: 'all rows', five: 'rows with the 5′ end', long: 'rows at least 6 kb long', short: 'rows under 1 kb' };
+  var GRP_LAB = { all: 'rows in all', five: 'rows with the 5′ end', long: 'rows at least 6 kb long', short: 'rows under 1 kb' };
   var BIN_LAB = ['none', '<10%', '10–20%', '20–30%', '30–40%', '40–50%', '50–60%', '60–70%', '70–80%', '80–90%', '90–100%'];
 
   function drawHist() {
