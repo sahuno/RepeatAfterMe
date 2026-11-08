@@ -1,0 +1,44 @@
+/* Repeat After Me: "Which copies" lesson. Builds on site.css, names.css and multimap.css. */
+.cctl { display: flex; flex-direction: column; gap: 8px; }
+svg#copysvg, svg#histsvg { display: block; max-width: 100%; }
+svg#copysvg text { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
+svg#copysvg text.hd { font-family: var(--display); font-weight: 700; font-size: 10.5px; fill: var(--muted); }
+svg#copysvg text.lab { fill: var(--muted); }
+svg#copysvg text.chg.up { fill: var(--ink); font-weight: 600; }
+svg#copysvg text.chg.down { fill: var(--ink-2); font-style: italic; font-weight: 600; }
+svg#copysvg text.chg.flat { fill: var(--muted); }
+svg#copysvg g.crow { cursor: pointer; }
+svg#copysvg g.crow:focus { outline: none; }
+svg#copysvg g.crow:focus rect.hit, svg#copysvg g.crow:hover rect.hit { fill: var(--surface); }
+svg#copysvg rect.hit { fill: transparent; }
+svg#copysvg rect.trk { fill: var(--rule); fill-opacity: 0.45; }
+svg#copysvg rect.bef { fill: var(--muted); }
+svg#copysvg rect.aft { fill: var(--LINE); }
+svg#copysvg rect.faint { opacity: 0.28; }
+
+ul.cread { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-width: 70ch; }
+ul.cread li { background: var(--surface); border: 1px solid var(--rule); border-left: 5px solid var(--LINE); border-radius: 6px; padding: 8px 12px; display: flex; flex-direction: column; gap: 2px; }
+ul.cread li b { font-family: var(--display); font-size: 0.92rem; }
+ul.cread li .why { font-size: 0.92rem; color: var(--ink-2); }
+ul.cread li[data-r="sub"] { border-left-color: var(--muted); }
+
+.cstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; max-width: 640px; }
+.cstat { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; }
+.cstat .k { font-family: var(--display); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.cstat .v { font-family: var(--mono); font-size: 1.25rem; font-weight: 600; }
+svg#histsvg rect.hb { fill: var(--LINE); fill-opacity: 0.8; }
+svg#histsvg rect.hb.none { fill: var(--muted); }
+svg#histsvg text.ax { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+svg#histsvg text.axt { font-family: var(--display); font-size: 11px; font-weight: 700; fill: var(--muted); }
+svg#histsvg line.grid { stroke: var(--rule); }
+.histnote { font-size: 0.92rem; color: var(--ink-2); margin: 0; }
+
+.tw { overflow-x: auto; max-width: 100%; }
+table.k3 { border-collapse: collapse; font-size: 0.9rem; width: 100%; max-width: 760px; }
+table.k3 th { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule); vertical-align: bottom; }
+table.k3 td { padding: 5px 8px 5px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+table.k3 td:first-child { font-family: var(--mono); font-size: 0.82rem; }
+table.k3 .n { text-align: right; font-family: var(--mono); }
+table.k3 tr.true td { font-weight: 600; }
+table.k3 .five { font-family: var(--display); font-size: 0.7rem; font-weight: 700; color: var(--LINE); margin-left: 4px; }
+@media (max-width: 520px) { table.k3 { font-size: 0.82rem; } table.k3 th { font-size: 0.64rem; } }

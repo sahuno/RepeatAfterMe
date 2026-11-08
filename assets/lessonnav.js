@@ -10,6 +10,7 @@
     { href: 'zoos.html', title: 'Two zoos' },
     { href: 'multimap.html', title: 'One read, many places' },
     { href: 'tools.html', title: 'Counting tools' },
+    { href: 'copies.html', title: 'Which copies' },
     { href: 'passenger.html', title: 'Passenger or driver' }
   ];
   var here = location.pathname.split('/').pop() || 'index.html';

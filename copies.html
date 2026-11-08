@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Which Copies</title>
+<meta name="description" content="A subfamily count adds up every copy, so the same two-fold rise can come from every copy or from one. A model of that, how many of each real mouse L1Md_T copy's reads can be told apart, and what copy-level tools did with three known copies.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/copies.css?v=f878f0da">
+<script src="data/copies.js?v=b46d3cb8" defer></script>
+<script src="assets/copies.js?v=0af2a36a" defer></script>
+<script src="assets/lessonnav.js?v=375bd209" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Counting</div>
+  <h1>Which copies</h1>
+  <p class="lede">A subfamily count adds up every copy of the subfamily. "L1Md_T is up two-fold" fits every copy doubling, three copies rising or one silent copy switching on, and those are different biology. A copy-level count can tell them apart only where a copy has sequence of its own, and the L1Md_T copies that still carry their promoter have the least.</p>
+</header>
+
+<section id="model">
+  <h2>Same total, different copies</h2>
+  <p>Twenty made-up copies of one subfamily, with 100 reads before and 200 after, so the subfamily is up two-fold in every example. The grey bar is a copy's reads before, the orange bar after. Tap a copy to move ten reads onto it from the others; the subfamily total stays at 200. The second view keeps only the reads that fit one copy alone, which is what a copy-level count has to work with.</p>
+  <div class="cctl">
+    <div class="seg presets" role="group" aria-label="Examples">
+      <span class="lab">Try</span>
+      <button type="button" data-preset="every">Every copy doubles</button>
+      <button type="button" data-preset="three">Three copies</button>
+      <button type="button" data-preset="one">One silent copy</button>
+      <button type="button" data-preset="updown">Up and down</button>
+    </div>
+    <div class="seg" role="group" aria-label="Reads shown">
+      <span class="lab">Show</span>
+      <button type="button" data-view="all">All reads</button>
+      <button type="button" data-view="own">Reads that fit one copy</button>
+    </div>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="copysvg" role="group" aria-label="Twenty made-up copies, each a row with its reads before and after as bars and the change at the right. Tap a row to move ten reads onto that copy."></svg></div>
+    <ul class="cread" id="cread" aria-live="polite"></ul>
+    <div class="controls"><button type="button" class="reset" id="reset">↺ Reset view</button></div>
+    <figcaption>Made-up counts at equal sequencing depth, so nothing needs normalising. Each copy's share of reads that fit it alone is real: the twenty shares are the L1Md_T rows below at every 5% step, from the 2.5th to the 97.5th percentile, given to the copies in a fixed mixed order. Copy 20, silent before, has a share of 2.6%.</figcaption>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+  <ul class="picklist" id="modelfacts">
+    <li>The subfamily goes from 100 reads to 200 in every example. When every copy doubles, 19 copies go up (copy 20 had no reads to double) and the three biggest risers carry 34% of the extra reads. In the three-copies and one-copy examples, they carry all of it.</li>
+    <li>Up and down: three copies gain 120 reads and two lose 20. The subfamily still reads 2.0×, and the two copies that fell leave no trace in it.</li>
+    <li>Switch to reads that fit one copy. When every copy doubles, those reads double too, from 33.5 to 67.1. When silent copy 20 switches on and makes half of all reads, they go from 33.5 to 36.1, 1.1×: with 2.6% of its reads its own, the copy that changed is nearly invisible to a copy-level count. The real L1Md_T copies that keep their promoter have a median of 5.6%.</li>
+  </ul>
+</section>
+
+<section id="l1mdt">
+  <h2>The L1Md_T copies</h2>
+  <p>Real numbers: every L1Md_T row in the mouse reference genome (mm10) on the main chromosomes. One copy is one RepeatMasker row, and a row can be a piece of one insertion. To see how many of each copy's reads a short read can pin on it, a perfect 100-base read was cut every 20 bases along every row, 2,429,296 reads in all, and aligned with STAR at the settings of <a href="multimap.html">One read, many places</a>. For each row, the chart counts the share of its reads that STAR placed on that row and nowhere else.</p>
+  <div class="cstats">
+    <div class="cstat"><div class="k">Rows</div><div class="v" data-stat="rows"></div></div>
+    <div class="cstat"><div class="k">Under 1 kb</div><div class="v" data-stat="short"></div></div>
+    <div class="cstat"><div class="k">At least 6 kb</div><div class="v" data-stat="long"></div></div>
+    <div class="cstat"><div class="k">With the 5′ end</div><div class="v" data-stat="five"></div></div>
+  </div>
+  <div class="seg presets" role="group" aria-label="Which rows">
+    <span class="lab">Rows</span>
+    <button type="button" data-grp="all">All</button>
+    <button type="button" data-grp="five">With the 5′ end</button>
+    <button type="button" data-grp="long">At least 6 kb</button>
+    <button type="button" data-grp="short">Under 1 kb</button>
+  </div>
+  <figure class="ice">
+    <div class="icebox"><svg id="histsvg" role="img" aria-label="Bar chart: for the chosen L1Md_T rows, the share of rows by the share of their reads that fit the row alone. The note below gives the numbers."></svg></div>
+    <p class="histnote" id="histnote" aria-live="polite"></p>
+    <figcaption>"With the 5′ end" means the row covers the first 100 bases of the L1Md_T consensus, the reconstructed original sequence (about 6,600 bases long). Reads are centred inside their row, so near a row's edge they run into the DNA beside it, as real reads do. Perfect reads with no sequencing errors; real reads with errors would fit their own copy less often.</figcaption>
+  </figure>
+  <ul class="picklist">
+    <li>Most rows are pieces: 14,247 of 23,639 are shorter than 1 kb, and 2,622 are at least 6 kb. "LINE retrotransposons are frequently 5′ truncated at the time of insertion", and an L1's promoter sits in that 5′ end, its 5′ untranslated region (Lanciano and Cristofari, p. 724). 2,526 rows keep the first 100 bases of the consensus.</li>
+    <li>Over all rows, 21.3% of the tiled reads landed on their own row and nowhere else, 23.8% fit several places, and 54.9% never aligned, because every short stretch of them occurs in more places than STAR will try. With random reads, <a href="multimap.html">One read, many places</a> found 21.5% and 54.9% for L1Md_T.</li>
+    <li>The median row has 25% of its reads fitting it alone, and 955 rows have none. Rows with the 5′ end have a median of 5.6%, and 1,799 of the 2,526 are under 10%: the copies that still carry the promoter are the ones a copy-level count sees worst.</li>
+    <li>Rows under 200 bases score highest (median 100%), because a 100-base read centred on them is mostly the DNA beside them. Their count is then mostly reads from their neighbours' DNA.</li>
+    <li>Where they sit: 18,051 of the 23,639 rows lie outside protein-coding genes, 5,498 in introns and 90 touch an exon, by the rule of <a href="passenger.html">Passenger or driver</a>.</li>
+  </ul>
+</section>
+
+<section id="bench">
+  <h2>Can a tool name the copies</h2>
+  <p>In the test on simulated reads in <a href="tools.html">Counting tools</a>, one scenario cut each subfamily's 2,000 reads from three copies only. For L1Md_T, these are the three copies, in bold, with what each copy-level rule counted on them, and the other copies the rules put reads on.</p>
+  <div class="tw"><table class="k3" id="k3table" aria-label="L1Md_T copies in the three-copies test: true reads against Telescope, TElocal and featureCounts unique reads"></table></div>
+  <p class="muted" style="font-size:0.9rem">"Fits it alone" is the share of the row's tiled reads placed on it and nowhere else, from the chart above. "Unique only" is featureCounts counting reads that aligned to one place. Telescope is its default count; TElocal its multi mode.</p>
+  <ul class="picklist">
+    <li>The copy that made the most reads, 1,006 on chrX, has 1.5% of its tiled reads fitting it alone. Telescope gave it 64 reads and TElocal 38; both put the chr10 copy, which made 838, first with 239 and 236.</li>
+    <li>Of the 2,000 reads, Telescope put 378 on the three true copies and TElocal 348; 1,621 never aligned at all.</li>
+    <li>A 536-base piece of L1Md_T on chr9 made no L1Md_T reads but got 165 reads that fit it alone. They were cut around a 36-base tRNA right next to it and overlap its first bases: a copy's count can include reads made by its neighbour.</li>
+    <li>TElocal also put 17 reads on five short, young copies that made none, 1 to 6 reads each.</li>
+  </ul>
+</section>
+
+<section id="report">
+  <h2>What to report</h2>
+  <ol class="fixlist">
+    <li>Report a subfamily result as a subfamily result. "Reads assigned to L1Md_T rose two-fold" says nothing about how many copies rose. With SQuIRE in mouse tissues, Yang et al. found "the reported subfamily-level expression was due to expression from fewer than 7% of each subfamily's loci" (a locus is one copy's place in the genome); in a fly ALS model, an increase seen at the subfamily level "is largely explained by a single locus".</li>
+    <li>To say which copies, use a copy-level tool (TElocal, SQuIRE or Telescope; <a href="tools.html">Counting tools</a>), then check each copy it names: how much of the copy can a read fit alone? Lanciano and Cristofari suggest estimating mappability, how uniquely a read from a place aligns, "to assess which TE family or locus can be confidently quantified at the locus-specific level rather than at the aggregated family level" (p. 729). Tiling reads, as above, is one way; ready-made mappability tracks for mouse and human are on the UCSC Genome Browser (p. 729).</li>
+    <li>Expect the copies with a promoter to be the hardest to name. Here the busiest true copy had 1.5% of its reads fitting it alone, and two tools ranked it below a copy with 10.6%. Longer and paired reads fit more copies alone, but less so for the youngest: in Teissandier et al.'s simulation, paired-end reads gave some older mouse L1 subfamilies "a 30% mapping gain", and the young L1MdTf_I, L1MdTf_II and L1MdA_I "10% only on average".</li>
+    <li>Check the name a paper used. The mm10 table holds both L1Md_T, 23,688 rows, and L1MdTf_I, L1MdTf_II and L1MdTf_III, 70, 80 and 181 rows. A result for one is not a result for the other.</li>
+    <li>Say where the named copies sit and what sits beside them. A copy inside an expressed gene can be a passenger of the gene's RNA (<a href="passenger.html">Passenger or driver</a>), and a short copy next to another expressed element can collect that element's reads.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>Yang WR, Ardeljan D, Pacyna CN, Payer LM, Burns KH (2019) SQuIRE reveals locus-specific regulation of interspersed repeat expression. Nucleic Acids Res 47:e27. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6411935/">PMC6411935</a>.</div>
+    <div>Lanciano S, Cristofari G (2020) Measuring and interpreting transposable element expression. Nat Rev Genet 21:721–736. <a href="https://doi.org/10.1038/s41576-020-0251-y">doi:10.1038/s41576-020-0251-y</a>; open author manuscript at <a href="https://inserm.hal.science/inserm-03261002">HAL inserm-03261002</a>. Page numbers are the journal's.</div>
+    <div>Teissandier A, Servant N, Barillot E, Bourc'his D (2019) Tools and best practices for retrotransposon analysis using high-throughput sequencing data. Mob DNA 10:52. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6935493/">PMC6935493</a>.</div>
+    <div>Real data: the UCSC RepeatMasker table for mm10 (the rows of <a href="names.html">Three names</a>); reads tiled and aligned with STAR 2.7.11b, up to 100 places per read. The three-copies test is the one in <a href="tools.html">Counting tools</a>. Scripts: <a href="prep/q11/tile_reads.py">tile_reads.py</a>, <a href="prep/q11/tally_tiles.py">tally_tiles.py</a>, <a href="prep/q11/run_tiles.sh">run_tiles.sh</a>, <a href="prep/q11/k3_copies.py">k3_copies.py</a>, <a href="prep/q11/build_copies_json.py">build_copies_json.py</a>. The model is written for this page: <a href="assets/copies.js?v=0af2a36a">copies.js</a>.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>
