@@ -1,0 +1,34 @@
+/* Repeat After Me: "How copies are made" lesson. Builds on site.css, names.css and multimap.css. */
+ul.ways { display: flex; flex-direction: column; gap: 14px; }
+ul.ways li { display: block; }
+.cl { display: inline-block; font-family: var(--display); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-left-width: 5px; border-radius: 4px; padding: 0 7px; margin-right: 6px; }
+.cl.LINE { border-left-color: var(--LINE); } .cl.SINE { border-left-color: var(--SINE); } .cl.LTR { border-left-color: var(--LTR); } .cl.DNA { border-left-color: var(--DNA); }
+
+label.pick { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+label.pick .lab { font-family: var(--display); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+label.pick select { font: 0.9rem var(--mono); padding: 4px 6px; max-width: 100%; background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; }
+
+svg#stacksvg { display: block; max-width: 100%; }
+svg#stacksvg text { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+svg#stacksvg text.tl { font-family: var(--display); font-weight: 700; font-size: 11px; fill: var(--ink-2); }
+svg#stacksvg line.grid { stroke: var(--rule); }
+svg#stacksvg line.axl { stroke: var(--rule); }
+svg#stacksvg path.cov { fill-opacity: 0.75; stroke: none; }
+svg#stacksvg path.cov.LINE, svg#stacksvg g.stk.LINE rect { fill: var(--LINE); }
+svg#stacksvg path.cov.SINE, svg#stacksvg g.stk.SINE rect { fill: var(--SINE); }
+svg#stacksvg path.cov.LTR, svg#stacksvg g.stk.LTR rect { fill: var(--LTR); }
+svg#stacksvg path.cov.DNA, svg#stacksvg g.stk.DNA rect { fill: var(--DNA); }
+.sread { font-size: 0.95rem; margin: 6px 0 0; max-width: 70ch; }
+
+.cstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; max-width: 640px; }
+.cstat { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; }
+.cstat .k { font-family: var(--display); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.cstat .v { font-family: var(--mono); font-size: 1.25rem; font-weight: 600; }
+
+.tw { overflow-x: auto; max-width: 100%; }
+table.young { border-collapse: collapse; font-size: 0.88rem; width: 100%; max-width: 560px; }
+table.young th { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--rule); }
+table.young td { padding: 5px 8px 5px 0; border-bottom: 1px solid var(--rule); }
+table.young td:nth-child(n+2) { font-family: var(--mono); font-size: 0.82rem; white-space: nowrap; }
+i.sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
+i.sw.LINE { background: var(--LINE); } i.sw.SINE { background: var(--SINE); } i.sw.LTR { background: var(--LTR); } i.sw.DNA { background: var(--DNA); }

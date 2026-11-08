@@ -7,6 +7,7 @@
   var LESSONS = [
     { href: 'names.html', title: 'Three names' },
     { href: 'ltr.html', title: 'Body and ends' },
+    { href: 'copying.html', title: 'How copies are made' },
     { href: 'zoos.html', title: 'Two zoos' },
     { href: 'strains.html', title: 'Not in the reference' },
     { href: 'multimap.html', title: 'One read, many places' },

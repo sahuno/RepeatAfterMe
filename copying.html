@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How Copies Are Made</title>
+<meta name="description" content="How each class of transposon makes a new copy, and what each way of copying leaves in the mouse genome: L1 copies without their 5′ end, short whole SINEs, ERV bodies missing their middle, and old DNA transposons.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/copying.css?v=7146009f">
+<script src="data/copying.js?v=5ae19a0c" defer></script>
+<script src="assets/copying.js?v=8eba9599" defer></script>
+<script src="assets/lessonnav.js?v=25fd9dc2" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Naming</div>
+  <h1>How copies are made</h1>
+  <p class="lede">How does a transposon make a new copy, and why can most of its copies in the mouse genome not copy again? Each class copies itself its own way, and each way leaves its own kind of wreck. Most L1 copies in mm10 have lost their 5′ end, where the promoter sits; mouse DNA transposons are all old and none still moves.</p>
+</header>
+
+<section id="how">
+  <h2>Four ways to copy</h2>
+  <p>A transposon (TE, transposable element) is a stretch of DNA that can make new copies of itself elsewhere in the genome. The four classes on this site differ in how. The <a href="./#classes">stage on the home page</a> plays each one; here are the sources.</p>
+  <ul class="picklist ways">
+    <li><span class="cl LINE">L1</span> Full-length mouse L1s "are 6–7 kb and contain two open reading frames (ORFs) encoding ORF1p and ORF2p, with the latter having endonuclease and reverse transcriptase activity" (Gagnier et al. 2019): a cutter for DNA and a writer that turns RNA into DNA. In human L1, the cutter "cleaves a single strand of chromosomal DNA", freeing an end "that is used by ORF2p reverse transcriptase to copy LINE-1 RNA" right there in the chromosome (Kazazian and Moran 2017).</li>
+    <li><span class="cl SINE">SINE</span> B1 and B2 make no proteins of their own: they "are non-autonomous retrotransposons, as they do not encode proteins involved in their amplification", and "mouse SINEs have been shown to be retrotransposed by mouse L1" (Gagnier et al.). A SINE needs L1's proteins to be copied.</li>
+    <li><span class="cl LTR">ERV</span> An endogenous retrovirus (ERV) is a retrovirus-like sequence in the genome (Kazazian and Moran). Full-length ERVs "can encode gag, pol and sometimes env" (Gagnier et al.); env is the protein that helps a virus enter and leave cells (Kazazian and Moran). About 200 IAP copies carry env, but most do not, and "loss of env and other specific genetic modifications facilitated adoption of an intracellular retrotranspositional life cycle": IAPs copy inside the cell instead of leaving it.</li>
+    <li><span class="cl DNA">DNA</span> A DNA transposon carries transposase, "an enzyme that allows the transposon to cut itself out of one genomic site and insert itself into another site" (Kazazian and Moran): cut and paste, with no RNA in between. Mouse and human "contain ancient families of DNA transposons, none currently active, which comprise 1–3% of these genomes" (Gagnier et al.).</li>
+  </ul>
+</section>
+
+<section id="left">
+  <h2>What copying leaves behind</h2>
+  <p>Every insertion of a subfamily in mm10, lined up against the subfamily's consensus, the reconstructed original sequence, with its 5′ end (start) on the left and its 3′ end (tail) on the right. Each thin line is one insertion, drawn where it matches the consensus. The curve above shows the share of insertions that still have each part. Pick a subfamily.</p>
+  <label class="pick"><span class="lab">Subfamily</span> <select id="subpick" aria-label="Subfamily"></select></label>
+  <figure class="ice">
+    <div class="icebox"><svg id="stacksvg" role="img" aria-label="For the picked subfamily: above, the share of insertions that cover each part of the consensus; below, 150 sampled insertions as lines along the consensus. The sentence below gives the numbers."></svg></div>
+    <p class="sread" id="sread" aria-live="polite"></p>
+    <figcaption>An insertion is the set of rows RepeatMasker gives one ID (<a href="units.html">Rows or subfamilies</a>). "Has the 3′ end": one of its rows ends within 100 bases of the consensus end; "has the 5′ end": one begins within the first 100. The lines are a fixed random sample of 150 insertions; the percentages use all of them. "% different" is the median over the subfamily's rows.</figcaption>
+  </figure>
+  <noscript><p>This figure needs JavaScript.</p></noscript>
+  <ul class="picklist">
+    <li>L1 copies keep their tail and lose their start. 97.3% of L1Md_T insertions have the 3′ end and 14.7% the 5′ end; for the older L1Md_F2 it is 95.7% and 0.5%. In new insertions, "the vast majority of such inserts being 5′-truncated to varying extents. Although the exact mechanisms underlying this truncation phenomenon remain unclear" (Gagnier et al.). The 3′ end is the part that stays; how far each copy reaches toward the 5′ end varies.</li>
+    <li>SINEs are short enough to be copied whole: 99.4% of B1_Mm insertions have both the 5′ and 3′ ends checked here, with a median of 145 of the 147 consensus bases.</li>
+    <li>The IAP body keeps both ends, 82.1% the 5′ end and 85.0% the 3′ end, but a median insertion has 3,833 of 6,481 bases: pieces are missing from the middle. Gagnier et al. name common "partly deleted proviral forms", the best known with a 1.9 kb deletion. The LTRs at each end are separate rows, and many IAPs have kept only one LTR (<a href="ltr.html">Body and ends</a>).</li>
+    <li>DNA transposons such as URR1A are mostly whole, 99.9% with the 5′ end, but old: 15.7% different from their consensus in the median row, against 3.5% for L1Md_T.</li>
+  </ul>
+</section>
+
+<section id="again">
+  <h2>How many could copy again</h2>
+  <div class="cstats">
+    <div class="cstat"><div class="k">L1 insertions</div><div class="v" data-stat="l1">635,320</div></div>
+    <div class="cstat"><div class="k">L1 covering 6 kb or more</div><div class="v" data-stat="l1long">17,077</div></div>
+    <div class="cstat"><div class="k">L1 structurally intact</div><div class="v">2,811</div></div>
+  </div>
+  <p>Of 635,320 L1 insertions in mm10, 17,077 still cover at least 6,000 bases of their consensus, close to full length. Gagnier et al. count 2,811 mouse L1s "that are fully structurally intact", full length with both reading frames whole. An insertion that lost its 5′ end has no promoter to make RNA from (the promoter sits "in the 5′ untranslated region (UTR) for LINEs", Lanciano and Cristofari, p. 724), so it cannot start a copy of its own.</p>
+  <p>Mutations pile up in a copy over time, so the copies that could still work are among the young ones, and DNA transposons have almost none. RepeatMasker rows less than 5% and 10% different from their consensus:</p>
+  <div class="tw"><table class="young" id="youngtable" aria-label="Rows under 5% and 10% different from consensus, by class"></table></div>
+  <p class="muted" style="font-size:0.9rem">Of the 31 DNA transposon rows under 5%, 29 are shorter than 100 bases. ERVs lose the ability in their own way: "most have lost coding competence due to mutational degradation over time" (Gagnier et al.).</p>
+</section>
+
+<section id="means">
+  <h2>What this means for your analysis</h2>
+  <ol class="fixlist">
+    <li>Most L1 rows cannot make their own RNA. Reads on a 5′-truncated L1 come from something else: a gene or a longer transcript running through it (<a href="passenger.html">Passenger or driver</a>). The copies that keep their promoter are few, 2,524 of 17,180 L1Md_T insertions, and they are the hardest to tell apart (<a href="copies.html">Which copies</a>).</li>
+    <li>The copies that can still copy are young, and young copies are nearly identical: L1Md_A rows are a median 1.9% different from their consensus. Reads from them fit many places (<a href="multimap.html">One read, many places</a>).</li>
+    <li>L1 copies, and SINEs such as human Alu, end in a run of A bases: Lanciano and Cristofari warn that the oligo(dT) used to select RNA with a poly(A) tail "can potentially pull down DNA fragments with long poly(dA) tracts as found at the 3′ end of many non-long-terminal-repeat retroelements, such as L1, Alu or SVA elements" (p. 726). Expect DNA contamination to show up at their 3′ ends.</li>
+    <li>A DNA transposon signal does not mean DNA transposons moved: none is active in mouse, so the reads come from old copies.</li>
+  </ol>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>Gagnier L, Belancio VP, Mager DL (2019) Mouse germ line mutations due to retrotransposon insertions. Mob DNA 10:15. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6466679/">PMC6466679</a>.</div>
+    <div>Kazazian HH Jr, Moran JV (2017) Mobile DNA in health and disease. N Engl J Med 377:361–370. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5980640/">PMC5980640</a>.</div>
+    <div>Lanciano S, Cristofari G (2020) Measuring and interpreting transposable element expression. Nat Rev Genet 21:721–736. <a href="https://doi.org/10.1038/s41576-020-0251-y">doi:10.1038/s41576-020-0251-y</a>; open author manuscript at <a href="https://inserm.hal.science/inserm-03261002">HAL inserm-03261002</a>. Page numbers are the journal's.</div>
+    <div>Real data: UCSC mm10 RepeatMasker .out files (<a href="https://hgdownload.soe.ucsc.edu/goldenPath/mm10/bigZips/">bigZips</a> chromOut.tar.gz), grouped into insertions as in <a href="units.html">Rows or subfamilies</a>. Script: <a href="prep/q3/build_copying_json.py">build_copying_json.py</a>.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>
