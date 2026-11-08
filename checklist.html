@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Before You Show It</title>
+<meta name="description" content="Ten checks for a repeat result before it goes to lab meeting, each tied to the lesson that explains it. Mark each check and see which sentences about the result you have earned.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css?v=513387c1">
+<link rel="stylesheet" href="assets/names.css?v=f2e06e5b">
+<link rel="stylesheet" href="assets/multimap.css?v=a5e22a4e">
+<link rel="stylesheet" href="assets/checklist.css?v=03a842c7">
+<script src="assets/checklist.js?v=de8794b4" defer></script>
+<script src="assets/lessonnav.js?v=1ed8b412" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav" aria-label="Site">
+  <a class="brand" href="./" aria-label="Repeat After Me, home">
+    <span class="dots" aria-hidden="true"><i class="LINE"></i><i class="SINE"></i><i class="LTR"></i><i class="DNA"></i></span>
+    Repeat After Me
+  </a>
+  <ul>
+    <li><a href="./#lessons">Lessons</a></li>
+    <li><a href="./#about">About</a></li>
+  </ul>
+</nav>
+
+<header class="lesson">
+  <div class="eyebrow">Lesson · Interpreting</div>
+  <h1>Before you show it</h1>
+  <p class="lede">Each check earns one sentence you can say about a repeat result. Take "L1Md_T is up two-fold" through the ten checks below, mark each one as passing or failing, and the panel at the end lists what you can and cannot say at lab meeting.</p>
+</header>
+
+<section id="checks">
+  <h2>Ten checks</h2>
+  <p>The checks follow the order an analysis meets them, and each points to the lesson that explains it. Marking a check shows what a passing or failing result looks like. The drawings are made up, except checks 2 and 7, which use the real L1Md_T numbers from earlier lessons. Your marks are kept in the page address, so you can bookmark a half-done checklist or send it to someone.</p>
+  <div class="cks">
+  <article class="ck" data-k="0">
+    <h3><span class="cn">1</span>Label</h3>
+    <p class="cq">Is the label in your table the one you mean, at the level you mean?</p>
+    <div class="seg" role="group" aria-label="Check 1, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Name the level you counted: subfamily (L1Md_T), family (L1) or class (LINE). For an ERV, say whether you counted the -int rows, the LTR rows or both; LTR rows include solo LTRs, ends left behind when the body was cut out. Compare only like labels: the mm10 table has L1Md_T and, as separate rows, L1MdTf_I, L1MdTf_II and L1MdTf_III.</p>
+    <p class="from">From: <a href="names.html">Three names</a>, <a href="ltr.html">Body and ends</a>, <a href="zoos.html">Two zoos</a>, <a href="copies.html">Which copies</a>. <span class="cmark" data-k="0"></span></p>
+  </article>
+  <article class="ck" data-k="1">
+    <h3><span class="cn">2</span>Reads lost</h3>
+    <p class="cq">How many of the subfamily's reads did you count?</p>
+    <div class="seg" role="group" aria-label="Check 2, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Look at your aligner's totals for reads that fit several places and reads that never aligned. For young subfamilies, a count of unique reads alone “tends to greatly underestimate or even eliminate the signal” (Lanciano and Cristofari, p. 729). The figure is real: L1Md_T's 2,000 simulated reads from One read, many places.</p>
+    <p class="from">From: <a href="multimap.html">One read, many places</a>. <span class="cmark" data-k="1"></span></p>
+  </article>
+  <article class="ck" data-k="2">
+    <h3><span class="cn">3</span>Second counting rule</h3>
+    <p class="cq">Does the rise survive a second counting rule?</p>
+    <div class="seg" role="group" aria-label="Check 3, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Count once with unique reads only and once with an EM rule that shares out the reads fitting several places (TEcount's multi mode, or featureCounts -M --fraction). On simulated reads, subfamily totals survived most counting choices, so a rise that shows under one rule only needs an explanation.</p>
+    <p class="from">From: <a href="tools.html">Counting tools</a>. <span class="cmark" data-k="2"></span></p>
+  </article>
+  <article class="ck" data-k="3">
+    <h3><span class="cn">4</span>Strand and edges</h3>
+    <p class="cq">Do the reads run the copies' way, and step up at their edges?</p>
+    <div class="seg" role="group" aria-label="Check 4, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">This needs a stranded library. Reads a copy made run its way and start and stop with it; reads a gene carried run the gene's way at the same depth through the copy and the intron around it. The test works best on copies pointing against their gene.</p>
+    <p class="from">From: <a href="passenger.html">Passenger or driver</a>. <span class="cmark" data-k="3"></span></p>
+  </article>
+  <article class="ck" data-k="4">
+    <h3><span class="cn">5</span>Where the RNA starts</h3>
+    <p class="cq">Does coverage start inside the copies' 5′ end?</p>
+    <div class="seg" role="group" aria-label="Check 5, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">An L1's promoter is in its 5′ untranslated region (Lanciano and Cristofari, p. 724), and only 2,526 of the 23,639 L1Md_T rows keep their 5′ end. Look at coverage, or better at mapped transcription start sites, around the 5′ end of the copies that carry the change.</p>
+    <p class="from">From: <a href="passenger.html">Passenger or driver</a>, <a href="copies.html">Which copies</a>. <span class="cmark" data-k="4"></span></p>
+  </article>
+  <article class="ck" data-k="5">
+    <h3><span class="cn">6</span>Copies outside genes</h3>
+    <p class="cq">Does the rise hold in copies outside genes?</p>
+    <div class="seg" role="group" aria-label="Check 6, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Split the subfamily's reads by where the copies sit and compare. 18,051 of the 23,639 L1Md_T rows lie outside protein-coding genes; a rise carried by host genes shows only in the copies inside them.</p>
+    <p class="from">From: <a href="passenger.html">Passenger or driver</a>. <span class="cmark" data-k="5"></span></p>
+  </article>
+  <article class="ck" data-k="6">
+    <h3><span class="cn">7</span>Named copies</h3>
+    <p class="cq">Can a copy-level count name the copies, and do they have sequence of their own?</p>
+    <div class="seg" role="group" aria-label="Check 7, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Use a copy-level tool, then check each copy it names: the share of the copy's reads that fit it alone, and whether the copy is in your mice at all. L1Md_T copies with the 5′ end have a median of 5.6%. Copies differ between strains: “it is critical not to dismiss polymorphic TEs when one is analysing TE expression” (Lanciano and Cristofari, p. 724).</p>
+    <p class="from">From: <a href="copies.html">Which copies</a>, <a href="tools.html">Counting tools</a>, <a href="zoos.html">Two zoos</a>. <span class="cmark" data-k="6"></span></p>
+  </article>
+  <article class="ck" data-k="7">
+    <h3><span class="cn">8</span>A look in the genome browser</h3>
+    <p class="cq">Do the top copies look right in a genome browser?</p>
+    <div class="seg" role="group" aria-label="Check 8, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Open the copies that carry most of the change, with the gene and RepeatMasker tracks on. Look for reads running in from a gene or a neighbour, piles at one edge, and copies too short to stand alone. For human L1, Deininger et al. found that unstranded or whole-cell data “would require extensive manual curation looking at the pattern of expression around each L1 locus”.</p>
+    <p class="from">From: <a href="passenger.html">Passenger or driver</a>, <a href="copies.html">Which copies</a>. <span class="cmark" data-k="7"></span></p>
+  </article>
+  <article class="ck" data-k="8">
+    <h3><span class="cn">9</span>Replicates and DNA contamination</h3>
+    <p class="cq">Does every replicate show it, and is there DNA in the RNA?</p>
+    <div class="seg" role="group" aria-label="Check 9, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Plot the subfamily for each sample, not only the mean. Genomic DNA matters more for repeats than for genes: “A small amount of contaminating DNA, which would not greatly affect the measurement of gene expression, could significantly influence TE expression results owing to the high TE copy number”, and it “can vary considerably from sample to sample”. Lanciano and Cristofari suggest “checking the consistency of intron–exon or intergenic–intragenic signal ratios” to find poor samples (p. 726).</p>
+    <p class="from">No lesson yet; source: Lanciano and Cristofari, p. 726. <span class="cmark" data-k="8"></span></p>
+  </article>
+  <article class="ck" data-k="9">
+    <h3><span class="cn">10</span>An independent method</h3>
+    <p class="cq">Does another method agree?</p>
+    <div class="seg" role="group" aria-label="Check 10, your result">
+      <span class="lab">Yours</span>
+      <button type="button" data-m="n">Not checked</button>
+      <button type="button" data-m="p">Passes</button>
+      <button type="button" data-m="f">Fails</button>
+    </div>
+    <div class="cfig" aria-live="polite"></div>
+    <p class="how">Start-site mapping or active chromatin marks at the copies, nascent RNA, or long reads, which “could provide locus-specific expression levels” (Lanciano and Cristofari, p. 733). RT-qPCR has limits for repeats: on total RNA it mixes a copy's own RNA with genes' RNA, “it is often difficult to design probes and primers that are truly specific for a given TE family”, and it needs no-RT controls to rule out DNA (p. 726).</p>
+    <p class="from">From: <a href="passenger.html">Passenger or driver</a>. No lesson yet on long reads or RT-qPCR; source: Lanciano and Cristofari, pp. 726 and 733. <span class="cmark" data-k="9"></span></p>
+  </article>
+  </div>
+</section>
+
+<section id="say">
+  <h2>What you can say</h2>
+  <p class="saysum" id="saysum" aria-live="polite"></p>
+  <ol class="say" id="saylist"></ol>
+  <div class="controls">
+    <button type="button" class="reset" id="copytext">Copy as text</button>
+    <button type="button" class="reset" id="clearall">↺ Clear all marks</button>
+    <span class="copied" id="copied" aria-live="polite"></span>
+  </div>
+  <pre class="saytext" id="saytext" hidden></pre>
+  <p>No single check settles a result, and neither does any one method: “none of the tools or approaches described here can bring a comprehensive solution on its own” (Lanciano and Cristofari, p. 733). A sentence you have not earned can still go on a slide as a question.</p>
+</section>
+
+<footer>
+  <div class="sources" id="sources">
+    <div>Lanciano S, Cristofari G (2020) Measuring and interpreting transposable element expression. Nat Rev Genet 21:721–736. <a href="https://doi.org/10.1038/s41576-020-0251-y">doi:10.1038/s41576-020-0251-y</a>; open author manuscript at <a href="https://inserm.hal.science/inserm-03261002">HAL inserm-03261002</a>. Page numbers are the journal's.</div>
+    <div>Deininger P, Morales ME, White TB, Baddoo M, Hedges DJ, Servant G, Srivastav S, Smither ME, Concha M, DeHaro DL, Flemington EK, Belancio VP (2017) A comprehensive approach to expression of L1 loci. Nucleic Acids Res 45:e31. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5389711/">PMC5389711</a>.</div>
+    <div>Real numbers: L1Md_T's simulated reads from <a href="multimap.html">One read, many places</a> (check 2), the L1Md_T rows and copies of <a href="copies.html">Which copies</a> (checks 5, 6 and 7). The checklist is written for this page: <a href="assets/checklist.js?v=de8794b4">checklist.js</a>.</div>
+  </div>
+  <div>Made by Samuel Ahuno. Colours: Okabe-Ito palette, colour-blind safe.</div>
+</footer>
+
+</div>
+</body>
+</html>

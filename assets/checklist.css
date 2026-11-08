@@ -1,0 +1,53 @@
+/* Repeat After Me: "Before you show it" lesson. Builds on site.css, names.css and multimap.css. */
+:root { --pass: #009E73; --fail: #D55E00; --open: #9aa1ad; --gene: #0072B2; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --gene: #56a8e0; --open: #6b7280; } }
+:root[data-theme="dark"] { --gene: #56a8e0; --open: #6b7280; }
+
+.cks { display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 900px) { .cks { grid-template-columns: 1fr 1fr; } }
+.ck { background: var(--surface); border: 1px solid var(--rule); border-left: 5px solid var(--open); border-radius: 6px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ck[data-state="p"] { border-left-color: var(--pass); }
+.ck[data-state="f"] { border-left-color: var(--fail); }
+.ck h3 { font-size: 1.05rem; display: flex; align-items: center; gap: 8px; margin: 0; }
+.ck .cn { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--muted); border: 1px solid var(--rule); border-radius: 50%; width: 1.6rem; height: 1.6rem; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.ck .cq { margin: 0; font-weight: 600; }
+.ck .how { margin: 0; font-size: 0.92rem; color: var(--ink-2); }
+.ck .from { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.ck .cmark { display: block; margin-top: 2px; }
+.cfig { background: var(--bg); border-radius: 4px; padding: 8px 10px; }
+.cfig .exlab { font-family: var(--display); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.ck[data-state="f"] .cfig .exlab { color: var(--fail); }
+.ck[data-state="p"] .cfig .exlab { color: var(--pass); }
+.cfig svg { display: block; max-width: 420px; margin: 4px 0; }
+.cfig .ex { margin: 2px 0 0; font-size: 0.9rem; }
+.cfig svg text { font-family: var(--mono); fill: var(--ink-2); }
+.cfig svg text.fh { font-family: var(--display); font-weight: 700; font-size: 11px; fill: var(--muted); }
+.cfig svg text.fl { font-size: 11px; }
+.cfig svg text.fv { font-size: 11px; font-weight: 600; fill: var(--ink); }
+.cfig svg text.fs { font-size: 10px; fill: var(--muted); }
+.cfig svg rect.sg { fill: var(--LINE); opacity: 0.25; }
+.cfig svg rect.sg.on { opacity: 0.9; }
+.cfig svg rect.sg.l { fill: var(--muted); }
+.cfig svg rect.fb { fill: var(--LINE); }
+.cfig svg rect.trk { fill: var(--rule); }
+.cfig svg line.ref, .cfig svg line.gr { stroke: var(--muted); stroke-dasharray: 2 2; }
+.cfig svg line.bl { stroke: var(--rule); }
+.cfig svg polygon.cv.o { fill: var(--LINE); fill-opacity: 0.6; }
+.cfig svg polygon.cv.g { fill: var(--gene); fill-opacity: 0.55; }
+.cfig svg rect.cp { fill: var(--LINE); }
+.cfig svg rect.cp5 { fill: var(--ink); }
+.cfig svg rect.nb { fill: var(--muted); }
+.cfig svg circle.dc { fill: var(--muted); }
+.cfig svg circle.dt { fill: var(--LINE); }
+.cfig svg tspan.kc { fill: var(--muted); } .cfig svg tspan.kt { fill: var(--LINE); }
+
+.saysum { font-family: var(--display); font-weight: 700; margin: 0; }
+ol.say { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-width: 70ch; }
+ol.say li { background: var(--surface); border: 1px solid var(--rule); border-left: 5px solid var(--open); border-radius: 6px; padding: 8px 12px; display: flex; flex-direction: column; gap: 2px; }
+ol.say li b { font-weight: 600; }
+ol.say li .why { font-size: 0.88rem; color: var(--ink-2); }
+ol.say li.s-yes { border-left-color: var(--pass); }
+ol.say li.s-no { border-left-color: var(--fail); }
+ol.say li.s-no b { text-decoration: line-through; text-decoration-color: var(--fail); }
+.copied { font-size: 0.88rem; color: var(--muted); align-self: center; }
+pre.saytext { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; font-family: var(--mono); font-size: 0.8rem; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 70ch; }

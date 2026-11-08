@@ -11,7 +11,8 @@
     { href: 'multimap.html', title: 'One read, many places' },
     { href: 'tools.html', title: 'Counting tools' },
     { href: 'copies.html', title: 'Which copies' },
-    { href: 'passenger.html', title: 'Passenger or driver' }
+    { href: 'passenger.html', title: 'Passenger or driver' },
+    { href: 'checklist.html', title: 'Before you show it' }
   ];
   var here = location.pathname.split('/').pop() || 'index.html';
   var idx = -1;
