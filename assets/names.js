@@ -2,7 +2,7 @@
    A zoomable icicle (a tree drawn as rows of boxes) of RepeatMasker names for mouse and human,
    one raw table row whose name columns light up their level, four "labels that mislead" jumps,
    and a small double-counting toy. Vanilla JS, no dependencies. Data: window.NAMES_DATA from data/names.js.
-   Test hooks (render instantly): ?sp=mouse|human&size=bp|rows&zoom=LINE|L1&sel=LINE|L1|L1Md_T&level=1..3&flag=b1|q|iap|only&chr=chr3
+   Test hooks (render instantly): ?sp=mouse|human&size=bp|rows&zoom=LINE|L1&sel=LINE|L1|L1Md_T&level=1..3&flag=b1|q|iap|only&chr=chr3&view=tree|sankey
    Per-chromosome numbers: window.CHROM_DATA from data/chrom_<species>.js, loaded the first time a chromosome is picked.
    Paths join class, family and subfamily with "|" because some names contain "/".
    window.Names exposes go(patch), flag(id), state(), setInstant(bool), drawn(), ready(). */
@@ -101,7 +101,7 @@
   var q = new URLSearchParams(location.search);
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var instant = true; // first render is always instant
-  var S = { sp: 'mouse', size: 'bp', zoom: '', sel: '', level: 0, flag: '', chr: '' };
+  var S = { sp: 'mouse', size: 'bp', zoom: '', sel: '', level: 0, flag: '', chr: '', view: q.get('view') === 'sankey' ? 'sankey' : 'tree' };
 
   // chr: '' = whole genome; left out = the chromosome picked now (S.chr)
   function vec(n, sp, chr) { if (chr === undefined) chr = S.chr; return (chr ? n.cv && n.cv[sp + SEP + chr] : n.v[sp]) || null; }
@@ -139,14 +139,18 @@
   function fit(s, px) { var max = Math.floor((px - 8) / CH); if (max < 2) return ''; return s.length <= max ? s : s.slice(0, Math.max(1, max - 1)) + '…'; }
   function label(n) { return n.fold ? n.n : n.n; }
 
+  function hatchDefs() {
+    var d = '<defs>';
+    Object.keys(COL).forEach(function (k) {
+      d += '<pattern id="hatch-' + k + '" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="var(--surface)"/><rect width="3.5" height="7" fill="' + COL[k] + '"/></pattern>';
+    });
+    return d + '</defs>';
+  }
+
   function draw() {
     W = Math.max(280, Math.round(svg.parentNode.clientWidth - 20));
-    var out = [];
-    out.push('<defs>');
-    Object.keys(COL).forEach(function (k) {
-      out.push('<pattern id="hatch-' + k + '" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="var(--surface)"/><rect width="3.5" height="7" fill="' + COL[k] + '"/></pattern>');
-    });
-    out.push('</defs>');
+    if (S.view === 'sankey') return drawSankey();
+    var out = [hatchDefs()];
     // A picked chromosome: a pale wedge from its slice of the genome row to the full width of the rows below.
     var span = S.chr && S.size === 'bp' && !S.zoom ? chromSpan(S.sp, S.chr) : null;
     if (span) {
@@ -238,6 +242,107 @@
     svg.innerHTML = out.join('');
   }
 
+  // ---------- Sankey view ----------
+  // The same names, drawn as bars joined by ribbons (a Sankey diagram: a ribbon's thickness is the
+  // amount that flows from a parent name into a child name). Rows run top to bottom, as in the tree.
+  // Each row is packed with small gaps, so ribbons can slant. Names too thin to draw are gathered into one
+  // "smaller" bar per parent. The selected name, and the names above it, are never gathered and are drawn
+  // at least SSEL px wide.
+  var SBAR = 36, SRIB = 56, SMINW = 5, SSEL = 5;
+  function ribFill(n) {
+    if (n.depth === 0) return 'var(--genome-2)';
+    if (n.synthetic) return 'var(--muted)';
+    var base = n.cls.replace(/\?$/, '');
+    return n.te && COL[base] ? COL[base] : 'var(--otherrep)';
+  }
+  function drawSankey() {
+    W = Math.max(280, Math.round(svg.parentNode.clientWidth - 20));
+    var z = nodeOf(S.zoom) || root, selNode = nodeOf(S.sel), chain = [], rows = [[], [], [], []];
+    for (var x = z; x; x = x.parent) chain.unshift(x);
+    var V = val(z, S.sp, S.size);
+    chain.forEach(function (n, d) { rows[d].push({ n: n, v: V, parent: d ? rows[d - 1][0] : null }); });
+    var minv = V * SMINW / W;
+    for (var d = z.depth + 1; d <= 3; d++) {
+      rows[d - 1].forEach(function (pi) {
+        if (pi.fold || !pi.n.kids.length) return;
+        var f = { n: 0, v: 0, first: null };
+        pi.n.kids.forEach(function (kid) {
+          var v = val(kid, S.sp, S.size);
+          if (!(v > 0)) return;
+          var keep = selNode && isAnc(kid, selNode);
+          if (v < minv && !keep) { f.n++; f.v += v; if (!f.first) f.first = kid; return; }
+          rows[d].push({ n: kid, v: v, parent: pi, min: v < minv ? SSEL : 0 });
+        });
+        if (f.n) rows[d].push({ fold: f, v: f.v, parent: pi });
+      });
+    }
+    // One width scale for every row, set by the row that needs the most room for its gaps.
+    var k = Infinity, gap = [];
+    rows.forEach(function (items, d) {
+      var g = 0, s = 0;
+      items.forEach(function (it, i) { s += it.v; if (i) g += it.parent !== items[i - 1].parent ? 8 : 2; });
+      gap[d] = g;
+      if (s > 0) k = Math.min(k, (W - g - 2 * SSEL) / s);
+    });
+    var rowY = [];
+    for (var r = 0; r < 4; r++) rowY[r] = 22 + r * (SBAR + SRIB);
+    rows.forEach(function (items, d) {
+      var tot = gap[d];
+      items.forEach(function (it) { it.w = Math.max(it.v * k, it.min || 0); tot += it.w; });
+      var cx = Math.max(0, (W - tot) / 2);
+      items.forEach(function (it, i) {
+        if (i) cx += it.parent !== items[i - 1].parent ? 8 : 2;
+        it.x = cx; cx += it.w;
+        it.oc = it.x; // where the next ribbon leaves this bar
+      });
+    });
+    var out = [hatchDefs()], bars = [], ribs = [], selBox = null;
+    drawnCount = 0;
+    for (var d2 = 0; d2 < 4; d2++) {
+      var on = S.level === d2 && d2 > 0;
+      out.push('<text class="rowlab' + (on ? ' on' : '') + '" x="0" y="' + (rowY[d2] - 7) + '">' + LEVEL[d2].toUpperCase() + (d2 ? ' · ' + COLNAME[d2] : '') + (on ? '  ◀ the name you tapped' : '') + '</text>');
+    }
+    rows.forEach(function (items, d) {
+      var y = rowY[d], dimRow = S.level > 0 && d !== S.level;
+      items.forEach(function (it) {
+        var n = it.n, w = it.w, x0 = it.x;
+        if (it.parent) {
+          var pi = it.parent, y1 = rowY[d - 1] + SBAR, y2 = y, ym = (y1 + y2) / 2, a = pi.oc;
+          pi.oc += w;
+          ribs.push('<path class="rib' + (S.level > 0 ? ' dim' : '') + '" fill="' + ribFill(n || it.fold.first) + '" d="M' + a.toFixed(1) + ',' + y1 + ' C' + a.toFixed(1) + ',' + ym + ' ' + x0.toFixed(1) + ',' + ym + ' ' + x0.toFixed(1) + ',' + y2 +
+            ' L' + (x0 + w).toFixed(1) + ',' + y2 + ' C' + (x0 + w).toFixed(1) + ',' + ym + ' ' + (a + w).toFixed(1) + ',' + ym + ' ' + (a + w).toFixed(1) + ',' + y1 + ' Z"/>');
+        }
+        drawnCount++;
+        if (it.fold) {
+          var f = it.fold, canZoom = it.parent.n !== z;
+          var ftip = f.n + ' ' + LEVEL[d].toLowerCase() + ' names in ' + (it.parent.n.depth ? it.parent.n.n : 'the genome') + ', each too thin to draw here' + (canZoom ? '. Tap to zoom in.' : '.');
+          var ft = fit('+' + f.n + ' smaller', w);
+          bars.push('<g' + (canZoom ? ' data-run="' + esc(it.parent.n.path) + '"' : '') + (dimRow ? ' class="dim"' : '') + '><title>' + esc(ftip) + '</title>' +
+            '<rect class="run" x="' + x0.toFixed(2) + '" y="' + y + '" width="' + w.toFixed(2) + '" height="' + SBAR + '" fill="' + fill(f.first) + '"/>' +
+            (ft ? '<text x="' + (x0 + 5).toFixed(1) + '" y="' + (y + 22) + '" fill="var(--ink)">' + esc(ft) + '</text>' : '') + '</g>');
+          return;
+        }
+        var name = n.depth === 0 ? SPNAME[S.sp] + (S.chr ? ' ' + S.chr : ' genome') : label(n);
+        var tip = (n.depth ? LEVEL[n.depth] + ' ' : '') + name + ' · ' + metric(n);
+        var lab = fit(name, w), sub = fit(metric(n), w), txt = '';
+        if (lab && (n.depth < 3 || lab.length >= Math.min(name.length, 4))) {
+          txt += '<text x="' + (x0 + 5).toFixed(1) + '" y="' + (y + 15) + '" fill="' + inkFor(n) + '" font-weight="600">' + esc(lab) + '</text>';
+          if (sub) txt += '<text x="' + (x0 + 5).toFixed(1) + '" y="' + (y + 29) + '" fill="' + inkFor(n) + '">' + esc(sub) + '</text>';
+        }
+        var f2 = fill(n), focusable = !!txt && !n.synthetic;
+        bars.push('<g data-p="' + esc(n.path) + '"' + (dimRow ? ' class="dim"' : '') + (focusable ? ' tabindex="0" role="button" aria-label="' + esc(tip) + '"' : '') + '>' +
+          '<title>' + esc(tip) + '</title><rect class="' + (n.synthetic ? 'nr' : (w >= 3 ? 'box' : 'box thin')) + '" x="' + x0.toFixed(2) + '" y="' + y + '" width="' + w.toFixed(2) + '" height="' + SBAR + '"' + (f2 ? ' fill="' + f2 + '"' : '') + '/>' + txt + '</g>');
+        if (n.path === S.sel && n.depth > 0) selBox = [x0, y, w, SBAR];
+      });
+    });
+    out.push(ribs.join(''), bars.join(''));
+    if (selBox) out.push('<rect class="sel" x="' + (selBox[0] + 1.25).toFixed(2) + '" y="' + (selBox[1] + 1.25) + '" width="' + Math.max(0, selBox[2] - 2.5).toFixed(2) + '" height="' + (selBox[3] - 2.5) + '"/>');
+    H = rowY[3] + SBAR;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('height', H);
+    svg.innerHTML = out.join('');
+  }
+
   // ---------- transitions ----------
   var anim = null;
   function targets() {
@@ -248,7 +353,7 @@
   function settle() { ALL.forEach(function (n) { n.c0 = n.d0; n.c1 = n.d1; }); draw(); }
   function animate() {
     if (anim) cancelAnimationFrame(anim.id);
-    if (instant || reduced) { anim = null; settle(); return; }
+    if (instant || reduced || S.view === 'sankey') { anim = null; settle(); return; }
     ALL.forEach(function (n) { n.f0 = n.c0 === undefined ? n.d0 : n.c0; n.f1 = n.c1 === undefined ? n.d1 : n.c1; });
     var t0 = performance.now(), dur = 650;
     anim = {};
@@ -263,11 +368,12 @@
   // ---------- state changes ----------
   function go(p) {
     p = p || {};
-    ['sp', 'size', 'zoom', 'sel', 'level', 'flag', 'chr'].forEach(function (k) { if (k in p) S[k] = p[k]; });
+    ['sp', 'size', 'zoom', 'sel', 'level', 'flag', 'chr', 'view'].forEach(function (k) { if (k in p) S[k] = p[k]; });
     if (!('level' in p)) S.level = 0;
     if (!('flag' in p)) S.flag = '';
     if (S.sp !== 'human') S.sp = 'mouse';
     if (S.size !== 'rows') S.size = 'bp';
+    if (S.view !== 'sankey') S.view = 'tree';
     if ('chr' in p) pendingChr = '';
     if (S.chr && !chromLen(S.sp, S.chr)) S.chr = ''; // e.g. human chr21 has no mouse counterpart
     if (S.chr && !chLoaded[S.sp]) {
@@ -293,6 +399,7 @@
       var u = new URLSearchParams();
       if (S.sp !== 'mouse') u.set('sp', S.sp);
       if (S.size !== 'bp') u.set('size', S.size);
+      if (S.view !== 'tree') u.set('view', S.view);
       if (S.zoom) u.set('zoom', S.zoom);
       if (S.sel) u.set('sel', S.sel);
       if (S.flag) u.set('flag', S.flag);
@@ -333,6 +440,9 @@
   Array.prototype.forEach.call(document.querySelectorAll('[data-size]'), function (b) {
     b.addEventListener('click', function () { instant = false; go({ size: b.getAttribute('data-size'), level: S.level, flag: S.flag }); });
   });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function (b) {
+    b.addEventListener('click', function () { instant = false; go({ view: b.getAttribute('data-view'), level: S.level, flag: S.flag }); });
+  });
   var chrSel = document.getElementById('chrpick'), chrOptsFor = '';
   if (chrSel) chrSel.addEventListener('change', function () { instant = false; go({ chr: chrSel.value, level: S.level }); });
   var START = { sp: 'mouse', size: 'bp', zoom: '', sel: '', level: 0, flag: '', chr: '' };
@@ -343,6 +453,13 @@
   function renderControls() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-sp]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-sp') === S.sp)); });
     Array.prototype.forEach.call(document.querySelectorAll('[data-size]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-size') === S.size)); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-view]'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === S.view)); });
+    var sk = S.view === 'sankey', c1 = document.getElementById('icecap'), c2 = document.getElementById('sankeycap');
+    if (c1) c1.hidden = sk;
+    if (c2) c2.hidden = !sk;
+    svg.setAttribute('aria-label', sk
+      ? 'Bars joined by ribbons, four rows: genome, class, family, subfamily. Bar width is the share of the genome. The panel below describes the selected bar.'
+      : 'Boxes for every repeat name, four rows: genome, class, family, subfamily. Box width is the share of the genome. The panel below describes the selected box.');
     if (chrSel) {
       if (chrOptsFor !== S.sp) {
         chrSel.innerHTML = '<option value="">Whole genome</option>' + D.species[S.sp].chroms.map(function (c) { return '<option value="' + esc(c[0]) + '">' + esc(c[0]) + '</option>'; }).join('');
@@ -458,7 +575,7 @@
     },
     q: {
       go: { zoom: '', sel: 'DNA?' },
-      note: function () { var m = qClasses('mouse'), h = qClasses('human'); return '<b>DNA?</b> is its own label, separate from <b>DNA</b>. Filter on class "DNA" and these rows drop out. Mouse has ' + m.length + ' classes with a "?" (' + m.join(', ') + '); human has ' + h.length + ' (' + h.join(', ') + '). Families can carry one too, such as <b>ERVK?</b> in mouse. The "?" classes are the thin striped boxes right of the coloured ones.'; }
+      note: function () { var m = qClasses('mouse'), h = qClasses('human'); return '<b>DNA?</b> is its own label, separate from <b>DNA</b>. Filter on class "DNA" and these rows drop out. Mouse has ' + m.length + ' classes with a "?" (' + m.join(', ') + '); human has ' + h.length + ' (' + h.join(', ') + '). Families can carry one too, such as <b>ERVK?</b> in mouse. ' + (S.view === 'sankey' ? 'Only DNA? is drawn in the Sankey view; the other "?" classes are too thin and sit in the "smaller" bar. Switch to Tree to see them.' : 'The "?" classes are the thin striped boxes right of the coloured ones.'); }
     },
     iap: {
       go: { sp: 'mouse', zoom: 'LTR' + SEP + 'ERVK', sel: 'LTR' + SEP + 'ERVK' + SEP + 'IAPEz-int' },
@@ -466,7 +583,7 @@
     },
     only: {
       go: { sp: 'mouse', zoom: 'SINE', sel: 'SINE' + SEP + 'B2' },
-      note: function () { return 'The human table has no family labelled <b>B2</b> or <b>B4</b>. In mouse they cover ' + share('SINE|B2', 'mouse') + ' and ' + share('SINE|B4', 'mouse') + ' of the genome. Switch to human and their boxes shrink to nothing. In the other direction, human <b>SVA</b> (class Retroposon, ' + share('Retroposon|SVA', 'human') + ' of the human genome) has no mouse label.'; }
+      note: function () { return 'The human table has no family labelled <b>B2</b> or <b>B4</b>. In mouse they cover ' + share('SINE|B2', 'mouse') + ' and ' + share('SINE|B4', 'mouse') + ' of the genome. Switch to human and their ' + (S.view === 'sankey' ? 'bars' : 'boxes') + ' shrink to nothing. In the other direction, human <b>SVA</b> (class Retroposon, ' + share('Retroposon|SVA', 'human') + ' of the human genome) has no mouse label.'; }
     }
   };
   function flag(id, opts) {
@@ -527,6 +644,7 @@
   else window.addEventListener('resize', function () { if (!anim) draw(); });
 
   window.Names = {
+    view: function () { return S.view; },
     go: function (p) { go(p); }, flag: flag, reset: reset,
     state: function () { return JSON.parse(JSON.stringify(S)); },
     setInstant: function (b) { instant = !!b; },

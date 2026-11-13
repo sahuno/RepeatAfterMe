@@ -38,6 +38,8 @@ figure.ice { margin: 0; display: flex; flex-direction: column; gap: 12px; }
 svg.ice { display: block; width: 100%; overflow: visible; }
 svg.ice text { font-family: var(--mono); font-size: 12px; pointer-events: none; }
 svg.ice text.rowlab { font-family: var(--display); font-size: 11px; font-weight: 700; letter-spacing: 0.07em; fill: var(--muted); }
+svg.ice path.rib { fill-opacity: 0.38; stroke: none; pointer-events: none; }
+svg.ice text.rowlab { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
 svg.ice text.rowlab.on { fill: var(--accent); }
 svg.ice [data-p] { cursor: pointer; }
 svg.ice rect.box { stroke: var(--surface); stroke-width: 1; }
@@ -46,7 +48,7 @@ svg.ice rect.run { stroke: none; fill-opacity: 0.45; }
 svg.ice [data-run] { cursor: zoom-in; }
 svg.ice rect.nr { fill: var(--surface); stroke: var(--muted); stroke-dasharray: 3 3; }
 svg.ice rect.sel { fill: none; stroke: var(--ink); stroke-width: 2.5; pointer-events: none; }
-svg.ice g.dim { opacity: 0.28; }
+svg.ice g.dim, svg.ice path.rib.dim { opacity: 0.28; }
 svg.ice [data-chr] { cursor: pointer; }
 svg.ice g.off { opacity: 0.4; }
 svg.ice g.dim g.off { opacity: 1; } /* the row is already dimmed; do not multiply the two */
